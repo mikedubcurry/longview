@@ -1,0 +1,27 @@
+{
+	"name": "longview",
+	"version": "0.0.1",
+	"description": "an app to organize and prioritize different aspirations and project i want to work on at some point",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.spec/ts' --exec 'ts-node src/index.ts'",
+		"build": "tsc",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "mikedubcurry",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/express": "^4.17.13",
+		"@types/node": "^16.10.2",
+		"nodemon": "^2.0.13",
+		"ts-node": "^10.2.1",
+		"typescript": "^4.4.3"
+	},
+	"dependencies": {
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"pg": "^8.7.1",
+		"pg-hstore": "^2.3.4",
+		"sequelize": "^6.6.5"
+	}
+}
