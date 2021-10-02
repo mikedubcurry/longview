@@ -6,24 +6,23 @@ declare type TUser = {
 	// projects: Project[];
 };
 
-declare type Goal = {
+declare type TGoal = {
 	goal: string;
-	createdOn: Date;
-	notes: Note[];
+	// createdOn: Date;
+	// notes: Note[];
 	id: number;
 };
 
-declare type Project = {
+declare type TProject = {
 	idea: string;
 	description: string;
-	goal?: Goal;
-	createdOn: Date;
-	notes: Note[];
+	// goal?: Goal;
+	// notes?: Note[];
 	id: number;
 };
 
-declare type Note = {
+declare type TNote = {
 	text: string;
-	createdOn: Date;
+	// createdOn: Date;
 	id: number;
 };

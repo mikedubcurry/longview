@@ -2,25 +2,25 @@ import { DataTypes, Model, Optional } from 'sequelize';
 
 import { sqlConnection } from 'db';
 
-export interface GoalInput extends Optional<TGoal, 'id'> {}
+export interface NoteInput extends Optional<TNote, 'id'> {}
 
-class Goal extends Model<TGoal, GoalInput> implements TGoal {
+class Note extends Model<TNote, NoteInput> implements TNote {
 	public id!: number;
-	public goal!: string;
+	public text!: string;
 
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 	public readonly deletedAt!: Date;
 }
 
-Goal.init(
+Note.init(
 	{
 		id: {
 			type: DataTypes.INTEGER.UNSIGNED,
 			autoIncrement: true,
 			primaryKey: true,
 		},
-		goal: {
+		text: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
@@ -32,4 +32,4 @@ Goal.init(
 	}
 );
 
-export { Goal };
+export { Note };
