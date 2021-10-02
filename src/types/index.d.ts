@@ -1,28 +1,31 @@
-declare type TUser = {
+declare interface TUser {
 	username: string;
 	password: string;
 	id: number;
-	// goals: Goal[];
-	// projects: Project[];
-};
+	goals?: Goal[];
+	projects?: Project[];
+}
 
-declare type TGoal = {
+declare interface TGoal {
 	goal: string;
 	// createdOn: Date;
 	// notes: Note[];
 	id: number;
-};
+	ownerId: number;
+}
 
-declare type TProject = {
+declare interface TProject {
 	idea: string;
 	description: string;
-	// goal?: Goal;
+	goalId?: number;
 	// notes?: Note[];
 	id: number;
-};
+	ownerId: number;
+}
 
-declare type TNote = {
+declare interface TNote {
 	text: string;
 	// createdOn: Date;
 	id: number;
-};
+	ownerId: number;
+}

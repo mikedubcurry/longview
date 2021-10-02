@@ -3,9 +3,17 @@ import { config } from 'dotenv';
 
 config();
 
+import { sqlConnection } from './db';
+import { dbInit } from './db/init';
+
+sqlConnection.authenticate();
+
+dbInit();
+
 const app = express();
 
 app.use(express.json());
+
 app.get('/', (req, res) => {
 	res.send('ay lmao');
 });

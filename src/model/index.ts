@@ -1,4 +1,4 @@
-export { User } from './User';
+export { Note } from './Note';
 export { Project } from './Project';
 export { Goal } from './Goal';
-export { Note } from './Note';
+export { User } from './User';

@@ -1,14 +1,24 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 
-import { sqlConnection } from 'db';
+import { sqlConnection } from '../db';
+import { Goal, User } from '../model';
 
-export interface ProjectInput extends Optional<TProject, 'id'> {}
+interface IProject {
+	idea: string;
+	description: string;
+	goalId?: number;
+	// notes?: Note[];
+	id: number;
+	ownerId: number;
+}
+export interface ProjectInput extends Optional<IProject, 'id' | 'ownerId'> {}
 
-class Project extends Model<TProject, ProjectInput> implements TProject {
+class Project extends Model<IProject, ProjectInput> implements IProject {
 	public id!: number;
 	public idea!: string;
 	public description!: string;
-	// public goal?: Goal;
+	public ownerId!: number;
+	public goalId?: number;
 	// public notes?: Note[];
 
 	public readonly createdAt!: Date;
@@ -19,9 +29,13 @@ class Project extends Model<TProject, ProjectInput> implements TProject {
 Project.init(
 	{
 		id: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.INTEGER,
 			autoIncrement: true,
 			primaryKey: true,
+		},
+		ownerId: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
 		},
 		idea: {
 			type: DataTypes.STRING,
@@ -39,5 +53,6 @@ Project.init(
 		timestamps: true,
 	}
 );
+
 
 export { Project };

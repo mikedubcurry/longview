@@ -1,12 +1,20 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 
-import { sqlConnection } from 'db';
+import { sqlConnection } from '../db';
 
-export interface NoteInput extends Optional<TNote, 'id'> {}
+interface INote {
+	text: string;
+	// createdOn: Date;
+	id: number;
+	ownerId: number;
+}
 
-class Note extends Model<TNote, NoteInput> implements TNote {
+export interface NoteInput extends Optional<INote, 'id'> {}
+
+class Note extends Model<INote, NoteInput> implements INote {
 	public id!: number;
 	public text!: string;
+	public ownerId!: number;
 
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
@@ -20,6 +28,10 @@ Note.init(
 			autoIncrement: true,
 			primaryKey: true,
 		},
+		ownerId: {
+			type: DataTypes.INTEGER.UNSIGNED,
+			allowNull: false,
+		},
 		text: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -31,5 +43,7 @@ Note.init(
 		paranoid: true,
 	}
 );
+
+// Note.hasOne()
 
 export { Note };

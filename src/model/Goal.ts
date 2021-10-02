@@ -1,12 +1,21 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 
-import { sqlConnection } from 'db';
+import { sqlConnection } from '../db';
+import { User } from '../model';
 
-export interface GoalInput extends Optional<TGoal, 'id'> {}
+interface IGoal {
+	goal: string;
+	// createdOn: Date;
+	// notes: Note[];
+	id: number;
+	ownerId: number;
+}
+export interface GoalInput extends Optional<IGoal, 'id'> {}
 
-class Goal extends Model<TGoal, GoalInput> implements TGoal {
+class Goal extends Model<IGoal, GoalInput> implements IGoal {
 	public id!: number;
 	public goal!: string;
+	public ownerId!: number;
 
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
@@ -20,6 +29,10 @@ Goal.init(
 			autoIncrement: true,
 			primaryKey: true,
 		},
+		ownerId: {
+			type: DataTypes.INTEGER.UNSIGNED,
+			allowNull: false,
+		},
 		goal: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -31,5 +44,7 @@ Goal.init(
 		paranoid: true,
 	}
 );
+
+
 
 export { Goal };

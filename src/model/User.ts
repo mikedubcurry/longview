@@ -1,10 +1,25 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import {
+	DataTypes,
+	Model,
+	Optional,
+	Association,
+	HasManyGetAssociationsMixin,
+	HasManyAddAssociationMixin,
+	HasManyCreateAssociationMixin,
+} from 'sequelize';
 
-import { sqlConnection } from 'db';
+import { sqlConnection } from '../db';
+import { Goal, Project } from '../model';
+interface IUser {
+	username: string;
+	password: string;
+	id: number;
+	// goals?: IGoal[];
+	// projects?: Project[];
+}
+export interface UserInput extends Optional<IUser, 'id'> {}
 
-export interface UserInput extends Optional<User, 'id'> {}
-
-class User extends Model<TUser, UserInput> implements TUser {
+class User extends Model<IUser, UserInput> implements IUser {
 	public id!: number;
 	public username!: string;
 	public password!: string;
@@ -15,12 +30,25 @@ class User extends Model<TUser, UserInput> implements TUser {
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 	public readonly deletedAt!: Date;
+
+	public getProjects!: HasManyGetAssociationsMixin<Project>; // Note the null assertions!
+	public addProject!: HasManyAddAssociationMixin<Project, number>;
+	public createProject!: HasManyCreateAssociationMixin<Project>;
+
+	public getGoals!: HasManyGetAssociationsMixin<Goal>; // Note the null assertions!
+	public addGoal!: HasManyAddAssociationMixin<Goal, number>;
+	public createGoal!: HasManyCreateAssociationMixin<Goal>;
+
+	public static associations: {
+		projects: Association<User, Project>;
+		goals: Association<User, Goal>;
+	};
 }
 
 User.init(
 	{
 		id: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.INTEGER,
 			autoIncrement: true,
 			primaryKey: true,
 		},
@@ -40,5 +68,23 @@ User.init(
 		sequelize: sqlConnection,
 	}
 );
+
+User.hasMany(Project, {
+	foreignKey: 'ownerId',
+	sourceKey: 'id',
+	as: 'projects',
+});
+
+Project.belongsTo(User, { targetKey: 'id' });
+
+User.hasMany(Goal, {
+	foreignKey: 'ownerId',
+	sourceKey: 'id',
+	as: 'goals',
+});
+
+Goal.belongsTo(User, {
+	targetKey: 'id',
+});
 
 export { User };
