@@ -7,6 +7,7 @@ const dbPassword = process.env.DB_PASSWORD!;
 const sqlConnection = new Sequelize(dbName, dbUser, dbPassword, {
 	dialect: 'postgres',
 	port: 5432,
+	logging: false
 });
 
 export { sqlConnection };

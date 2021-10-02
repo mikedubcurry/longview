@@ -7,6 +7,7 @@ import {
 	HasManyAddAssociationMixin,
 	HasManyCreateAssociationMixin,
 } from 'sequelize';
+import bcrypt from 'bcrypt';
 
 import { sqlConnection } from '../db';
 import { Goal, Project } from '../model';
@@ -68,7 +69,12 @@ User.init(
 		sequelize: sqlConnection,
 	}
 );
-
+User.beforeSave('hashPassword', (user) => {
+	if (user.password) {
+		const salt = bcrypt.genSaltSync(10, 'a');
+		user.password = bcrypt.hashSync(user.password, salt);
+	}
+});
 User.hasMany(Project, {
 	foreignKey: 'ownerId',
 	sourceKey: 'id',
