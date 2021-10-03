@@ -24,12 +24,12 @@ class Note extends Model<INote, NoteInput> implements INote {
 Note.init(
 	{
 		id: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.INTEGER,
 			autoIncrement: true,
 			primaryKey: true,
 		},
 		ownerId: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
 		text: {
