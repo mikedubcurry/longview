@@ -21,7 +21,7 @@ export function useTokenAuth(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
-function getToken(authHeader: string) {
+export function getToken(authHeader: string) {
 	if (!authHeader) throw Error('expexted authHeader to be a string');
 	if (!authHeader.includes('Bearer')) throw Error('expected authHeader to contain a Bearer token');
 	if (authHeader.length < 7) throw Error('must supply a token in the auth header');

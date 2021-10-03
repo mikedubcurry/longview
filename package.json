@@ -6,14 +6,19 @@
 	"scripts": {
 		"dev": "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.spec/ts' --exec 'ts-node src/index.ts'",
 		"build": "tsc",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jest"
 	},
 	"author": "mikedubcurry",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/express": "^4.17.13",
+		"@types/jest": "^27.0.2",
 		"@types/node": "^16.10.2",
+		"@types/supertest": "^2.0.11",
+		"jest": "^27.2.4",
 		"nodemon": "^2.0.13",
+		"supertest": "^6.1.6",
+		"ts-jest": "^27.0.5",
 		"ts-node": "^10.2.1",
 		"typescript": "^4.4.3"
 	},
