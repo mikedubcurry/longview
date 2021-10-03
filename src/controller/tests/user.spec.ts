@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 config();
-import { signUp } from '../user';
+import { createUser, deleteUser } from '../user';
 import { sqlConnection } from '../../db';
 import { dbInit } from '../../db/init';
 
@@ -10,7 +10,7 @@ describe('user controller', () => {
 		const password = 'password';
 		await sqlConnection.authenticate({ logging: false });
 		await dbInit();
-		const result = await signUp(username, password);
+		const result = await createUser(username, password);
 		const [query] = await sqlConnection.query('select * from "Users";');
 		expect(query).toHaveLength(1);
 	});
@@ -20,8 +20,20 @@ describe('user controller', () => {
 		const password = 'password';
 		await sqlConnection.authenticate({ logging: false });
 		await dbInit();
-		const result = await signUp(username, password);
+		const result = await createUser(username, password);
 		expect(result.password).not.toEqual(password);
+	});
+
+	it('should delete a user', async () => {
+		const userPass = 'deleteMe';
+		await sqlConnection.authenticate({ logging: false });
+		await dbInit();
+
+		await createUser(userPass, userPass);
+
+		await deleteUser(userPass, userPass);
+		const [result] = await sqlConnection.query(`select * from "Users" where username = 'deleteMe';`);
+    expect(result).toHaveLength(0)
 	});
 });
 
