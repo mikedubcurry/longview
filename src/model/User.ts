@@ -64,6 +64,8 @@ User.init(
 		},
 	},
 	{
+		tableName: 'users',
+		freezeTableName: true,
 		paranoid: true,
 		timestamps: true,
 		sequelize: sqlConnection,

@@ -11,12 +11,12 @@ describe('user controller', () => {
 		await sqlConnection.authenticate({ logging: false });
 		await dbInit();
 		const result = await createUser(username, password);
-		const [query] = await sqlConnection.query('select * from "Users";');
+		const [query] = await sqlConnection.query('select * from users;');
 		expect(query).toHaveLength(1);
 	});
 
 	it("should hash the user's password", async () => {
-		const username = 'joeTest';
+		const username = 'jotoro';
 		const password = 'password';
 		await sqlConnection.authenticate({ logging: false });
 		await dbInit();
@@ -27,13 +27,15 @@ describe('user controller', () => {
 	it('should delete a user', async () => {
 		const userPass = 'deleteMe';
 		await sqlConnection.authenticate({ logging: false });
-		await dbInit();
+		// await dbInit();
+		await sqlConnection.sync({ force: true, alter: true });
 
 		await createUser(userPass, userPass);
 
 		await deleteUser(userPass, userPass);
-		const [result] = await sqlConnection.query(`select * from "Users" where username = 'deleteMe';`);
-    expect(result).toHaveLength(0)
+		const [ result] = await sqlConnection.query(`select "deletedAt" from users where username = 'deleteMe';`);
+
+		expect(result).toHaveLength(1);
 	});
 });
 

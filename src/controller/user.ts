@@ -9,5 +9,5 @@ export async function createUser(username: string, password: string) {
 }
 
 export async function deleteUser(username: string, password: string) {
-  
+	return await User.destroy({ where: { username: username } });
 }
