@@ -14,9 +14,11 @@ export async function createUser(username: string, password: string) {
 }
 
 export async function deleteUser(username: string, password: string) {
-	const exists = await userExists(username);
-	if (!exists) throw new Error(`user: ${username} does not exist`);
-	return await User.destroy({ where: { username: username } });
+	const user = await userExists(username);
+	if (!user) throw new Error(`user: ${username} does not exist`);
+	if (compareSync(password, user.password)) {
+		return await User.destroy({ where: { username: username } });
+	} else throw Error('incorrect username or password');
 }
 
 export async function userExists(username: string) {

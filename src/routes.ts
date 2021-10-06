@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 
-type route = {
+import { logIn } from './services/auth';
+
+type Route = {
 	path: `/${string}`;
 	method: 'post' | 'get' | 'patch' | 'put' | 'delete';
 	handler: (req: Request, res: Response, next?: NextFunction) => Promise<any>;
 };
 
-export const routes: route[] = [
+export const authRoutes: Route[] = [
 	// users
 	{
 		path: '/user/signup',
@@ -16,8 +18,10 @@ export const routes: route[] = [
 	{
 		path: '/user/login',
 		method: 'post',
-		handler: () => new Promise(() => {}), // users.login
+		handler: logIn, // users.login
 	},
+];
+export const protectedRoutes: Route[] = [
 	{
 		path: '/user',
 		method: 'delete',
