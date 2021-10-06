@@ -8,11 +8,10 @@ const app = express();
 app.use(express.json());
 
 app.get('/', (req, res) => {
-	// console.log(req.headers.authorization);
 	res.json({ test: 'pass' });
 });
 
-
+// register each auth route, accessible without basic auth token
 authRoutes.forEach((route) => {
 	app[route.method](route.path, (req, res, next) => {
 		route
@@ -22,8 +21,8 @@ authRoutes.forEach((route) => {
 	});
 });
 
+// use basic auth token for routes that manipulate user data
 app.use(useTokenAuth);
-
 protectedRoutes.forEach((route) => {
 	app[route.method](route.path, (req, res, next) => {
 		route

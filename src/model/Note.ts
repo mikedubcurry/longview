@@ -44,6 +44,4 @@ Note.init(
 	}
 );
 
-// Note.hasOne()
-
 export { Note };
