@@ -14,16 +14,17 @@ describe('user controller', () => {
 			const result = await createUser(username, password);
 			const [query] = await db.query('select * from users;');
 			expect(query).toHaveLength(1);
-			await deleteUser(username, password);
 		} catch (e) {
 			console.error(e);
 		}
+		await deleteUser(username, password);
 	});
 
 	it("should hash the user's password", async () => {
 		const username = 'usertest2';
 		const password = 'password';
 		const result = await createUser(username, password);
+		expect(result).toBeTruthy();
 		expect(result.password).not.toEqual(password);
 		await deleteUser(username, password);
 	});
