@@ -7,7 +7,6 @@ import { sqlConnection } from '../../db';
 const db = sqlConnection;
 
 describe('user controller', () => {
-
 	it('should create a user in the test db', async () => {
 		const username = 'usertest1';
 		const password = 'password';
@@ -35,12 +34,11 @@ describe('user controller', () => {
 		let user = await createUser(userPass, userPass);
 		if (user) {
 			const result = await deleteUser(userPass, userPass);
-			console.log(await db.query('select * from users;'));
-			
+
 			expect(result).toBe(1);
 		} else {
 			console.log(user);
-			
+
 			throw Error('something happened...');
 		}
 	});
@@ -80,6 +78,15 @@ describe('user controller', () => {
 
 		expect(passwordsDontMatch).toEqual(false);
 		await deleteUser(username, password);
+	});
+
+	it('should throw if creating a user that already exists', async () => {
+		const username = 'usertest7';
+		const password = 'password';
+		await createUser(username, password);
+
+		await expect(createUser(username, password)).rejects.toThrow();
+		await deleteUser(username, password)
 	});
 
 	afterAll(async () => {

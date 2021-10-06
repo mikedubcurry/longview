@@ -8,9 +8,14 @@ export async function commparePassword(username: string, password: string) {
 }
 
 export async function createUser(username: string, password: string) {
-	const user = new User({ username, password });
-
-	return await user.save();
+	// check if user exists first, throw if true, otherwise create user
+	const exists = await userExists(username);
+	if (!exists) {
+		const user = new User({ username, password });
+		return await user.save();
+	} else {
+		throw new Error('user already exists');
+	}
 }
 
 export async function deleteUser(username: string, password: string) {
