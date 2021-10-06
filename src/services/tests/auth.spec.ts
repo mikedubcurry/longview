@@ -5,23 +5,14 @@ config();
 
 import { sqlConnection } from '../../db';
 import { dbInit } from '../../db/init';
-import { createUser } from '../../controller/user';
+import { createUser, deleteUser } from '../../controller/user';
 import { app } from '../../app';
 
 const request = supertest(app);
 
+const db = sqlConnection;
+
 describe('auth service', () => {
-	beforeAll((done) => {
-		setUp(done);
-	}, 10000);
-
-	afterEach((done) => {
-		cleanUp(done);
-	}, 10000);
-
-	afterAll((done) => {
-		closeDb(done);
-	}, 10000);
 	it('should verify auth test suite runs', () => {
 		expect(1 + 1).toEqual(2);
 	}, 10000);
@@ -38,7 +29,7 @@ describe('auth service', () => {
 
 	// 	const tokenIsValid = verify(token, process.env.JWT_SECRET!);
 
-	// 	// await deleteUser('jotoro', 'password');
+	// await deleteUser('jotoro', 'password');
 	// });
 
 	it('should return a 400 code for missing username or password', async () => {
@@ -52,7 +43,7 @@ describe('auth service', () => {
 
 		expect(noUsername.status).toBe(400);
 
-		// await deleteUser('jotoro', 'password');
+		await deleteUser('jotoro', 'password');
 	}, 10000);
 
 	// it('should return 401 unauthorized for incorrect username or password', async () => {
@@ -74,27 +65,8 @@ describe('auth service', () => {
 	// test for signUp handler
 
 	// test for deleteUser handler
+	afterAll(async () => {
+		await db.query('delete from users');
+		await db.close();
+	});
 });
-
-function setUp(done: jest.DoneCallback) {
-	sqlConnection.authenticate().then(() => {
-		// sqlConnection.sync({ force: true, alter: true }).then(() => {
-		// 	done();
-		// });
-		dbInit().then(() => {
-			done()
-		})
-	});
-}
-
-function cleanUp(done: jest.DoneCallback) {
-	sqlConnection.query('delete from users;').then((d) => {
-		done();
-	});
-}
-
-function closeDb(done: jest.DoneCallback) {
-	sqlConnection.close().then(() => {
-		done();
-	});
-}

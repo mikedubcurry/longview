@@ -2,46 +2,46 @@ import { config } from 'dotenv';
 config();
 import { commparePassword, createUser, deleteUser, userExists } from '../user';
 import { sqlConnection } from '../../db';
-import { dbInit } from '../../db/init';
+// import { dbInit } from '../../db/init';
+
+const db = sqlConnection;
 
 describe('user controller', () => {
-	beforeAll((done) => {
-		setUp(done);
-	}, 10000);
 
-	afterEach((done) => {
-		cleanUp(done);
-	}, 10000);
+	// afterEach(async () => {
+	// 	await cleanUp();
+	// });
 
-	afterAll((done) => {
-		closeDb(done);
-	}, 10000);
 	it('should create a user in the test db', async () => {
 		const username = 'joeTest';
 		const password = 'password';
-		const result = await createUser(username, password);
-		const [query] = await sqlConnection.query('select * from users;');
-		expect(query).toHaveLength(1);
+		try {
+			const result = await createUser(username, password);
+			const [query] = await db.query('select * from users;');
+			expect(query).toHaveLength(1);
+			await deleteUser(username, password)
+		} catch (e) {
+			console.error(e);
+		}
 	}, 10000);
 
 	it("should hash the user's password", async () => {
-		const username = 'jotoro';
+		const username = 'humphrey';
 		const password = 'password';
 		const result = await createUser(username, password);
 		expect(result.password).not.toEqual(password);
+		await deleteUser(username, password)
 	}, 10000);
 
 	it('should delete a user', async () => {
 		const userPass = 'deleteMe';
 
-			await createUser(userPass, userPass);
+		let user = await createUser(userPass, userPass);
 
-			const result = await deleteUser(userPass, userPass);
+		const result = await deleteUser(userPass, userPass);
 
-			expect(result).toBe(1);
-			// done();
-		
-	}, 10000);
+		expect(result).toBe(1);
+	});
 
 	it('should throw if to be deleted user does not exist', async () => {
 		const username = 'mike';
@@ -51,7 +51,7 @@ describe('user controller', () => {
 	}, 10000);
 
 	it('should check if a user exists', async () => {
-		const username = 'jotoro';
+		const username = 'mike';
 		const password = 'password';
 		await createUser(username, password);
 
@@ -62,10 +62,11 @@ describe('user controller', () => {
 		let doesNotExist = await userExists('dio');
 
 		expect(doesNotExist).toBeFalsy();
+		await deleteUser(username, password)
 	}, 10000);
 
 	it('should return true if username and password match', async () => {
-		const username = 'jotoro';
+		const username = 'hamilton';
 		const password = 'jojo';
 		await createUser(username, password);
 
@@ -76,31 +77,11 @@ describe('user controller', () => {
 		let passwordsDontMatch = await commparePassword('username', 'dio');
 
 		expect(passwordsDontMatch).toEqual(false);
+		await deleteUser(username, password)
 	}, 10000);
+	afterAll(async () => {
+		await db.query('delete from users');
+		await db.close();
+	});
 });
 
-function setUp(done: jest.DoneCallback) {
-	sqlConnection.authenticate().then(() => {
-		// sqlConnection.sync({ force: true, alter: true }).then(() => {
-		// 	done();
-		// });
-		dbInit().then(() => {
-			done();
-		});
-	});
-}
-
-function cleanUp(done: jest.DoneCallback) {
-	sqlConnection.query('delete from users;').then((d) => {
-		// sqlConnection.close().then(() => {
-		// 	done();
-		// });
-		done();
-	});
-}
-
-function closeDb(done: jest.DoneCallback) {
-	sqlConnection.close().then(() => {
-		done();
-	});
-}
