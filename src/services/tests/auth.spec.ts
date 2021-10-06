@@ -15,7 +15,7 @@ const db = sqlConnection;
 describe('auth service', () => {
 	it('should verify auth test suite runs', () => {
 		expect(1 + 1).toEqual(2);
-	}, 10000);
+	});
 
 	// test for logIn handler
 	// it('should return a valid jwt on successful login', async () => {
@@ -33,18 +33,20 @@ describe('auth service', () => {
 	// });
 
 	it('should return a 400 code for missing username or password', async () => {
-		await createUser('jotoro', 'password');
+		const username = 'authtest1'
+		const password = 'password'
+		await createUser(username, password);
 
-		const noPassword = await supertest(app).post('/user/login').send({ username: 'jotoro', password: '' });
+		const noPassword = await supertest(app).post('/user/login').send({ username: username, password: '' });
 
 		expect(noPassword.status).toBe(400);
 
-		const noUsername = await supertest(app).post('/user/login').send({ username: '', password: 'password' });
+		const noUsername = await supertest(app).post('/user/login').send({ username: '', password: password });
 
 		expect(noUsername.status).toBe(400);
 
-		await deleteUser('jotoro', 'password');
-	}, 10000);
+		await deleteUser(username, password);
+	});
 
 	// it('should return 401 unauthorized for incorrect username or password', async () => {
 	// 	await createUser('jotoro', 'password');
@@ -66,7 +68,7 @@ describe('auth service', () => {
 
 	// test for deleteUser handler
 	afterAll(async () => {
-		await db.query('delete from users');
+		// await db.query('delete from users');
 		await db.close();
 	});
 });
