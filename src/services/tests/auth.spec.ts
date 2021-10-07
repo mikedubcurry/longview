@@ -19,7 +19,6 @@ describe('auth service', () => {
 
 	// test for logIn handler
 
-
 	it('should return a 400 code for missing username or password', async () => {
 		const username = 'authtest1';
 		const password = 'password';
@@ -76,6 +75,81 @@ describe('auth service', () => {
 	// test for logOut handler
 
 	// test for signUp handler
+	it('should create a new user on signup', async () => {
+		const username = 'authtest4';
+		const password = 'password';
+
+		// we dont care about the request here, just verifying a user is created in the db
+		await request.post('/user/signup').send({ username, password });
+
+		const [result] = await db.query(`select * from users where username = '${username}'`);
+
+		expect(result).toHaveLength(1);
+
+		await deleteUser(username, password);
+	});
+	it('should return 400 code for no password or no username', async () => {
+		const username = 'authtest5';
+		const password = 'password';
+
+		const noPassword = await supertest(app).post('/user/signup').send({ username: username, password: '' });
+
+		expect(noPassword.status).toBe(400);
+
+		const noUsername = await supertest(app).post('/user/signup').send({ username: '', password: password });
+
+		expect(noUsername.status).toBe(400);
+
+		// user is not created so no need to clean up
+	});
+	it('should return 400 if user already exists', async () => {
+		const username = 'authtest6';
+		const password = 'password';
+
+		await createUser(username, password);
+
+		const response = await request.post('/user/signup').send({ username, password });
+
+		expect(response.status).toBe(400);
+
+		await deleteUser(username, password);
+	});
+	it("should require passwords and usernames to be 'strong' (greater than 8 chars), else return a 400", async () => {
+		const username = 'authtest7';
+		const badUsername = 'mike';
+		const password = 'password';
+		const badPassword = 'cat';
+
+		const response = await request.post('/user/signup').send({ username, password: badPassword });
+
+		expect(response.status).toBe(400);
+
+		const response2 = await request.post('/user/signup').send({ username: badUsername, password });
+
+		expect(response2.status).toBe(400);
+		// no user is created so no clean up
+	});
+
+	it('should return a valid token after successful signup', async () => {
+		const username = 'authtest8';
+		const password = 'password';
+
+		const response = await request.post('/user/signup').send({ username, password });
+
+		expect(response.status).toBe(200);
+
+		const { token } = response.body;
+
+		expect(token).toBeTruthy();
+
+		try {
+			const tokenIsValid = verify(token, process.env.JWT_SECRET!);
+			expect(tokenIsValid).toBeTruthy();
+		} catch (e) {
+			console.error(e);
+		}
+		await deleteUser(username, password);
+	});
 
 	// test for deleteUser handler
 	afterAll(async () => {

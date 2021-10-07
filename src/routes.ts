@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { logIn } from './services/auth';
+import { logIn, signUp } from './services/auth';
 
 type Route = {
 	path: `/${string}`;
@@ -13,7 +13,7 @@ export const authRoutes: Route[] = [
 	{
 		path: '/user/signup',
 		method: 'post',
-		handler: () => new Promise(() => {}), // users.signup
+		handler: signUp, // users.signup
 	},
 	{
 		path: '/user/login',
