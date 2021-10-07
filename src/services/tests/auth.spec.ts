@@ -152,6 +152,26 @@ describe('auth service', () => {
 	});
 
 	// test for deleteUser handler
+	it('should return 401 unauthorized if no auth token is included in the request', async () => {
+		expect('write this test').toBe(false);
+	});
+
+	it('should return 401 unauthorized if password is incorrect', async () => {
+		expect('write this test').toBe(false);
+	});
+
+	it('should return 401 if username is incorrect', async () => {
+		expect('write this test').toBe(false);
+	});
+
+	it('should return 400 if no username or no password', async () => {
+		expect('write this test').toBe(false);
+	});
+
+	it('should delete the user in question if all cases are met', async () => {
+		expect('write this test').toBe(false);
+	});
+
 	afterAll(async () => {
 		// await db.query('delete from users');
 		await db.close();
