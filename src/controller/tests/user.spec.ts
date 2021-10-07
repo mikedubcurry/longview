@@ -12,7 +12,7 @@ describe('user controller', () => {
 		const password = 'password';
 		try {
 			const result = await createUser(username, password);
-			const [query] = await db.query('select * from users;');
+			const [query] = await db.query("select * from users where username = 'usertest1';");
 			expect(query).toHaveLength(1);
 		} catch (e) {
 			console.error(e);
