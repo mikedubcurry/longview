@@ -72,7 +72,6 @@ describe('auth service', () => {
 		}
 		await deleteUser(username, password);
 	});
-	// test for logOut handler
 
 	// test for signUp handler
 	it('should create a new user on signup', async () => {
