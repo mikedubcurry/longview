@@ -18,23 +18,11 @@ describe('auth service', () => {
 	});
 
 	// test for logIn handler
-	// it('should return a valid jwt on successful login', async () => {
-	// 	await createUser('jotoro', 'password');
 
-	// 	const response = await request.post('/user/login').send({ username: 'jotoro', password: 'password' });
-
-	// 	expect(response.status).toBe(200);
-
-	// 	const token = response.body;
-
-	// 	const tokenIsValid = verify(token, process.env.JWT_SECRET!);
-
-	// await deleteUser('jotoro', 'password');
-	// });
 
 	it('should return a 400 code for missing username or password', async () => {
-		const username = 'authtest1'
-		const password = 'password'
+		const username = 'authtest1';
+		const password = 'password';
 		await createUser(username, password);
 
 		const noPassword = await supertest(app).post('/user/login').send({ username: username, password: '' });
@@ -48,20 +36,43 @@ describe('auth service', () => {
 		await deleteUser(username, password);
 	});
 
-	// it('should return 401 unauthorized for incorrect username or password', async () => {
-	// 	await createUser('jotoro', 'password');
+	it('should return 401 unauthorized for incorrect username or password', async () => {
+		const username = 'authtest2';
+		const password = 'password';
+		await createUser(username, password);
 
-	// 	const wrongUsername = await supertest(app).post('/user/login').send({ username: 'jojo', password: 'password' });
+		try {
+			const wrongUsername = await supertest(app).post('/user/login').send({ username: 'jojo', password: password });
 
-	// 	expect(wrongUsername.status).toBe(401);
+			expect(wrongUsername.status).toBe(401);
 
-	// 	const wrongPassword = await supertest(app).post('/user/login').send({ username: 'jotoro', password: 'bizarre' });
+			const wrongPassword = await supertest(app).post('/user/login').send({ username: username, password: 'bizarre' });
 
-	// 	expect(wrongPassword.status).toBe(401);
+			expect(wrongPassword.status).toBe(401);
+		} catch (e) {
+			console.error(e);
+		}
 
-	// 	await deleteUser('jotoro', 'password');
-	// });
+		await deleteUser(username, password);
+	});
+	it('should return a valid jwt on successful login', async () => {
+		const username = 'authtest3';
+		const password = 'password';
 
+		await createUser(username, password);
+
+		const response = await request.post('/user/login').send({ username, password });
+		const { token } = response.body;
+
+		expect(response.status).toBe(200);
+		try {
+			const tokenIsValid = verify(token, process.env.JWT_SECRET!);
+			expect(tokenIsValid).toBeTruthy();
+		} catch (e) {
+			console.error(e);
+		}
+		await deleteUser(username, password);
+	});
 	// test for logOut handler
 
 	// test for signUp handler
