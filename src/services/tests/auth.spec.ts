@@ -261,7 +261,6 @@ describe('auth service', () => {
 	});
 
 	afterAll(async () => {
-		// await db.query('delete from users');
 		await db.close();
 	});
 });

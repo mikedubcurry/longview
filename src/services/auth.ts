@@ -76,7 +76,8 @@ export async function deleteUser(req: Request, res: Response) {
 		}
 	} catch (e) {
 		console.error(e);
-		return res.status(500).send(e);
+		// something went wrong with the token
+		return res.status(500).json({ message: 'error validating authorization' });
 	}
 
 	const isUser = await userExists(username);
@@ -89,8 +90,10 @@ export async function deleteUser(req: Request, res: Response) {
 	if (passwordsMatch) {
 		const deleted = await delUser(username, password);
 		if (deleted) {
+			// if user was deleted
 			return res.status(200).json({ message: `deleted user: ${username}` });
 		} else {
+			// something mightve went wrong with the postgres...
 			return res.status(500).json({ message: `error deleting user: ${username}` });
 		}
 	} else {
