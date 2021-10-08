@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { logIn, signUp } from './services/auth';
+import { deleteUser, logIn, signUp } from './services/auth';
 
 type Route = {
 	path: `/${string}`;
@@ -25,7 +25,7 @@ export const protectedRoutes: Route[] = [
 	{
 		path: '/user',
 		method: 'delete',
-		handler: () => new Promise(() => {}), // users.deleteUser
+		handler: deleteUser, // users.deleteUser
 	},
 	// projects
 	{
