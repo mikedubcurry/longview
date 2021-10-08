@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import { verify } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { config } from 'dotenv';
 config();
 
@@ -152,23 +152,112 @@ describe('auth service', () => {
 
 	// test for deleteUser handler
 	it('should return 401 unauthorized if no auth token is included in the request', async () => {
-		expect('write this test').toBe(false);
+		// technically handled by middlewares.useTokenAuth
+		const username = 'authtest9';
+		const password = 'password';
+
+		await createUser(username, password);
+
+		// no authorization header passed
+		const response = await request.delete('/user').send({ username, password });
+
+		expect(response.status).toBe(401);
+
+		await deleteUser(username, password);
 	});
 
 	it('should return 401 unauthorized if password is incorrect', async () => {
-		expect('write this test').toBe(false);
+		const username = 'authtest10';
+		const password = 'password';
+		const user = await createUser(username, password);
+
+		const token = sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
+		const authHeader = { authorization: `Bearer ${token}` };
+
+		const response = await request.delete('/user').send({ username, password: 'wrongPassword' }).set(authHeader);
+
+		expect(response.status).toBe(401);
+
+		await deleteUser(username, password);
 	});
 
-	it('should return 401 if username is incorrect', async () => {
-		expect('write this test').toBe(false);
+	it('should return 401 if username is incorrect but auth token is from active user', async () => {
+		const username = 'authtest11';
+		const password = 'password';
+		const user = await createUser(username, password);
+
+		const token = sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
+		const authHeader = { authorization: `Bearer ${token}` };
+		const response = await request.delete('/user').send({ username: 'michael', password }).set(authHeader);
+
+		expect(response.status).toBe(401);
+
+		await deleteUser(username, password);
 	});
 
 	it('should return 400 if no username or no password', async () => {
-		expect('write this test').toBe(false);
+		const username = 'authtest12';
+		const password = 'password';
+		const user = await createUser(username, password);
+
+		const token = sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
+		const authHeader = { authorization: `Bearer ${token}` };
+		const response = await request.delete('/user').send({ username }).set(authHeader);
+		const response2 = await request.delete('/user').send({ password }).set(authHeader);
+
+		expect(response.status).toBe(400);
+		expect(response2.status).toBe(400);
+
+		await deleteUser(username, password);
+	});
+
+	it('should return 401 if token does not match username', async () => {
+		const username = 'authtest13';
+		const password = 'password';
+		const user = await createUser(username, password);
+
+		const token = sign({ username: '7331_haxor', id: user.id }, process.env.JWT_SECRET!);
+		const authHeader = { authorization: `Bearer ${token}` };
+
+		const response = await request.delete('/user').send({ username, password }).set(authHeader);
+
+		expect(response.status).toBe(401);
+
+		await deleteUser(username, password);
+	});
+
+	it('should return 401 if username does not exist in db', async () => {
+		const username = 'authtest14';
+		const password = 'password';
+		const user = await createUser(username, password);
+		// create user to create plausible token, delete to test repeat deletion
+		await deleteUser(username, password);
+
+		const token = sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
+		const authHeader = { authorization: `Bearer ${token}` };
+
+		const response = await request.delete('/user').send({ username, password }).set(authHeader);
+
+		expect(response.status).toBe(401);
 	});
 
 	it('should delete the user in question if all cases are met', async () => {
-		expect('write this test').toBe(false);
+		const username = 'authtest15';
+		const password = 'password';
+		const user = await createUser(username, password);
+
+		const token = sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
+		const authHeader = { authorization: `Bearer ${token}` };
+
+		const response = await request.delete('/user').send({ username, password }).set(authHeader);
+
+		expect(response.status).toBe(200);
+
+		const [result] = await db.query('select * from users');
+
+		expect(result).toHaveLength(0);
+
+		// user should be deleted so no clean up necessary
 	});
 
 	afterAll(async () => {
