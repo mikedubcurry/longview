@@ -1,4 +1,12 @@
+import { config } from 'dotenv';
+config()
+import { sign } from 'jsonwebtoken';
+import supertest from 'supertest';
+
+import { app } from '../app';
 import { getToken } from './index';
+
+const request = supertest(app);
 
 describe('token middleware', () => {
 	it('should take a Bearer token as input', () => {
@@ -11,5 +19,13 @@ describe('token middleware', () => {
 		expect(() => getToken(invalidToken1)).toThrow();
 		expect(() => getToken(invalidToken2)).toThrow();
 		expect(() => getToken(invalidToken3)).toThrow();
+	});
+	it('should return 401 if token does not correspond with an active user', async () => {
+		// token for user that doesnt exist in db
+		const token = sign({ username: 'hacker', id: 69 }, process.env.JWT_SECRET!);
+
+		const response = await request.delete('/user').set({ authorization: `Bearer ${token}` });
+
+		expect(response.status).toBe(401);
 	});
 });
