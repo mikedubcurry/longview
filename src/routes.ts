@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { deleteUser, logIn, signUp } from './services/auth';
+import { createNewGoal, deleteGoalById, getAllGoals, getGoalById, updateGoalById } from './services/goal';
 
 type Route = {
 	path: `/${string}`;
@@ -67,27 +68,27 @@ export const protectedRoutes: Route[] = [
 	{
 		path: '/goals',
 		method: 'get',
-		handler: () => new Promise(() => {}), // goals.getGoals
+		handler: getAllGoals, // goals.getGoals
 	},
 	{
 		path: '/goals/:goalId',
 		method: 'get',
-		handler: () => new Promise(() => {}), // goals.getGoal
+		handler: getGoalById, // goals.getGoal
 	},
 	{
 		path: '/goals',
 		method: 'post',
-		handler: () => new Promise(() => {}), // goals.createGoal
+		handler: createNewGoal, // goals.createGoal
 	},
 	{
 		path: '/goals/:goalId',
 		method: 'patch',
-		handler: () => new Promise(() => {}), // goals.updateGoal
+		handler: updateGoalById, // goals.updateGoal
 	},
 	{
 		path: '/goals/:goalId',
 		method: 'delete',
-		handler: () => new Promise(() => {}), // goals.deleteGoal
+		handler: deleteGoalById, // goals.deleteGoal
 	},
 	// notes
 	{
