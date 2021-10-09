@@ -2,10 +2,8 @@ import { config } from 'dotenv';
 config();
 import { commparePassword, createUser, deleteUser, userExists } from '../user';
 import { sqlConnection } from '../../db';
-// import { dbInit } from '../../db/init';
 
 const db = sqlConnection;
-
 describe('user controller', () => {
 	it('should create a user in the test db', async () => {
 		const username = 'usertest1';

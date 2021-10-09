@@ -40,11 +40,10 @@ Goal.init(
 	},
 	{
 		timestamps: true,
+		tableName: 'goals',
+		freezeTableName: true,
 		sequelize: sqlConnection,
-		paranoid: true,
 	}
 );
-
-
 
 export { Goal };
