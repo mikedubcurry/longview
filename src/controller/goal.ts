@@ -1,9 +1,85 @@
-export async function createGoal(goal: string) {}
+import { Goal } from '../model';
 
-export async function getGoals() {}
+export async function createGoal(goal: string, ownerId: number) {
+	if (!goal) {
+		throw Error('must include goal text to create a new Goal');
+	}
+	if (!ownerId) {
+		throw Error('must supply ownerId to create a new Goal');
+	}
+	const newGoal = await Goal.create({ goal, ownerId });
+	return await newGoal.save();
+}
 
-export async function getGoal(goalId: number) {}
+export async function getGoals(ownerId: number) {
+	if (!ownerId) {
+		throw Error('must supply ownerId to get all Goals');
+	}
+	const goals = await Goal.findAll({ where: { ownerId } });
+	return goals;
+}
 
-export async function updateGoal(goalId: number, goal: string) {}
+export async function getGoal(goalId: number, ownerId: number) {
+	if (!goalId) {
+		throw Error('must supply goalId to get a goal');
+	}
+	if (!ownerId) {
+		throw Error('must supply ownerId to get a goal');
+	}
+	const goal = await Goal.findOne({
+		where: {
+			id: goalId,
+		},
+	});
 
-export async function deleteGoal(goalId: number) {}
+	if (goal && goal.ownerId !== ownerId) {
+		throw Error('goal does not belong to user');
+	}
+
+	return goal;
+}
+
+export async function updateGoal(goalId: number, goal: string, ownerId: number) {
+	if (!goal) {
+		throw Error('must supply goal text to update a Goal');
+	}
+	if (!ownerId) {
+		throw Error('must supply ownerId to update a goal');
+	}
+	const goalExists = await Goal.findOne({ where: { id: goalId } });
+	// check if there is a goal to update
+	if (goalExists) {
+		// check if goal belongs to user
+		if (ownerId !== goalExists.ownerId) {
+			throw Error('cannot update a goal that does not belong to you');
+		} else {
+			// goal exists and belongs to user, go ahead and update
+			const updatedGoal = await Goal.update({ goal }, { where: { id: goalId } });
+			return updateGoal;
+		}
+	} else {
+		throw Error(`goal with id ${goalId} does not exist`);
+	}
+}
+
+export async function deleteGoal(goalId: number, ownerId: number) {
+	if (!goalId) {
+		throw Error('must supply goalId to delete a goal');
+	}
+	if (!ownerId) {
+		throw Error('must supply ownerId to delete a goal');
+	}
+	const goalExists = await Goal.findOne({ where: { id: goalId } });
+	// check if goal exists
+	if (goalExists) {
+    // check if goal belongs to user
+		if (goalExists.ownerId !== ownerId) {
+			throw Error('cannot delete a goal that does not belong to you');
+		}
+    // goal exists and belongs to user, go ahead and delete
+		const deleted = await Goal.destroy({ where: { id: goalId } });
+		return deleted;
+	} else {
+		throw Error(`goal with id: ${goalId} does not exists`);
+	}
+}
