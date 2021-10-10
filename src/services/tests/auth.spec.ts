@@ -4,7 +4,6 @@ import { config } from 'dotenv';
 config();
 
 import { sqlConnection } from '../../db';
-import { dbInit } from '../../db/init';
 import { createUser, deleteUser } from '../../controller/user';
 import { app } from '../../app';
 
