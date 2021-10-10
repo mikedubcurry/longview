@@ -46,6 +46,9 @@ export async function updateGoal(goalId: number, goal: string, ownerId: number) 
 	if (!ownerId) {
 		throw Error('must supply ownerId to update a goal');
 	}
+	if (!goalId) {
+		throw Error('must supply goalId to update a Goal');
+	}
 	const goalExists = await Goal.findOne({ where: { id: goalId } });
 	// check if there is a goal to update
 	if (goalExists) {
@@ -72,11 +75,11 @@ export async function deleteGoal(goalId: number, ownerId: number) {
 	const goalExists = await Goal.findOne({ where: { id: goalId } });
 	// check if goal exists
 	if (goalExists) {
-    // check if goal belongs to user
+		// check if goal belongs to user
 		if (goalExists.ownerId !== ownerId) {
 			throw Error('cannot delete a goal that does not belong to you');
 		}
-    // goal exists and belongs to user, go ahead and delete
+		// goal exists and belongs to user, go ahead and delete
 		const deleted = await Goal.destroy({ where: { id: goalId } });
 		return deleted;
 	} else {
