@@ -53,18 +53,22 @@ describe('goal service', () => {
 		expect(response.status).toBe(400);
 	});
 
-	// it('should return 404 not found if goal does not exist', async () => {
-	// 	expect(true).toBe(false);
-	// });
+	it('should return 404 not found if goal does not exist', async () => {
+		const response = await request.get('/goals/999').set('authorization', authHeader);
 
-	// it('should return 401 unauthorized if requested goal does not belong to user', async () => {
-				
+		expect(response.status).toBe(404);
+	});
 
-	// })
+	it('should get a single goal', async () => {
+		const goal = 'testGoal';
+		const newGoal = await createGoal(goal, user.id);
 
-	// it('should get a single goal', async () => {
-	// 	expect(true).toBe(false);
-	// });
+		const response = await request.get(`/goals/${newGoal.id}`).set('authorization', authHeader);
+		expect(response.status).toBe(200)
+		const [result] = await db.query(`select * from goals where goals."goal" = '${goal}'`);
+		
+		expect(result).toHaveLength(1)
+	});
 
 	// it('should get all a users goals', async () => {
 	// 	expect(true).toBe(false);
