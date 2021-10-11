@@ -12,7 +12,7 @@ export async function useTokenAuth(req: Request, res: Response, next: NextFuncti
 	// return headers.authorization string after 'Bearer '...
 	const token = getToken(req.headers.authorization);
 	try {
-		let tokenIsValid = verify(token, jwtSecret);
+		let tokenIsValid = verify(token, jwtSecret) as UsernameAndId;
 		if (tokenIsValid && typeof tokenIsValid !== 'string' && tokenIsValid.id) {
 			const userExists = await User.findOne({ where: { id: tokenIsValid.id } });
 
@@ -24,6 +24,7 @@ export async function useTokenAuth(req: Request, res: Response, next: NextFuncti
 			// should check to make sure token corresponds to an active user
 
 			// token is good, carry on
+			req.user = { id: tokenIsValid.id };
 			next();
 		} else {
 			return res.status(401).json({ message: 'unauthorized' });
@@ -40,4 +41,15 @@ export function getToken(authHeader: string) {
 	if (authHeader.length < 7) throw Error('must supply a token in the auth header');
 	// 7 because that starts the token after 'Bearer '...
 	return authHeader.slice(7);
+}
+
+export function getUser(authHeader: string) {
+	const token = getToken(authHeader);
+	const usernameAndId = verify(token, process.env.JWT_SECRET!) as UsernameAndId;
+	return usernameAndId;
+}
+
+interface UsernameAndId {
+	username: string;
+	id: number;
 }
