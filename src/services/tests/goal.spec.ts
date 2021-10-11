@@ -23,6 +23,10 @@ describe('goal service', () => {
 		authHeader = 'Bearer ' + sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
 	});
 
+	afterEach(async () => {
+		await db.query('delete from goals');
+	});
+
 	it('should return 401 unauthorized if no authHeader is passed to createGoal', async () => {
 		const goal = 'goaltest1';
 		const response = await request.post('/goals').send({ goal });
@@ -64,15 +68,31 @@ describe('goal service', () => {
 		const newGoal = await createGoal(goal, user.id);
 
 		const response = await request.get(`/goals/${newGoal.id}`).set('authorization', authHeader);
-		expect(response.status).toBe(200)
+		expect(response.status).toBe(200);
 		const [result] = await db.query(`select * from goals where goals."goal" = '${goal}'`);
-		
-		expect(result).toHaveLength(1)
+
+		expect(result).toHaveLength(1);
 	});
 
-	// it('should get all a users goals', async () => {
-	// 	expect(true).toBe(false);
-	// });
+	it('should get all a users goals', async () => {
+		const goals = ['goal1', 'goal2', 'goal3'];
+
+		await Promise.all(
+			goals.map((goal) => {
+				return createGoal(goal, user.id);
+			})
+		);
+
+		const response = (await request.get('/goals').set('authorization', authHeader))
+
+		expect(response.body).toHaveProperty('goals');
+
+		if (response.body.goals.length) {
+			expect(response.body.goals).toHaveLength(3);
+		}
+
+		// expect(true).toBe(false);
+	});
 
 	// it('should return 400 bad input if goal text, goalId is not passed to updateGoal', async () => {
 	// 	expect(true).toBe(false);

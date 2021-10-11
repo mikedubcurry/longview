@@ -1,9 +1,20 @@
 import { Request, Response } from 'express';
 
-import { createGoal, getGoal } from '../controller/goal';
+import { createGoal, getGoal, getGoals } from '../controller/goal';
 import { getToken, getUser } from '../middleware';
 
-export async function getAllGoals(req: Request, res: Response) {}
+export async function getAllGoals(req: Request, res: Response) {
+	const user = req.user!;
+	try {
+		const goals = await getGoals(user.id);
+
+		return res.json({ goals });
+	} catch (e: any) {
+		if (e.message === 'must supply ownerId to get all Goals') {
+			return res.status(401).json({ message: 'unauthorized' });
+		}
+	}
+}
 
 export async function getGoalById(req: Request, res: Response) {
 	const { goalId } = req.params;
@@ -23,7 +34,6 @@ export async function getGoalById(req: Request, res: Response) {
 			return res.status(401).json({ message: e.message });
 		}
 	}
-	// const goal = getGoal(goalId)
 }
 
 export async function createNewGoal(req: Request, res: Response) {
