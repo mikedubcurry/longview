@@ -1,4 +1,4 @@
-import { Goal } from '../model';
+import { Goal, User } from '../model';
 
 export async function createGoal(goal: string, ownerId: number) {
 	if (!goal) {
@@ -7,8 +7,14 @@ export async function createGoal(goal: string, ownerId: number) {
 	if (!ownerId) {
 		throw Error('must supply ownerId to create a new Goal');
 	}
-	const newGoal = await Goal.create({ goal, ownerId });
+	const user = await User.findByPk(ownerId);
+	if (!user) {
+		throw Error(`user with id: ${ownerId} does not exist`);
+	}
+	const newGoal = await user.createGoal({ goal, ownerId });
 	return await newGoal.save();
+	// const newGoal = await Goal.create({ goal, ownerId });
+	// return await newGoal.save();
 }
 
 export async function getGoals(ownerId: number) {
