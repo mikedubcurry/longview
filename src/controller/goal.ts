@@ -11,7 +11,7 @@ export async function createGoal(goal: string, ownerId: number) {
 	if (!user) {
 		throw Error(`user with id: ${ownerId} does not exist`);
 	}
-	const newGoal = await user.createGoal({ goal, ownerId });
+	const newGoal = await user.createGoal({ goal });
 	return await newGoal.save();
 	// const newGoal = await Goal.create({ goal, ownerId });
 	// return await newGoal.save();
@@ -32,13 +32,18 @@ export async function getGoal(goalId: number, ownerId: number) {
 	if (!ownerId) {
 		throw Error('must supply ownerId to get a goal');
 	}
-	const goal = await Goal.findOne({
-		where: {
-			id: goalId,
-		},
-	});
+	const user = await User.findByPk(ownerId);
+	if (!user) {
+		throw Error(`user with id: ${ownerId} does not exist`);
+	}
+	// get goal from user's association
+	const [goal] = await user.getGoals({ where: { id: goalId } });
 
-	if (goal && goal.ownerId !== ownerId) {
+	if (!goal) {
+		throw Error('goal doesnt exist');
+	}
+
+	if (goal.ownerId !== ownerId) {
 		throw Error('goal does not belong to user');
 	}
 
