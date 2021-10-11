@@ -252,7 +252,7 @@ describe('auth service', () => {
 
 		expect(response.status).toBe(200);
 
-		const [result] = await db.query('select * from users');
+		const [result] = await db.query(`select * from users where username = '${username}'`);
 
 		expect(result).toHaveLength(0);
 
