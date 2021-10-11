@@ -83,7 +83,10 @@ User.hasMany(Project, {
 	as: 'projects',
 });
 
-Project.belongsTo(User, { targetKey: 'id' });
+Project.belongsTo(User, {
+	targetKey: 'id',
+	foreignKey: 'ownerId',
+});
 
 User.hasMany(Goal, {
 	foreignKey: 'ownerId',
@@ -93,6 +96,7 @@ User.hasMany(Goal, {
 
 Goal.belongsTo(User, {
 	targetKey: 'id',
+	foreignKey: 'ownerId',
 });
 
 export { User };
