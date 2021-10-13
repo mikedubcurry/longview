@@ -133,34 +133,53 @@ describe('goal service', () => {
 		const goal = 'testGoal';
 		const newText = 'updatedGoal';
 		const newGoal = await createGoal(goal, user.id);
-		const response = await request.patch(`/goals/${newGoal.id}`).set('authorization', authHeader).send({ goal: newText });
+		const response = await request
+			.patch(`/goals/${newGoal.id}`)
+			.set('authorization', authHeader)
+			.send({ goal: newText });
 
 		expect(response.status).toBe(200);
 
 		const [[result]] = await db.query(`select * from goals where id = '${newGoal.id}'`);
 
-
 		expect(result).toHaveProperty('goal');
-		const {goal: updatedText} = result as {goal: string}
-		expect(updatedText).toEqual(newText)
-		
+		const { goal: updatedText } = result as { goal: string };
+		expect(updatedText).toEqual(newText);
 	});
 
-	// it('should return 400 bad input if goalId is not passed to deleteGoal', async () => {
-	// 	expect(true).toBe(false);
-	// });
+	it('should return 400 bad input if goalId is not passed to deleteGoal', async () => {
+		const response = await request.delete('/goals/undefined').set('authorization', authHeader);
 
-	// it('should return 401 unauthorized if the to be deleted goal does not exist', async () => {
-	// 	expect(true).toBe(false);
-	// });
+		expect(response.status).toBe(400);
+	});
 
-	// it('should return 404 not found if the to be deleted goal does not exist', async () => {
-	// 	expect(true).toBe(false);
-	// });
+	it('should return 401 unauthorized if the to be deleted goal does not belong to user', async () => {
+		const goal = 'testgoal';
+		const newGoal = await createGoal(goal, user2.id);
+		console.log(newGoal);
+		
+		const response = await request.delete(`/goals/${newGoal.id}`).set('authorization', authHeader);
+		console.log(response.body);
+		
+		expect(response.status).toBe(401);
+	});
 
-	// it('should delete a goal', async () => {
-	// 	expect(true).toBe(false);
-	// });
+	it('should return 404 not found if the to be deleted goal does not exist', async () => {
+		const response = await request.delete('/goals/99999').set('authorization', authHeader);
+
+		expect(response.status).toBe(404);
+	});
+
+	it('should delete a goal', async () => {
+		const goal = 'testGoal';
+		const newGoal = await createGoal(goal, user.id);
+
+		const response = await request.delete(`/goals/${newGoal.id}`).set('authorization', authHeader)
+
+
+		expect(response.status).toBe(200)
+		expect(response.body.message).toBe(1)
+	});
 
 	afterAll(async () => {
 		await db.query('delete from goals');

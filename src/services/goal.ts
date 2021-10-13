@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { createGoal, getGoal, getGoals, updateGoal } from '../controller/goal';
+import { createGoal, deleteGoal, getGoal, getGoals, updateGoal } from '../controller/goal';
 import { getToken, getUser } from '../middleware';
 
 export async function getAllGoals(req: Request, res: Response) {
@@ -71,4 +71,24 @@ export async function updateGoalById(req: Request, res: Response) {
 	}
 }
 
-export async function deleteGoalById(req: Request, res: Response) {}
+export async function deleteGoalById(req: Request, res: Response) {
+	const { goalId } = req.params;
+
+	if (!parseInt(goalId)) {
+		return res.status(400).json({ message: 'must pass valid goalId to delete a goal' });
+	}
+
+	const user = req.user!;
+
+	try {
+		const deleted = await deleteGoal(parseInt(goalId), user.id);
+		return res.json({message: deleted})
+	} catch (e: any) {
+		if (e.message.includes('does not belong to you')) {
+			return res.status(401).json({ message: e.message });
+		}
+		if(e.message.includes('does not exists')) {
+			return res.status(404).json({message: e.message})
+		}
+	}
+}
