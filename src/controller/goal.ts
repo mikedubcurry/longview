@@ -13,16 +13,19 @@ export async function createGoal(goal: string, ownerId: number) {
 	}
 	const newGoal = await user.createGoal({ goal });
 	return await newGoal.save();
-	// const newGoal = await Goal.create({ goal, ownerId });
-	// return await newGoal.save();
 }
 
 export async function getGoals(ownerId: number) {
 	if (!ownerId) {
 		throw Error('must supply ownerId to get all Goals');
 	}
-	const goals = await Goal.findAll({ where: { ownerId } });
-	return goals;
+	const user = await User.findByPk(ownerId);
+	if (user) {
+		const goals = await user.getGoals()
+		return goals;
+	} else {
+		throw Error(`user with id: ${ownerId} does not exist`);
+	}
 }
 
 export async function getGoal(goalId: number, ownerId: number) {
@@ -69,7 +72,7 @@ export async function updateGoal(goalId: number, goal: string, ownerId: number) 
 		} else {
 			// goal exists and belongs to user, go ahead and update
 			const updatedGoal = await Goal.update({ goal }, { where: { id: goalId } });
-			return updateGoal;
+			return updatedGoal;
 		}
 	} else {
 		throw Error(`goal with id ${goalId} does not exist`);

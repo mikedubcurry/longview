@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { createGoal, getGoal, getGoals } from '../controller/goal';
+import { createGoal, getGoal, getGoals, updateGoal } from '../controller/goal';
 import { getToken, getUser } from '../middleware';
 
 export async function getAllGoals(req: Request, res: Response) {
@@ -46,6 +46,29 @@ export async function createNewGoal(req: Request, res: Response) {
 	return res.json({ goal: newGoal });
 }
 
-export async function updateGoalById(req: Request, res: Response) {}
+export async function updateGoalById(req: Request, res: Response) {
+	const { goal } = req.body;
+	if (!goal || typeof goal !== 'string') {
+		return res.status(400).json({ message: 'must include goal text to update a goal' });
+	}
+	const { goalId } = req.params;
+	if (!parseInt(goalId)) {
+		return res.status(400).json({ message: 'must include goalId in route params update a goal' });
+	}
+
+	const user = req.user!;
+
+	try {
+		const updated = await updateGoal(parseInt(goalId), goal, user.id);
+		res.json({ goal: updated });
+	} catch (e: any) {
+		if (e.message.includes('does not belong to you')) {
+			return res.status(401).json({ message: 'unauthorized' });
+		}
+		if (e.message.includes('does not exist')) {
+			return res.status(404).json({ message: e.message });
+		}
+	}
+}
 
 export async function deleteGoalById(req: Request, res: Response) {}
