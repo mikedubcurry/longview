@@ -156,10 +156,8 @@ describe('goal service', () => {
 	it('should return 401 unauthorized if the to be deleted goal does not belong to user', async () => {
 		const goal = 'testgoal';
 		const newGoal = await createGoal(goal, user2.id);
-		console.log(newGoal);
 		
 		const response = await request.delete(`/goals/${newGoal.id}`).set('authorization', authHeader);
-		console.log(response.body);
 		
 		expect(response.status).toBe(401);
 	});
