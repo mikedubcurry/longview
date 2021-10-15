@@ -20,6 +20,7 @@ class Goal extends Model<IGoal, GoalInput> implements IGoal {
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 	public readonly deletedAt!: Date;
+	// consider adding `addNote` association
 }
 
 Goal.init(

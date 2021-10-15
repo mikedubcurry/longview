@@ -24,6 +24,7 @@ class Project extends Model<IProject, ProjectInput> implements IProject {
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 	public readonly deletedAt!: Date;
+	// consider adding `addNote` association
 }
 
 Project.init(
