@@ -3,6 +3,7 @@ config();
 import { createGoal, getGoal, getGoals, updateGoal, deleteGoal } from '../goal';
 import { createUser } from '../user';
 import { sqlConnection } from '../../db';
+import { AuthError, BadInputError, NonExistentError } from '../utlis';
 
 const db = sqlConnection;
 
@@ -25,16 +26,16 @@ describe('goal controller', () => {
 		expect(result).toHaveLength(1);
 	});
 
-	it('should throw if no goal is entered when creating a goal', async () => {
+	it('should throw BadInputError if no goal is entered when creating a goal', async () => {
 		const emptyGoal = '';
 
-		await expect(createGoal(emptyGoal, user.id)).rejects.toThrow();
+		await expect(createGoal(emptyGoal, user.id)).rejects.toThrowError(BadInputError);
 	});
 
-	it('should throw if no ownderId is passed to createGoal', async () => {
+	it('should throw BadInputError if no ownderId is passed to createGoal', async () => {
 		const goal = 'goalTest2';
 
-		await expect(createGoal(goal, 0)).rejects.toThrow();
+		await expect(createGoal(goal, 0)).rejects.toThrowError(BadInputError);
 	});
 
 	it('should get a single goal', async () => {
@@ -46,21 +47,21 @@ describe('goal controller', () => {
 		expect(myGoal).toBeTruthy();
 	});
 
-	it('should throw if no goalId or no ownerId is supplied to get a goal', async () => {
+	it('should throw BadInput if no goalId or no ownerId is supplied to get a goal', async () => {
 		const goalZero = 0;
 		const goalId = 1;
 		const zeroOwnerId = 0;
 
-		await expect(getGoal(goalZero, user.id)).rejects.toThrow();
-		await expect(getGoal(goalId, zeroOwnerId)).rejects.toThrow();
+		await expect(getGoal(goalZero, user.id)).rejects.toThrowError(BadInputError);
+		await expect(getGoal(goalId, zeroOwnerId)).rejects.toThrowError(BadInputError);
 	});
 
-	it('should throw if requested goal doesnt belong to owner', async () => {
+	it('should throw AuthError if requested goal doesnt belong to owner', async () => {
 		const goal = 'goaltest4';
 		const notOwner = 6;
 		const newGoal = await createGoal(goal, user.id);
 
-		await expect(getGoal(newGoal.id, notOwner)).rejects.toThrow();
+		await expect(getGoal(newGoal.id, notOwner)).rejects.toThrowError(AuthError);
 	});
 
 	it('should get all goals for a user', async () => {
@@ -77,7 +78,7 @@ describe('goal controller', () => {
 		expect(myGoals).toHaveLength(3);
 	});
 
-	it('should throw if no ownerId is supplied to getGoals', async () => {
+	it('should throw AuthError if no ownerId is supplied to getGoals', async () => {
 		const goals = ['goaltest9', 'goaltest10', 'goaltest11'];
 		const falseyOwnerId = 0;
 		// bulk create goals
@@ -103,34 +104,34 @@ describe('goal controller', () => {
 		expect(result!.goal).toBe(updatedGoalText);
 	});
 
-	it('should throw if no goal text is passed to updateGoal', async () => {
+	it('should throw BadInputError if no goal text is passed to updateGoal', async () => {
 		const goal = 'goaltest13';
 		const newGoal = await createGoal(goal, user.id);
 
-		await expect(updateGoal(newGoal.id, '', user.id)).rejects.toThrow();
+		await expect(updateGoal(newGoal.id, '', user.id)).rejects.toThrowError(BadInputError);
 	});
 
-	it('should throw if no ownerId is passed to updateGoal', async () => {
+	it('should throw BadInput if no ownerId is passed to updateGoal', async () => {
 		const goal = 'goaltest14';
 		const newGoal = await createGoal(goal, user.id);
 		const newGoalText = 'newText';
 
-		await expect(updateGoal(newGoal.id, newGoalText, 0)).rejects.toThrow();
+		await expect(updateGoal(newGoal.id, newGoalText, 0)).rejects.toThrowError(BadInputError);
 	});
 
-	it('should throw if to be updated goal does not exist', async () => {
+	it('should throw NonExistentError if to be updated goal does not exist', async () => {
 		const goal = 'goaltest15';
 
-		await expect(updateGoal(99, goal, user.id)).rejects.toThrow();
+		await expect(updateGoal(99, goal, user.id)).rejects.toThrowError(NonExistentError);
 	});
 
-	it('should throw if user is trying to update a goal that does not belong to them', async () => {
+	it('should throw AuthError if user is trying to update a goal that does not belong to them', async () => {
 		const goal = 'goaltest16';
 		const newGoal = await createGoal(goal, user.id);
 
 		const newGoalText = 'newText';
 
-		await expect(updateGoal(newGoal.id, newGoalText, 9)).rejects.toThrow();
+		await expect(updateGoal(newGoal.id, newGoalText, 9)).rejects.toThrowError(AuthError);
 	});
 
 	it('should delete a goal', async () => {
@@ -142,29 +143,29 @@ describe('goal controller', () => {
 		expect(deleted).toBe(1);
 	});
 
-	it('should throw if no goalId is passed to deleteGoal', async () => {
+	it('should throw BadInputError if no goalId is passed to deleteGoal', async () => {
 
-		await expect(deleteGoal(0, user.id)).rejects.toThrow();
+		await expect(deleteGoal(0, user.id)).rejects.toThrowError(BadInputError);
 	});
 
-	it('should throw if ownerId is not passed to deleteGoal', async () => {
+	it('should throw BadInputError if ownerId is not passed to deleteGoal', async () => {
 		const goal = 'goaltest18';
 		const newGoal = await createGoal(goal, user.id);
 
-		await expect(deleteGoal(newGoal.id, 0)).rejects.toThrow();
+		await expect(deleteGoal(newGoal.id, 0)).rejects.toThrowError(BadInputError);
 	});
 
-	it('should throw if goal to be deleted does not belong to user', async () => {
+	it('should throw AuthError if goal to be deleted does not belong to user', async () => {
 		const goal = 'goaltest19';
 		const newGoal = await createGoal(goal, user.id);
 		const notOwner = 7;
 
-		await expect(deleteGoal(newGoal.id, notOwner)).rejects.toThrow();
+		await expect(deleteGoal(newGoal.id, notOwner)).rejects.toThrowError(AuthError);
 	});
 
-	it('should throw if to be deleted goal does not exist', async () => {
+	it('should throw NonExistentError if to be deleted goal does not exist', async () => {
 		const nonExistentGoalId = 999;
-		await expect(deleteGoal(nonExistentGoalId, user.id)).rejects.toThrow();
+		await expect(deleteGoal(nonExistentGoalId, user.id)).rejects.toThrowError(NonExistentError);
 	});
 
 	afterAll(async () => {
