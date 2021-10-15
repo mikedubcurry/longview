@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 config();
 import { commparePassword, createUser, deleteUser, userExists } from '../user';
 import { sqlConnection } from '../../db';
+import { AuthError } from '../utlis';
 
 const db = sqlConnection;
 describe('user controller', () => {
@@ -38,15 +39,15 @@ describe('user controller', () => {
 		} else {
 			console.log(user);
 
-			throw Error('something happened...');
+			throw Error('something happened in the user controller tests: delete user...');
 		}
 	});
 
-	it('should throw if to be deleted user does not exist', async () => {
+	it('should throw AuthError if to be deleted user does not exist', async () => {
 		const username = 'usertest4';
 		const password = 'doesntmatter';
 
-		await expect(deleteUser(username, password)).rejects.toThrow();
+		await expect(deleteUser(username, password)).rejects.toThrowError(AuthError);
 	});
 
 	it('should check if a user exists', async () => {
@@ -79,13 +80,13 @@ describe('user controller', () => {
 		await deleteUser(username, password);
 	});
 
-	it('should throw if creating a user that already exists', async () => {
+	it('should throw if AuthError creating a user that already exists', async () => {
 		const username = 'usertest7';
 		const password = 'password';
 		await createUser(username, password);
 
-		await expect(createUser(username, password)).rejects.toThrow();
-		await deleteUser(username, password)
+		await expect(createUser(username, password)).rejects.toThrowError(AuthError);
+		await deleteUser(username, password);
 	});
 
 	afterAll(async () => {
