@@ -50,10 +50,11 @@ Project.init(
 	},
 	{
 		paranoid: true,
+		tableName: 'projects',
+		freezeTableName: true,
 		sequelize: sqlConnection,
 		timestamps: true,
 	}
 );
-
 
 export { Project };
