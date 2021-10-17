@@ -78,7 +78,7 @@ describe('goal controller', () => {
 		expect(myGoals).toHaveLength(3);
 	});
 
-	it('should throw AuthError if no ownerId is supplied to getGoals', async () => {
+	it('should throw BadInputError if no ownerId is supplied to getGoals', async () => {
 		const goals = ['goaltest9', 'goaltest10', 'goaltest11'];
 		const falseyOwnerId = 0;
 		// bulk create goals
@@ -88,7 +88,7 @@ describe('goal controller', () => {
 		// 	})
 		// );
 
-		await expect(getGoals(falseyOwnerId)).rejects.toThrow();
+		await expect(getGoals(falseyOwnerId)).rejects.toThrowError(BadInputError);
 	});
 
 	it('should update a goal', async () => {

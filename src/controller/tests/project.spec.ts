@@ -22,6 +22,7 @@ describe('goal controller', () => {
 		altUser = await createUser('projectcontrollerAlt', 'password');
 		altGoal = await createGoal('projectGaolAlt', altUser.id);
 	});
+
 	afterEach(async () => {
 		await db.query('delete from projects;');
 	});
@@ -32,6 +33,7 @@ describe('goal controller', () => {
 
 		await expect(createProject(idea, description, user.id, goal.id)).rejects.toThrowError(BadInputError);
 	});
+
 	it('should throw BadInputError if description is not passed to createProject', async () => {
 		const idea = 'projectIdeaTest';
 		const description = '';
@@ -52,12 +54,14 @@ describe('goal controller', () => {
 
 		await expect(createProject(idea, description, 999, goal.id)).rejects.toThrowError(AuthError);
 	});
+
 	it('should throw AuthError if goal does not belong to user', async () => {
 		const idea = 'projectIdeaTest';
 		const description = 'projectDescTest';
 
 		await expect(createProject(idea, description, user.id, altGoal.id)).rejects.toThrowError(AuthError);
 	});
+
 	it('should create a project with a goal', async () => {
 		const idea = 'projectIdeaTest';
 		const description = 'projectDescTest';
@@ -71,6 +75,7 @@ describe('goal controller', () => {
 
 		expect(result[0].goalId).toEqual(goal.id);
 	});
+
 	it('should create a project without a goal', async () => {
 		const idea = 'projectIdeaTest';
 		const description = 'projectDescTest';

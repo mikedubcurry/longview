@@ -18,7 +18,7 @@ export async function createGoal(goal: string, ownerId: number) {
 
 export async function getGoals(ownerId: number) {
 	if (!ownerId) {
-		new BadInputError('must supply ownerId to get all Goals');
+		throw new BadInputError('must supply ownerId to get all Goals');
 	}
 	const user = await User.findByPk(ownerId);
 	if (user) {
