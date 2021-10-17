@@ -43,14 +43,14 @@ export async function createProject(idea: string, description: string, ownerId: 
 	}
 }
 
-export async function getProject(projectId: number) {}
+export async function getProject(projectId: number, ownerId: number) {}
 
-export async function getProjects() {}
+export async function getProjects(ownerId: number) {}
 
-export async function addGoal(projectId: number, goalId: number) {}
+export async function addGoal(projectId: number, goalId: number, ownerId: number) {}
 
-export async function addNote(projectId: number, noteId: number) {}
+export async function addNote(projectId: number, noteId: number, ownerId: number) {}
 
-export async function deleteProject(projectId: number) {}
+export async function deleteProject(projectId: number, ownerId: number) {}
 
-export async function removeGoal(projectId: number) {}
+export async function removeGoal(projectId: number, ownerId: number) {}
