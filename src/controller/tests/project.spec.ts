@@ -112,15 +112,15 @@ describe('goal controller', () => {
 		await expect(getProject(project.id, altUser.id)).rejects.toThrowError(AuthError);
 	});
 
-	// it('should get a specified project', async () => {
-	// 	const idea = 'projectControllerTest';
-	// 	const description = 'projectDescriptionTest';
-	// 	const project = await createProject(idea, description, user.id);
+	it('should get a specified project', async () => {
+		const idea = 'projectControllerTest';
+		const description = 'projectDescriptionTest';
+		const project = await createProject(idea, description, user.id);
 
-	// 	const requestedProject = await getProject(project.id, user.id);
+		const requestedProject = await getProject(project.id, user.id);
 
-	// 	expect(project.id).toEqual(requestedProject.id);
-	// });
+		expect(project.id).toEqual(requestedProject.id);
+	});
 	// getProjects
 	// addGoal
 	// addNote
