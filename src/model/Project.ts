@@ -47,6 +47,10 @@ Project.init(
 			allowNull: false,
 		},
 		// goal
+		goalId: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		}
 	},
 	{
 		paranoid: true,
