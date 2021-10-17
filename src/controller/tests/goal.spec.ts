@@ -94,7 +94,7 @@ describe('goal controller', () => {
 
 		const result = await getGoal(newGoal.id, user.id);
 
-		expect(result!.goal).toBe(updatedGoalText);
+		expect(result.goal).toBe(updatedGoalText);
 	});
 
 	it('should throw BadInputError if no goal text is passed to updateGoal', async () => {
