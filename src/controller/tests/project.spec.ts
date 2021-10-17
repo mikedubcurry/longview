@@ -126,7 +126,30 @@ describe('goal controller', () => {
 
 		expect(project.id).toEqual(requestedProject.id);
 	});
-	// getProjects
+
+	it('should throw BadInputError if no ownerId is passed to getProjects', async () => {
+		const falseyOwnerId = 0;
+
+		await expect(getProjects(falseyOwnerId)).rejects.toThrowError(BadInputError);
+	});
+
+	it("should get all a user's projects", async () => {
+		const projects = [
+			{ idea: 'testProject1', description: 'testDesc' },
+			{ idea: 'testProject2', description: 'testDesc' },
+			{ idea: 'testProject3', description: 'testDesc' },
+		];
+		// bulk create projects
+		await Promise.all(
+			projects.map(async (project) => {
+				await createProject(project.idea, project.description, user.id);
+			})
+		);
+
+		const myGoals = await getProjects(user.id);
+
+		expect(myGoals).toHaveLength(3);
+	});
 	// addGoal
 	// addNote
 	// deleteProject

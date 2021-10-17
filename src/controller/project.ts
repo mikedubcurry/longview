@@ -22,7 +22,7 @@ export async function createProject(idea: string, description: string, ownerId: 
 			throw new AuthError('supplied goal does not belong to user');
 		}
 
-		const newProject = await Project.create({
+		const newProject = await user.createProject({
 			idea,
 			description,
 			ownerId,
@@ -33,7 +33,7 @@ export async function createProject(idea: string, description: string, ownerId: 
 	} else {
 		// create project without goal
 
-		const newProject = await Project.create({
+		const newProject = await user.createProject({
 			idea,
 			description,
 			ownerId,
@@ -54,10 +54,24 @@ export async function getProject(projectId: number, ownerId: number) {
 	if (project.ownerId !== ownerId) {
 		throw new AuthError('project does not belong to user');
 	}
-  return project;
+	return project;
 }
 
-export async function getProjects(ownerId: number) {}
+export async function getProjects(ownerId: number) {
+	if (!ownerId) {
+		throw new BadInputError('must supply ownerId to getProjects');
+	}
+
+	const user = await User.findByPk(ownerId);
+
+	if (user) {
+		const projects = await user.getProjects();
+
+		return projects;
+	} else {
+		throw new AuthError(`user with id: ${ownerId} does not exist`);
+	}
+}
 
 export async function addGoal(projectId: number, goalId: number, ownerId: number) {}
 
