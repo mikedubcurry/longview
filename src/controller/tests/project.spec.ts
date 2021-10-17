@@ -5,7 +5,7 @@ import { createUser } from '../user';
 import { createGoal } from '../goal';
 import { sqlConnection } from '../../db';
 // import {dbInit} from '../../db/init'
-import { AuthError, BadInputError } from '../utlis';
+import { AuthError, BadInputError, NonExistentError } from '../utlis';
 import { Project } from '../../model';
 // dbInit()
 const db = sqlConnection;
@@ -64,30 +64,63 @@ describe('goal controller', () => {
 
 		const project = await createProject(idea, description, user.id, goal.id);
 
-		const [result] = await db.query(`select * from projects where "ownerId" = '${user.id}'`) as Project[][];
+		const [result] = (await db.query(`select * from projects where "ownerId" = '${user.id}'`)) as Project[][];
 		console.log(result);
 
 		expect(result).toHaveLength(1);
 
-		expect(result[0].goalId).toEqual(goal.id)	
-
-
+		expect(result[0].goalId).toEqual(goal.id);
 	});
 	it('should create a project without a goal', async () => {
 		const idea = 'projectIdeaTest';
 		const description = 'projectDescTest';
 
-		const project = await createProject(idea, description, user.id,);
+		const project = await createProject(idea, description, user.id);
 
-		const [result] = await db.query(`select * from projects where "ownerId" = '${user.id}'`) as Project[][];
+		const [result] = (await db.query(`select * from projects where "ownerId" = '${user.id}'`)) as Project[][];
 
 		expect(result).toHaveLength(1);
 
-		expect(result[0].goalId).toBeNull()		
-		
+		expect(result[0].goalId).toBeNull();
 	});
 
-	// getProject
+	it('should throw BadInputError if no projectId is passed to getProject', async () => {
+		const idea = 'projectControllerTest';
+		const description = 'projectDescriptionTest';
+		const project = await createProject(idea, description, user.id);
+
+		await expect(getProject(NaN, user.id)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw BadInputError if no ownerId is passed to getProject', async () => {
+		const idea = 'projectControllerTest';
+		const description = 'projectDescriptionTest';
+		const project = await createProject(idea, description, user.id);
+
+		await expect(getProject(project.id, NaN)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw  NonExistentError if project does not exist', async () => {
+		await expect(getProject(99999, user.id)).rejects.toThrowError(NonExistentError);
+	});
+
+	it('should throw AuthError if project does not belong to user', async () => {
+		const idea = 'projectControllerTest';
+		const description = 'projectDescriptionTest';
+		const project = await createProject(idea, description, user.id);
+
+		await expect(getProject(project.id, altUser.id)).rejects.toThrowError(AuthError);
+	});
+
+	// it('should get a specified project', async () => {
+	// 	const idea = 'projectControllerTest';
+	// 	const description = 'projectDescriptionTest';
+	// 	const project = await createProject(idea, description, user.id);
+
+	// 	const requestedProject = await getProject(project.id, user.id);
+
+	// 	expect(project.id).toEqual(requestedProject.id);
+	// });
 	// getProjects
 	// addGoal
 	// addNote

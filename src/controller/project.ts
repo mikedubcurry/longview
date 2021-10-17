@@ -1,5 +1,5 @@
 import { Goal, User, Project } from '../model';
-import { AuthError, BadInputError } from './utlis';
+import { AuthError, BadInputError, NonExistentError } from './utlis';
 
 export async function createProject(idea: string, description: string, ownerId: number, goalId?: number) {
 	if (!idea || !description) {
@@ -43,7 +43,19 @@ export async function createProject(idea: string, description: string, ownerId: 
 	}
 }
 
-export async function getProject(projectId: number, ownerId: number) {}
+export async function getProject(projectId: number, ownerId: number) {
+	if (!projectId || !ownerId) {
+		throw new BadInputError('must supply projectId and ownerId to getProject');
+	}
+	const project = await Project.findByPk(projectId);
+	if (!project) {
+		throw new NonExistentError(`project with id: ${projectId} does not exist`);
+	}
+	if (project.ownerId !== ownerId) {
+		throw new AuthError('project does not belong to user');
+	}
+  return project;
+}
 
 export async function getProjects(ownerId: number) {}
 
