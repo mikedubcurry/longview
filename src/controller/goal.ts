@@ -72,7 +72,7 @@ export async function updateGoal(goalId: number, goal: string, ownerId: number) 
 			throw new AuthError('cannot update a goal that does not belong to you');
 		} else {
 			// goal exists and belongs to user, go ahead and update
-			const updatedGoal = await Goal.update({ goal }, { where: { id: goalId } });
+			const [updatedGoal] = await Goal.upsert({ goal, id: goalId, ownerId: ownerId });
 			return updatedGoal;
 		}
 	} else {
