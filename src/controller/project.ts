@@ -73,6 +73,39 @@ export async function getProjects(ownerId: number) {
 	}
 }
 
+export async function updateProject(
+	projectId: number,
+	ownerId: number,
+	newProject: { idea?: string; description?: string }
+) {
+	if (!projectId || !ownerId || (!newProject.idea && !newProject.description)) {
+		throw new BadInputError('must supply projectId, ownerId and a new idea or desctiption to updateProject');
+	}
+	const project = await Project.findByPk(projectId);
+	if (!project) {
+		throw new NonExistentError(`project with id: ${projectId} does not exist`);
+	}
+
+	const user = await User.findByPk(ownerId);
+
+	if (project.ownerId !== ownerId) {
+		throw new AuthError('project does not belong to user');
+	}
+
+	const [updatedProject] = await Project.upsert(
+		{
+      id: project.id,
+      ownerId: project.ownerId,
+			// if idea or description are in newProject obj, use them in update, else use old value
+			idea: newProject.idea ? newProject.idea : project.idea,
+			description: newProject.description ? newProject.description : project.description,
+		},
+	);
+  
+
+	return updatedProject;
+}
+
 export async function addGoal(projectId: number, goalId: number, ownerId: number) {}
 
 export async function addNote(projectId: number, noteId: number, ownerId: number) {}

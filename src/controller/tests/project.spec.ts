@@ -1,6 +1,15 @@
 import { config } from 'dotenv';
 config();
-import { addGoal, addNote, createProject, deleteProject, getProject, getProjects, removeGoal } from '../project';
+import {
+	addGoal,
+	addNote,
+	createProject,
+	deleteProject,
+	getProject,
+	getProjects,
+	removeGoal,
+	updateProject,
+} from '../project';
 import { createUser } from '../user';
 import { createGoal } from '../goal';
 import { sqlConnection } from '../../db';
@@ -69,7 +78,6 @@ describe('goal controller', () => {
 		const project = await createProject(idea, description, user.id, goal.id);
 
 		const [result] = (await db.query(`select * from projects where "ownerId" = '${user.id}'`)) as Project[][];
-		console.log(result);
 
 		expect(result).toHaveLength(1);
 
@@ -149,6 +157,59 @@ describe('goal controller', () => {
 		const myGoals = await getProjects(user.id);
 
 		expect(myGoals).toHaveLength(3);
+	});
+	// updateProject
+	//   should throw BadInputError if ownerId, projectId, and newIdea or newDescription are not passed
+	//   should throw AuthError if project does not belong to user
+	//   should update a project
+	it('should throw BadInputError if no projectId is passed to updateProject', async () => {
+		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
+
+		await expect(updateProject(NaN, user.id, newProjectData)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw BadInputError if no ownerId is passed to updateProject', async () => {
+		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
+
+		await expect(updateProject(9, NaN, newProjectData)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw BadInputError if no idea or description is passed to updateProject', async () => {
+		const newProjectData = { idea: '', description: '' };
+
+		await expect(updateProject(9, 9, newProjectData)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw NonExistentError if project does not exist', async () => {
+		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
+
+		await expect(updateProject(9, user.id, newProjectData)).rejects.toThrowError(NonExistentError)
+
+	})
+
+	it('should throw AuthError if to-be-updated project does not belong to user', async () => {
+		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
+
+		const idea = 'updateProjectTest';
+		const description = 'updateProjectTest';
+		const project = await createProject(idea, description, user.id);
+
+		await expect(updateProject(project.id, altUser.id, newProjectData)).rejects.toThrowError(AuthError);
+	});
+
+	it('should update a project', async () => {
+		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
+
+		const idea = 'updateProjectTest';
+		const description = 'updateProjectTest';
+		const project = await createProject(idea, description, user.id);
+
+		const updatedProject = await updateProject(project.id, user.id, newProjectData);
+
+		const sameProject = await getProject(project.id, user.id);
+
+		expect(updatedProject.idea).toEqual(sameProject.idea);
+		expect(updatedProject.description).toEqual(sameProject.description);
 	});
 	// addGoal
 	// addNote
