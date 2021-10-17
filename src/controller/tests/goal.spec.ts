@@ -172,5 +172,5 @@ describe('goal controller', () => {
 		await db.query(`delete from users where id = '${user.id}'`)
 		await db.query('delete from goals;');
 		await db.close();
-	}, 3000);
+	});
 });

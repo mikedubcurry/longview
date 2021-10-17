@@ -180,7 +180,6 @@ describe('goal service', () => {
 	});
 
 	afterAll(async () => {
-		await db.query('delete from goals');
 		await deleteUser(testUser.username, testUser.password);
 		await deleteUser(altUser.username, altUser.password);
 		await db.close();
