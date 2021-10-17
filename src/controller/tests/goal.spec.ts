@@ -79,14 +79,7 @@ describe('goal controller', () => {
 	});
 
 	it('should throw BadInputError if no ownerId is supplied to getGoals', async () => {
-		const goals = ['goaltest9', 'goaltest10', 'goaltest11'];
 		const falseyOwnerId = 0;
-		// bulk create goals
-		// await Promise.all(
-		// 	goals.map(async (goal) => {
-		// 		await createGoal(goal, user.id);
-		// 	})
-		// );
 
 		await expect(getGoals(falseyOwnerId)).rejects.toThrowError(BadInputError);
 	});
