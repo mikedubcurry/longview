@@ -21,6 +21,7 @@ const db = sqlConnection;
 
 let user: { id: number };
 let goal: { id: number };
+let goal2: { id: number };
 let altUser: { id: number };
 let altGoal: { id: number };
 
@@ -28,6 +29,7 @@ describe('goal controller', () => {
 	beforeAll(async () => {
 		user = await createUser('projectcontroller', 'projectcontroller');
 		goal = await createGoal('proejctGoalTest', user.id);
+		goal2 = await createGoal('projectGoal2', user.id);
 		altUser = await createUser('projectcontrollerAlt', 'password');
 		altGoal = await createGoal('projectGaolAlt', altUser.id);
 	});
@@ -159,9 +161,6 @@ describe('goal controller', () => {
 		expect(myGoals).toHaveLength(3);
 	});
 	// updateProject
-	//   should throw BadInputError if ownerId, projectId, and newIdea or newDescription are not passed
-	//   should throw AuthError if project does not belong to user
-	//   should update a project
 	it('should throw BadInputError if no projectId is passed to updateProject', async () => {
 		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
 
@@ -183,9 +182,8 @@ describe('goal controller', () => {
 	it('should throw NonExistentError if project does not exist', async () => {
 		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
 
-		await expect(updateProject(9, user.id, newProjectData)).rejects.toThrowError(NonExistentError)
-
-	})
+		await expect(updateProject(9, user.id, newProjectData)).rejects.toThrowError(NonExistentError);
+	});
 
 	it('should throw AuthError if to-be-updated project does not belong to user', async () => {
 		const newProjectData = { idea: 'newIdea', description: 'newDescription' };
@@ -212,15 +210,82 @@ describe('goal controller', () => {
 		expect(updatedProject.description).toEqual(sameProject.description);
 	});
 	// addGoal
-	// addNote
-	// deleteProject
+	it('should throw BadInputError if no projectId is passed to addGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		await expect(addGoal(0, goal.id, user.id)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw BadInputError if no ownerId is passed to addGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		await expect(addGoal(project.id, goal.id, 0)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw BadInputError if no goalId is passed to addGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		await expect(addGoal(project.id, 0, user.id)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw NonExistentError if project does not exist when calling addGoal', async () => {
+		await expect(addGoal(9999, goal.id, user.id)).rejects.toThrowError(NonExistentError);
+	});
+
+	it('should throw AuthError if user does not exist when calling addGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		await expect(addGoal(project.id, goal.id, 9999)).rejects.toThrowError(AuthError);
+	});
+
+	it('should throw NonExistentError if goal does not exist when calling addGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		await expect(addGoal(project.id, 999, user.id)).rejects.toThrowError(NonExistentError);
+	});
+
+	it('should throw AuthError if project does not belong to user calling addGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		await expect(addGoal(project.id, altGoal.id, altUser.id)).rejects.toThrowError(AuthError);
+	});
+
+	it('should throw AuthError if goal does not belong to user', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		await expect(addGoal(project.id, altGoal.id, user.id)).rejects.toThrowError(AuthError);
+	});
+
+	it('should add a goal to a project', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id);
+
+		const withGoal = await addGoal(project.id, goal.id, user.id);
+
+		const updatedProject = await getProject(project.id, user.id);
+
+		expect(updatedProject.goalId).toEqual(goal.id);
+	});
+
+	it('should overwrite a goal on a project', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id, goal.id);
+
+		const projectWithNewGoal = await addGoal(project.id, goal2.id, user.id);
+
+		const updatedProject = await getProject(project.id, user.id);
+
+		expect(updatedProject.goalId).toEqual(goal2.id);
+	});
 	// removeGoal
+
+	// deleteProject
+	// addNote
 
 	afterAll(async () => {
 		await db.query(`delete from users where id = '${user.id}'`);
 		await db.query(`delete from users where id = '${altUser.id}'`);
 		await db.query('delete from projects;');
 		await db.query(`delete from goals where id = '${goal.id}'`);
+		await db.query(`delete from goals where id = '${goal2.id}'`);
 		await db.query(`delete from goals where id = '${altGoal.id}'`);
 		await db.close();
 	});

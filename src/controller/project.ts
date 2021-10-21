@@ -92,24 +92,54 @@ export async function updateProject(
 		throw new AuthError('project does not belong to user');
 	}
 
-	const [updatedProject] = await Project.upsert(
-		{
-      id: project.id,
-      ownerId: project.ownerId,
-			// if idea or description are in newProject obj, use them in update, else use old value
-			idea: newProject.idea ? newProject.idea : project.idea,
-			description: newProject.description ? newProject.description : project.description,
-		},
-	);
-  
+	const [updatedProject] = await Project.upsert({
+		id: project.id,
+		ownerId: project.ownerId,
+		// if idea or description are in newProject obj, use them in update, else use old value
+		idea: newProject.idea ? newProject.idea : project.idea,
+		description: newProject.description ? newProject.description : project.description,
+	});
 
 	return updatedProject;
 }
 
-export async function addGoal(projectId: number, goalId: number, ownerId: number) {}
+export async function addGoal(projectId: number, goalId: number, ownerId: number) {
+	if (!projectId || !goalId || !ownerId) {
+		throw new BadInputError('must supply projectId, goalId and ownerId to add a goal');
+	}
 
-export async function addNote(projectId: number, noteId: number, ownerId: number) {}
+	const user = await User.findByPk(ownerId);
+	if (!user) {
+		throw new AuthError(`user with id: ${ownerId} does not exist`);
+	}
+	const project = await Project.findByPk(projectId);
+	if (!project) {
+		throw new NonExistentError(`project with id: ${projectId} does not exist`);
+	}
+	if (project.ownerId !== user.id) {
+		throw new AuthError('project does not belong to user');
+	}
+	const goal = await Goal.findByPk(goalId);
+	if (!goal) {
+		throw new NonExistentError(`goal with id: ${goalId} does not exist`);
+	}
+	if (goal.ownerId !== user.id) {
+		throw new AuthError('goal does not belong to user');
+	}
+
+	const updated = await Project.upsert({
+		id: project.id,
+		idea: project.idea,
+		description: project.description,
+		ownerId: project.ownerId,
+		goalId,
+	});
+
+	return updated;
+}
 
 export async function deleteProject(projectId: number, ownerId: number) {}
 
 export async function removeGoal(projectId: number, ownerId: number) {}
+
+export async function addNote(projectId: number, noteId: number, ownerId: number) {}
