@@ -276,7 +276,41 @@ describe('goal controller', () => {
 		expect(updatedProject.goalId).toEqual(goal2.id);
 	});
 	// removeGoal
+	it('should throw BadInputError if no projectId is passed to removeGoal', async () => {
+		await expect(removeGoal(0, user.id)).rejects.toThrowError(BadInputError);
+	});
 
+	it('should throw BadInputError if no ownerId is passed to removeGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id, goal.id);
+
+		await expect(removeGoal(project.id, 0)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw NonExistentError if project does not exist when calling removeGoal', async () => {
+		await expect(removeGoal(9999, user.id)).rejects.toThrowError(NonExistentError);
+	});
+
+	it('should throw NonExistentError if user does not exist when calling removeGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id, goal.id);
+
+		await expect(removeGoal(project.id, 999)).rejects.toThrowError(NonExistentError);
+	});
+
+	it('should throw AuthError if project does not belong to user when calling removeGoal', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id, goal.id);
+
+		await expect(removeGoal(project.id, altUser.id)).rejects.toThrowError(AuthError);
+	});
+
+	it('should remove a goal from a project by setting goalId to null', async () => {
+		const project = await createProject('testIdea', 'testDescription', user.id, goal.id);
+
+		const withoutGoal = await removeGoal(project.id, user.id);
+
+		const updated = await getProject(project.id, user.id);
+
+		expect(updated.goalId).toBeNull();
+	});
 	// deleteProject
 	// addNote
 
