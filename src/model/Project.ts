@@ -6,7 +6,7 @@ import { Goal, User } from '../model';
 interface IProject {
 	idea: string;
 	description: string;
-	goalId?: number;
+	goalId?: number | null;
 	// notes?: Note[];
 	id: number;
 	ownerId: number;
@@ -18,7 +18,7 @@ class Project extends Model<IProject, ProjectInput> implements IProject {
 	public idea!: string;
 	public description!: string;
 	public ownerId!: number;
-	public goalId?: number;
+	public goalId?: number | null;
 	// public notes?: Note[];
 
 	public readonly createdAt!: Date;
