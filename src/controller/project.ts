@@ -166,6 +166,25 @@ export async function removeGoal(projectId: number, ownerId: number) {
 	return withoutGoal;
 }
 
-export async function deleteProject(projectId: number, ownerId: number) {}
+export async function deleteProject(projectId: number, ownerId: number) {
+	if (!projectId || !ownerId) {
+		throw new BadInputError('must supply projectId and ownerId to delete a project');
+	}
+	const project = await Project.findByPk(projectId);
+	if (!project) {
+		throw new NonExistentError(`project with id: ${projectId} does not exist`);
+	}
+	const user = await User.findByPk(ownerId);
+	if (!user) {
+		throw new AuthError(`user does not exist`);
+	}
+	if (project.ownerId !== ownerId) {
+		throw new AuthError('project does not belong to user');
+	}
+
+	const deleted = await Project.destroy({ where: { id: projectId } });
+
+	return deleted;
+}
 
 export async function addNote(projectId: number, noteId: number, ownerId: number) {}

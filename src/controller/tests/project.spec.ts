@@ -312,7 +312,35 @@ describe('goal controller', () => {
 		expect(updated.goalId).toBeNull();
 	});
 	// deleteProject
-	// addNote
+	it('should throw BadInputError if no projectId is passed to deleteProject', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		await expect(deleteProject(NaN, user.id)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw BadInputError if no ownerId is passed to deleteProject', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		await expect(deleteProject(project.id, NaN)).rejects.toThrowError(BadInputError);
+	});
+
+	it('should throw NonExistentError if project does not exist when calling deleteProject', async () => {
+		await expect(deleteProject(999, user.id)).rejects.toThrowError(NonExistentError);
+	});
+
+	it('should throw AuthError if a project does not exist when calling deleteProject', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		await expect(deleteProject(project.id, altUser.id)).rejects.toThrowError(AuthError);
+	});
+
+	it('should delete a project', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		const deleted = await deleteProject(project.id, user.id);
+		expect(deleted).toBe(1);
+	});
+	// TODO addNote
 
 	afterAll(async () => {
 		await db.query(`delete from users where id = '${user.id}'`);
