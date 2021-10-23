@@ -1,13 +1,21 @@
-import { DataTypes, Model, Optional } from 'sequelize';
+import {
+	DataTypes,
+	Model,
+	Optional,
+	Association,
+	HasManyGetAssociationsMixin,
+	HasManyAddAssociationMixin,
+	HasManyCreateAssociationMixin,
+} from 'sequelize';
 
 import { sqlConnection } from '../db';
-import { Goal, User } from '../model';
+import { Note } from '../model';
 
 interface IProject {
 	idea: string;
 	description: string;
 	goalId?: number | null;
-	// notes?: Note[];
+	notes?: Note[];
 	id: number;
 	ownerId: number;
 }
@@ -19,12 +27,19 @@ class Project extends Model<IProject, ProjectInput> implements IProject {
 	public description!: string;
 	public ownerId!: number;
 	public goalId?: number | null;
-	// public notes?: Note[];
+	public notes?: Note[];
 
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 	public readonly deletedAt!: Date;
-	// consider adding `addNote` association
+
+	public getGoals!: HasManyGetAssociationsMixin<Note>;
+	public addNote!: HasManyAddAssociationMixin<Note, number>;
+	public createNote!: HasManyCreateAssociationMixin<Note>;
+
+	public static associations: {
+		notes: Association<Project, Note>;
+	};
 }
 
 Project.init(
@@ -49,8 +64,8 @@ Project.init(
 		// goal
 		goalId: {
 			type: DataTypes.INTEGER,
-			allowNull: true
-		}
+			allowNull: true,
+		},
 	},
 	{
 		paranoid: true,
