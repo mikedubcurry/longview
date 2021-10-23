@@ -36,7 +36,7 @@ class User extends Model<IUser, UserInput> implements IUser {
 	public addProject!: HasManyAddAssociationMixin<Project, number>;
 	public createProject!: HasManyCreateAssociationMixin<Project>;
 
-	public getGoals!: HasManyGetAssociationsMixin<Goal>; // Note the null assertions!
+	public getGoals!: HasManyGetAssociationsMixin<Goal>;
 	public addGoal!: HasManyAddAssociationMixin<Goal, number>;
 	public createGoal!: HasManyCreateAssociationMixin<Goal>;
 
