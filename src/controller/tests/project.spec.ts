@@ -13,10 +13,9 @@ import {
 import { createUser } from '../user';
 import { createGoal } from '../goal';
 import { sqlConnection } from '../../db';
-// import {dbInit} from '../../db/init'
 import { AuthError, BadInputError, NonExistentError } from '../utlis';
 import { Project } from '../../model';
-// dbInit()
+
 const db = sqlConnection;
 
 let user: { id: number };
