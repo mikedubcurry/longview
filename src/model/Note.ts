@@ -40,6 +40,8 @@ Note.init(
 	{
 		timestamps: true,
 		sequelize: sqlConnection,
+		tableName: 'notes',
+		freezeTableName: true,
 		paranoid: true,
 	}
 );
