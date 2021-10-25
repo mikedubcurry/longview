@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 config();
 
 import { sqlConnection } from '../../db';
-import { createGoal, updateGoal, deleteGoal, getGoal, getGoals } from '../../controller/goal';
+import { createGoal } from '../../controller/goal';
 import { app } from '../../app';
 import { User } from '../../model';
 import { createUser, deleteUser } from '../../controller/user';
@@ -156,9 +156,9 @@ describe('goal service', () => {
 	it('should return 401 unauthorized if the to be deleted goal does not belong to user', async () => {
 		const goal = 'testgoal';
 		const newGoal = await createGoal(goal, user2.id);
-		
+
 		const response = await request.delete(`/goals/${newGoal.id}`).set('authorization', authHeader);
-		
+
 		expect(response.status).toBe(401);
 	});
 
@@ -172,11 +172,10 @@ describe('goal service', () => {
 		const goal = 'testGoal';
 		const newGoal = await createGoal(goal, user.id);
 
-		const response = await request.delete(`/goals/${newGoal.id}`).set('authorization', authHeader)
+		const response = await request.delete(`/goals/${newGoal.id}`).set('authorization', authHeader);
 
-
-		expect(response.status).toBe(200)
-		expect(response.body.message).toBe(1)
+		expect(response.status).toBe(200);
+		expect(response.body.message).toBe(1);
 	});
 
 	afterAll(async () => {
