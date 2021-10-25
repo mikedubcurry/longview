@@ -50,6 +50,11 @@ export const protectedRoutes: Route[] = [
 		handler: () => new Promise(() => {}), // projects.getProject
 	},
 	{
+		path: '/projects/:projectId',
+		method: 'patch',
+		handler: () => new Promise(() => {}), // projects.updateProject
+	},
+	{
 		path: '/projects/:projectId/goal',
 		method: 'patch',
 		handler: () => new Promise(() => {}), // projects.addGoal
