@@ -2,6 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 
 import { deleteUser, logIn, signUp } from './services/auth';
 import { createNewGoal, deleteGoalById, getAllGoals, getGoalById, updateGoalById } from './services/goal';
+import {
+	addGoalToProject,
+	createUserProject,
+	deleteUserProject,
+	getSingleProject,
+	getUserProjects,
+	removeGoalFromProject,
+	updateUserProject,
+} from './services/project';
 
 type Route = {
 	path: `/${string}`;
@@ -32,32 +41,32 @@ export const protectedRoutes: Route[] = [
 	{
 		path: '/projects',
 		method: 'get',
-		handler: () => new Promise(() => {}), // projects.getProjects
+		handler: getUserProjects, // projects.getProjects
 	},
 	{
 		path: '/projects',
 		method: 'post',
-		handler: () => new Promise(() => {}), // projects.createProject
+		handler: createUserProject, // projects.createProject
 	},
 	{
 		path: '/projects/:projectId',
 		method: 'delete',
-		handler: () => new Promise(() => {}), // projects.deleteProject
+		handler: deleteUserProject, // projects.deleteProject
 	},
 	{
 		path: '/projects/:projectId',
 		method: 'get',
-		handler: () => new Promise(() => {}), // projects.getProject
+		handler: getSingleProject, // projects.getProject
 	},
 	{
 		path: '/projects/:projectId',
 		method: 'patch',
-		handler: () => new Promise(() => {}), // projects.updateProject
+		handler: updateUserProject, // projects.updateProject
 	},
 	{
 		path: '/projects/:projectId/goal',
 		method: 'patch',
-		handler: () => new Promise(() => {}), // projects.addGoal
+		handler: addGoalToProject, // projects.addGoal
 	},
 	{
 		path: '/projects/:projectId/note',
@@ -67,7 +76,7 @@ export const protectedRoutes: Route[] = [
 	{
 		path: '/projects/:projectId/goal',
 		method: 'delete',
-		handler: () => new Promise(() => {}), // projects.removeGoal
+		handler: removeGoalFromProject, // projects.removeGoal
 	},
 	// goals
 	{
