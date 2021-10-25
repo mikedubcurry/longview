@@ -140,17 +140,84 @@ describe('projects service', () => {
 	});
 
 	// updateUserProject
-	it('should return 401 unauthorized if no authHeader is passed to updateUserProject', async () => {});
+	it('should return 401 unauthorized if no authHeader is passed to updateUserProject', async () => {
+		const response = await request.patch('/projects/1');
 
-	it('should return 400 bad input if no new idea OR description is passed to updateUserProject', async () => {});
+		expect(response.status).toBe(401);
+	});
 
-	it('should return 400 bad input if no projectId is passed to updateUserProject', async () => {});
+	it('should return 400 bad input if no new idea OR description is passed to updateUserProject', async () => {
+		const response = await request.patch('/projects/1').set('authorization', authHeader);
 
-	it('should return 401 unauthorized if project does not belong to user', async () => {});
+		expect(response.status).toBe(400);
+	});
 
-	it('should return 404 not found if project does not exist when calling updateUserProject', async () => {});
+	it('should return 400 bad input if no projectId is passed to updateUserProject', async () => {
+		const response = await request
+			.patch('/projects/0')
+			.set('authorization', authHeader)
+			.send({ idea: 'newProjectIdea' });
 
-	it('should update a project with new idea, description, or both', async () => {});
+		expect(response.status).toBe(400);
+	});
+
+	it('should return 401 unauthorized if project does not belong to user', async () => {
+		const project = await createProject('testProject', 'testDescription', user2.id);
+
+		const response = await request
+			.patch(`/projects/${project.id}`)
+			.set('authorization', authHeader)
+			.send({ idea: 'newProjectIdea' });
+
+		expect(response.status).toBe(401);
+	});
+
+	it('should return 404 not found if project does not exist when calling updateUserProject', async () => {
+		const response = await request
+			.patch(`/projects/404`)
+			.set('authorization', authHeader)
+			.send({ idea: 'newProjectIdea' });
+
+		expect(response.status).toBe(404);
+	});
+
+	it('should update a project with new idea, description, or both', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		const response1 = await request
+			.patch(`/projects/${project.id}`)
+			.set('authorization', authHeader)
+			.send({ idea: 'newIdea' });
+
+		expect(response1.status).toBe(200);
+		const [[result1]] = await db.query(`select * from projects where id = '${project.id}'`);
+		expect(result1).toHaveProperty('project');
+		const { project: updatedProject1 } = result1 as { project: BaseProject };
+		expect(updatedProject1.idea).toEqual('newIdea');
+
+		const response2 = await request
+			.patch(`/projects/${project.id}`)
+			.set('authorization', authHeader)
+			.send({ description: 'newDescription' });
+
+		expect(response2.status).toBe(200);
+		const [[result2]] = await db.query(`select * from projects where id = '${project.id}'`);
+		expect(result2).toHaveProperty('project');
+		const { project: updatedProject2 } = result2 as { project: BaseProject };
+		expect(updatedProject2.description).toEqual('newDescription');
+
+		const response3 = await request
+			.patch(`/projects/${project.id}`)
+			.set('authorization', authHeader)
+			.send({ idea: 'newerIdea', description: 'newerDescription' });
+
+		expect(response3.status).toBe(200);
+		const [[result3]] = await db.query(`select * from projects where id = '${project.id}'`);
+		expect(result3).toHaveProperty('project');
+		const { project: updatedProject3 } = result3 as { project: BaseProject };
+		expect(updatedProject3.idea).toEqual('newerIdea');
+		expect(updatedProject3.description).toEqual('newerDescription');
+	});
 
 	// deleteUserProject;
 	it('should return 401 unauthorized if no authHeader is passed to deleteUserProject', async () => {});
