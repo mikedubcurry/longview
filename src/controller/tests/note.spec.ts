@@ -15,7 +15,15 @@ describe('note controller', () => {
 		project = await createProject('noteController', 'noteController', user.id);
 	});
 
+	afterEach(async () => {
+		await db.query('delete from projects');
+	});
+
 	it('should just pass...', () => {
 		expect(true).toBe(true);
+	});
+
+	afterAll(async () => {
+		await db.query(`delete from users where id = '${user.id}'`);
 	});
 });
