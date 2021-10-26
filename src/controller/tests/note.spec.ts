@@ -14,4 +14,8 @@ describe('note controller', () => {
 		user = await createUser('notecontroller', 'notecontroller');
 		project = await createProject('noteController', 'noteController', user.id);
 	});
+
+	it('should just pass...', () => {
+		expect(true).toBe(true);
+	});
 });
