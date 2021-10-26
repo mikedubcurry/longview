@@ -39,7 +39,7 @@ describe('projects service', () => {
 
 	// getUserProjects
 	it('should return 401 unauthorized if no authHeader is passed to getUserProjects', async () => {
-		const response = await request.get('/projects').set('authorization', authHeader);
+		const response = await request.get('/projects');
 
 		expect(response.status).toBe(401);
 	});
@@ -58,306 +58,306 @@ describe('projects service', () => {
 		);
 		const response = await request.get('/projects').set('authorization', authHeader);
 
-		expect(response.body).toHaveLength(3);
+		expect(response.body.projects).toHaveLength(3);
 	});
 
-	// getSingleProject;
-	it('should return 401 unauthorized if no authHeader is passed to getSingleProject', async () => {
-		const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
-		const savedProject = await createProject(project.idea, project.description, user.id);
+	// // getSingleProject;
+	// it('should return 401 unauthorized if no authHeader is passed to getSingleProject', async () => {
+	// 	const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
+	// 	const savedProject = await createProject(project.idea, project.description, user.id);
 
-		const response = await request.get(`/projects/${savedProject.id}`);
+	// 	const response = await request.get(`/projects/${savedProject.id}`);
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 400 bad input if no project id is passed to getSingleProject', async () => {
-		const response = await request.get(`/projects/${0}`).set('authorization', authHeader);
+	// it('should return 400 bad input if no project id is passed to getSingleProject', async () => {
+	// 	const response = await request.get(`/projects/${0}`).set('authorization', authHeader);
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 401 unauthorized if projeect does not belong to user', async () => {
-		const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
-		const savedProject = await createProject(project.idea, project.description, user2.id);
+	// it('should return 401 unauthorized if projeect does not belong to user', async () => {
+	// 	const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
+	// 	const savedProject = await createProject(project.idea, project.description, user2.id);
 
-		const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
+	// 	const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 404 not found if project does not exist when calling getSingleProject', async () => {
-		const response = await request.get(`/projects/404`).set('authorization', authHeader);
+	// it('should return 404 not found if project does not exist when calling getSingleProject', async () => {
+	// 	const response = await request.get(`/projects/404`).set('authorization', authHeader);
 
-		expect(response.status).toBe(404);
-	});
+	// 	expect(response.status).toBe(404);
+	// });
 
-	it('should return a single requested project', async () => {
-		const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
-		const savedProject = await createProject(project.idea, project.description, user.id);
+	// it('should return a single requested project', async () => {
+	// 	const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
+	// 	const savedProject = await createProject(project.idea, project.description, user.id);
 
-		const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
+	// 	const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
 
-		expect(response.status).toBe(200);
+	// 	expect(response.status).toBe(200);
 
-		expect(response.body).toHaveProperty('project');
-	});
+	// 	expect(response.body).toHaveProperty('project');
+	// });
 
-	// createUserProject;
-	it('should return 401 unauthorized if no authHeader is passed to createUserProject', async () => {
-		const response = await request.post('/projects');
+	// // createUserProject;
+	// it('should return 401 unauthorized if no authHeader is passed to createUserProject', async () => {
+	// 	const response = await request.post('/projects');
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 400 bad input if no idea or description is passed to createUserProject', async () => {
-		const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
+	// it('should return 400 bad input if no idea or description is passed to createUserProject', async () => {
+	// 	const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
 
-		const response1 = await request
-			.post('/projects')
-			.set('authorization', authHeader)
-			.send({ idea: projectInput.idea, description: '' });
+	// 	const response1 = await request
+	// 		.post('/projects')
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: projectInput.idea, description: '' });
 
-		expect(response1.status).toBe(400);
+	// 	expect(response1.status).toBe(400);
 
-		const response2 = await request
-			.post('/projects')
-			.set('authorization', authHeader)
-			.send({ idea: '', description: projectInput.description });
+	// 	const response2 = await request
+	// 		.post('/projects')
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: '', description: projectInput.description });
 
-		expect(response2.status).toBe(400);
-	});
+	// 	expect(response2.status).toBe(400);
+	// });
 
-	it('it should create a new project', async () => {
-		const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
+	// it('it should create a new project', async () => {
+	// 	const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
 
-		const response = await request
-			.post('/projects')
-			.set('authorization', authHeader)
-			.send({ idea: projectInput.idea, description: projectInput.description });
+	// 	const response = await request
+	// 		.post('/projects')
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: projectInput.idea, description: projectInput.description });
 
-		const [[result]] = await db.query(`select * from projects where idea = '${projectInput.idea}'`);
+	// 	const [[result]] = await db.query(`select * from projects where idea = '${projectInput.idea}'`);
 
-		expect(result).toBeTruthy();
-	});
+	// 	expect(result).toBeTruthy();
+	// });
 
-	// updateUserProject
-	it('should return 401 unauthorized if no authHeader is passed to updateUserProject', async () => {
-		const response = await request.patch('/projects/1');
+	// // updateUserProject
+	// it('should return 401 unauthorized if no authHeader is passed to updateUserProject', async () => {
+	// 	const response = await request.patch('/projects/1');
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 400 bad input if no new idea OR description is passed to updateUserProject', async () => {
-		const response = await request.patch('/projects/1').set('authorization', authHeader);
+	// it('should return 400 bad input if no new idea OR description is passed to updateUserProject', async () => {
+	// 	const response = await request.patch('/projects/1').set('authorization', authHeader);
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 400 bad input if no projectId is passed to updateUserProject', async () => {
-		const response = await request
-			.patch('/projects/0')
-			.set('authorization', authHeader)
-			.send({ idea: 'newProjectIdea' });
+	// it('should return 400 bad input if no projectId is passed to updateUserProject', async () => {
+	// 	const response = await request
+	// 		.patch('/projects/0')
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: 'newProjectIdea' });
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 401 unauthorized if project does not belong to user', async () => {
-		const project = await createProject('testProject', 'testDescription', user2.id);
+	// it('should return 401 unauthorized if project does not belong to user', async () => {
+	// 	const project = await createProject('testProject', 'testDescription', user2.id);
 
-		const response = await request
-			.patch(`/projects/${project.id}`)
-			.set('authorization', authHeader)
-			.send({ idea: 'newProjectIdea' });
+	// 	const response = await request
+	// 		.patch(`/projects/${project.id}`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: 'newProjectIdea' });
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 404 not found if project does not exist when calling updateUserProject', async () => {
-		const response = await request
-			.patch(`/projects/404`)
-			.set('authorization', authHeader)
-			.send({ idea: 'newProjectIdea' });
+	// it('should return 404 not found if project does not exist when calling updateUserProject', async () => {
+	// 	const response = await request
+	// 		.patch(`/projects/404`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: 'newProjectIdea' });
 
-		expect(response.status).toBe(404);
-	});
+	// 	expect(response.status).toBe(404);
+	// });
 
-	it('should update a project with new idea, description, or both', async () => {
-		const project = await createProject('testProject', 'testDescription', user.id);
+	// it('should update a project with new idea, description, or both', async () => {
+	// 	const project = await createProject('testProject', 'testDescription', user.id);
 
-		const response1 = await request
-			.patch(`/projects/${project.id}`)
-			.set('authorization', authHeader)
-			.send({ idea: 'newIdea' });
+	// 	const response1 = await request
+	// 		.patch(`/projects/${project.id}`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: 'newIdea' });
 
-		expect(response1.status).toBe(200);
-		const [[result1]] = await db.query(`select * from projects where id = '${project.id}'`);
-		expect(result1).toHaveProperty('project');
-		const { project: updatedProject1 } = result1 as { project: BaseProject };
-		expect(updatedProject1.idea).toEqual('newIdea');
+	// 	expect(response1.status).toBe(200);
+	// 	const [[result1]] = await db.query(`select * from projects where id = '${project.id}'`);
+	// 	expect(result1).toHaveProperty('project');
+	// 	const { project: updatedProject1 } = result1 as { project: BaseProject };
+	// 	expect(updatedProject1.idea).toEqual('newIdea');
 
-		const response2 = await request
-			.patch(`/projects/${project.id}`)
-			.set('authorization', authHeader)
-			.send({ description: 'newDescription' });
+	// 	const response2 = await request
+	// 		.patch(`/projects/${project.id}`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ description: 'newDescription' });
 
-		expect(response2.status).toBe(200);
-		const [[result2]] = await db.query(`select * from projects where id = '${project.id}'`);
-		expect(result2).toHaveProperty('project');
-		const { project: updatedProject2 } = result2 as { project: BaseProject };
-		expect(updatedProject2.description).toEqual('newDescription');
+	// 	expect(response2.status).toBe(200);
+	// 	const [[result2]] = await db.query(`select * from projects where id = '${project.id}'`);
+	// 	expect(result2).toHaveProperty('project');
+	// 	const { project: updatedProject2 } = result2 as { project: BaseProject };
+	// 	expect(updatedProject2.description).toEqual('newDescription');
 
-		const response3 = await request
-			.patch(`/projects/${project.id}`)
-			.set('authorization', authHeader)
-			.send({ idea: 'newerIdea', description: 'newerDescription' });
+	// 	const response3 = await request
+	// 		.patch(`/projects/${project.id}`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ idea: 'newerIdea', description: 'newerDescription' });
 
-		expect(response3.status).toBe(200);
-		const [[result3]] = await db.query(`select * from projects where id = '${project.id}'`);
-		expect(result3).toHaveProperty('project');
-		const { project: updatedProject3 } = result3 as { project: BaseProject };
-		expect(updatedProject3.idea).toEqual('newerIdea');
-		expect(updatedProject3.description).toEqual('newerDescription');
-	});
+	// 	expect(response3.status).toBe(200);
+	// 	const [[result3]] = await db.query(`select * from projects where id = '${project.id}'`);
+	// 	expect(result3).toHaveProperty('project');
+	// 	const { project: updatedProject3 } = result3 as { project: BaseProject };
+	// 	expect(updatedProject3.idea).toEqual('newerIdea');
+	// 	expect(updatedProject3.description).toEqual('newerDescription');
+	// });
 
-	// deleteUserProject;
-	it('should return 401 unauthorized if no authHeader is passed to deleteUserProject', async () => {
-		const response = await request.delete('/projects/401');
+	// // deleteUserProject;
+	// it('should return 401 unauthorized if no authHeader is passed to deleteUserProject', async () => {
+	// 	const response = await request.delete('/projects/401');
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 400 bad input if no projectId is passed to deleteUserProject', async () => {
-		const response = await request.delete('/projects/0').set('authorization', authHeader);
+	// it('should return 400 bad input if no projectId is passed to deleteUserProject', async () => {
+	// 	const response = await request.delete('/projects/0').set('authorization', authHeader);
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 401 unauthorized if project does not belong to user', async () => {
-		const project = await createProject('testProject', 'testDescription', user2.id);
+	// it('should return 401 unauthorized if project does not belong to user', async () => {
+	// 	const project = await createProject('testProject', 'testDescription', user2.id);
 
-		const response = await request.delete(`/projects/${project.id}`).set('authorization', authHeader);
+	// 	const response = await request.delete(`/projects/${project.id}`).set('authorization', authHeader);
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 404 not found if project does not exist when calling deleteUserProject', async () => {
-		const response = await request.delete('/projects/404').set('authorization', authHeader);
+	// it('should return 404 not found if project does not exist when calling deleteUserProject', async () => {
+	// 	const response = await request.delete('/projects/404').set('authorization', authHeader);
 
-		expect(response.status).toBe(404);
-	});
+	// 	expect(response.status).toBe(404);
+	// });
 
-	it('should delete a project', async () => {
-		const project = await createProject('testProject', 'testDescription', user.id);
+	// it('should delete a project', async () => {
+	// 	const project = await createProject('testProject', 'testDescription', user.id);
 
-		const response = await request.delete(`/project/${project.id}`).set('authorization', authHeader);
+	// 	const response = await request.delete(`/project/${project.id}`).set('authorization', authHeader);
 
-		expect(response.status).toBe(200);
+	// 	expect(response.status).toBe(200);
 
-		const [result] = await db.query(`select * from projects where id = '${project.id}'`);
+	// 	const [result] = await db.query(`select * from projects where id = '${project.id}'`);
 
-		expect(result).toHaveLength(0);
-	});
+	// 	expect(result).toHaveLength(0);
+	// });
 
-	// addGoalToProject;
-	it('should return 401 unauthorized if no authHeader is passed to addGoalToProject', async () => {
-		const response = await request.patch('/projects/123/goal');
+	// // addGoalToProject;
+	// it('should return 401 unauthorized if no authHeader is passed to addGoalToProject', async () => {
+	// 	const response = await request.patch('/projects/123/goal');
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 400 bad input if no projectId is passed to addGoalToProject', async () => {
-		const response = await request.patch('/projects/0/goal').set('authorization', authHeader);
+	// it('should return 400 bad input if no projectId is passed to addGoalToProject', async () => {
+	// 	const response = await request.patch('/projects/0/goal').set('authorization', authHeader);
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 400 bad input if no goalId is passed to addGoalToProject', async () => {
-		const project = await createProject('testProject', 'testDescription', user.id);
+	// it('should return 400 bad input if no goalId is passed to addGoalToProject', async () => {
+	// 	const project = await createProject('testProject', 'testDescription', user.id);
 
-		const response = await request.patch(`/projects/${project.id}/goal`).set('authorization', authHeader);
+	// 	const response = await request.patch(`/projects/${project.id}/goal`).set('authorization', authHeader);
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 404 not found if goal does not exist when calling addGoalToProject', async () => {
-		const project = await createProject('testProject', 'testDescription', user.id);
+	// it('should return 404 not found if goal does not exist when calling addGoalToProject', async () => {
+	// 	const project = await createProject('testProject', 'testDescription', user.id);
 
-		const response = await request
-			.patch(`/projects/${project.id}/goal`)
-			.set('authorization', authHeader)
-			.send({ goalId: '404' });
+	// 	const response = await request
+	// 		.patch(`/projects/${project.id}/goal`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ goalId: '404' });
 
-		expect(response.status).toBe(404);
-	});
+	// 	expect(response.status).toBe(404);
+	// });
 
-	it('should return 404 not found if project does not exist when calling addGoalToProject', async () => {
-		const response = await request.patch('/projects/404').set('authorization', authHeader).send({ goalId: '999' });
+	// it('should return 404 not found if project does not exist when calling addGoalToProject', async () => {
+	// 	const response = await request.patch('/projects/404').set('authorization', authHeader).send({ goalId: '999' });
 
-		expect(response.status).toBe(404);
-	});
+	// 	expect(response.status).toBe(404);
+	// });
 
-	it('should add a goal to a project', async () => {
-		const goal = await createGoal('testGoal', user.id);
-		const project = await createProject('testProject', 'testDescription', user.id);
+	// it('should add a goal to a project', async () => {
+	// 	const goal = await createGoal('testGoal', user.id);
+	// 	const project = await createProject('testProject', 'testDescription', user.id);
 
-		const response = await request
-			.patch(`/projects/${project.id}/goal`)
-			.set('authorization', authHeader)
-			.send({ goalId: goal.id });
+	// 	const response = await request
+	// 		.patch(`/projects/${project.id}/goal`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ goalId: goal.id });
 
-		expect(response.status).toBe(200);
+	// 	expect(response.status).toBe(200);
 
-		const [[result]] = await db.query(`select * from projects where id = '${project.id}'`);
+	// 	const [[result]] = await db.query(`select * from projects where id = '${project.id}'`);
 
-		const updatedProject = result as { goalId: number };
-		expect(updatedProject.goalId).toEqual(goal.id);
-	});
-	// removeGoalFromProject;
-	it('should return 401 unauthorized if no authHeader is passed to removeGoalToProject', async () => {
-		const response = await request.delete('/projects/123/goal');
+	// 	const updatedProject = result as { goalId: number };
+	// 	expect(updatedProject.goalId).toEqual(goal.id);
+	// });
+	// // removeGoalFromProject;
+	// it('should return 401 unauthorized if no authHeader is passed to removeGoalToProject', async () => {
+	// 	const response = await request.delete('/projects/123/goal');
 
-		expect(response.status).toBe(401);
-	});
+	// 	expect(response.status).toBe(401);
+	// });
 
-	it('should return 400 bad input if no goalId is passed to removeGoalToProject', async () => {
-		const project = await createProject('testProject', 'testDescription', user.id);
+	// it('should return 400 bad input if no goalId is passed to removeGoalToProject', async () => {
+	// 	const project = await createProject('testProject', 'testDescription', user.id);
 
-		const response = await request.delete(`/projects/${project.id}/goal`).set('authorization', authHeader);
+	// 	const response = await request.delete(`/projects/${project.id}/goal`).set('authorization', authHeader);
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 400 bad input if no projectId is passed to removeGoalToProject', async () => {
-		const response = await request.delete(`/projects/0/goal`).set('authorization', authHeader).send({ goalId: 0 });
+	// it('should return 400 bad input if no projectId is passed to removeGoalToProject', async () => {
+	// 	const response = await request.delete(`/projects/0/goal`).set('authorization', authHeader).send({ goalId: 0 });
 
-		expect(response.status).toBe(400);
-	});
+	// 	expect(response.status).toBe(400);
+	// });
 
-	it('should return 404 not found if project does not exist when calling removeGoalToProject', async () => {
-		const response = await request.delete('/projects/404/goal').set('authorization', authHeader).send({ goalId: 404 });
+	// it('should return 404 not found if project does not exist when calling removeGoalToProject', async () => {
+	// 	const response = await request.delete('/projects/404/goal').set('authorization', authHeader).send({ goalId: 404 });
 
-		expect(response.status).toBe(404);
-	});
+	// 	expect(response.status).toBe(404);
+	// });
 
-	it('should remove a goal from a project', async () => {
-		const goal = await createGoal('testGoal', user.id);
-		const project = await createProject('testProject', 'testDescription', user.id, goal.id);
+	// it('should remove a goal from a project', async () => {
+	// 	const goal = await createGoal('testGoal', user.id);
+	// 	const project = await createProject('testProject', 'testDescription', user.id, goal.id);
 
-		const response = await request
-			.delete(`1/projects/${project.id}/goal`)
-			.set('authorization', authHeader)
-			.send({ goalId: goal.id });
+	// 	const response = await request
+	// 		.delete(`1/projects/${project.id}/goal`)
+	// 		.set('authorization', authHeader)
+	// 		.send({ goalId: goal.id });
 
-		expect(response.status).toBe(200);
+	// 	expect(response.status).toBe(200);
 
-		const [[result]] = await db.query(`select * from projects where id = '${project.id}'`);
+	// 	const [[result]] = await db.query(`select * from projects where id = '${project.id}'`);
 
-		const withoutGoal = result as BaseProject & { goalId: number };
+	// 	const withoutGoal = result as BaseProject & { goalId: number };
 
-		expect(withoutGoal.goalId).toBeFalsy();
-	});
+	// 	expect(withoutGoal.goalId).toBeFalsy();
+	// });
 
 	afterAll(async () => {
 		await deleteUser(testUser.username, testUser.password);
