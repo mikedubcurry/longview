@@ -62,84 +62,84 @@ describe('projects service', () => {
 	});
 
 	// // getSingleProject;
-	// it('should return 401 unauthorized if no authHeader is passed to getSingleProject', async () => {
-	// 	const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
-	// 	const savedProject = await createProject(project.idea, project.description, user.id);
+	it('should return 401 unauthorized if no authHeader is passed to getSingleProject', async () => {
+		const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
+		const savedProject = await createProject(project.idea, project.description, user.id);
 
-	// 	const response = await request.get(`/projects/${savedProject.id}`);
+		const response = await request.get(`/projects/${savedProject.id}`);
 
-	// 	expect(response.status).toBe(401);
-	// });
+		expect(response.status).toBe(401);
+	});
 
-	// it('should return 400 bad input if no project id is passed to getSingleProject', async () => {
-	// 	const response = await request.get(`/projects/${0}`).set('authorization', authHeader);
+	it('should return 400 bad input if no project id is passed to getSingleProject', async () => {
+		const response = await request.get(`/projects/${0}`).set('authorization', authHeader);
 
-	// 	expect(response.status).toBe(400);
-	// });
+		expect(response.status).toBe(400);
+	});
 
-	// it('should return 401 unauthorized if projeect does not belong to user', async () => {
-	// 	const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
-	// 	const savedProject = await createProject(project.idea, project.description, user2.id);
+	it('should return 401 unauthorized if projeect does not belong to user', async () => {
+		const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
+		const savedProject = await createProject(project.idea, project.description, user2.id);
 
-	// 	const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
+		const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
 
-	// 	expect(response.status).toBe(401);
-	// });
+		expect(response.status).toBe(401);
+	});
 
-	// it('should return 404 not found if project does not exist when calling getSingleProject', async () => {
-	// 	const response = await request.get(`/projects/404`).set('authorization', authHeader);
+	it('should return 404 not found if project does not exist when calling getSingleProject', async () => {
+		const response = await request.get(`/projects/404`).set('authorization', authHeader);
 
-	// 	expect(response.status).toBe(404);
-	// });
+		expect(response.status).toBe(404);
+	});
 
-	// it('should return a single requested project', async () => {
-	// 	const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
-	// 	const savedProject = await createProject(project.idea, project.description, user.id);
+	it('should return a single requested project', async () => {
+		const project: BaseProject = { idea: 'testProject', description: 'testDescriptiopn' };
+		const savedProject = await createProject(project.idea, project.description, user.id);
 
-	// 	const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
+		const response = await request.get(`/projects/${savedProject.id}`).set('authorization', authHeader);
 
-	// 	expect(response.status).toBe(200);
+		expect(response.status).toBe(200);
 
-	// 	expect(response.body).toHaveProperty('project');
-	// });
+		expect(response.body).toHaveProperty('project');
+	});
 
 	// // createUserProject;
-	// it('should return 401 unauthorized if no authHeader is passed to createUserProject', async () => {
-	// 	const response = await request.post('/projects');
+	it('should return 401 unauthorized if no authHeader is passed to createUserProject', async () => {
+		const response = await request.post('/projects');
 
-	// 	expect(response.status).toBe(401);
-	// });
+		expect(response.status).toBe(401);
+	});
 
-	// it('should return 400 bad input if no idea or description is passed to createUserProject', async () => {
-	// 	const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
+	it('should return 400 bad input if no idea or description is passed to createUserProject', async () => {
+		const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
 
-	// 	const response1 = await request
-	// 		.post('/projects')
-	// 		.set('authorization', authHeader)
-	// 		.send({ idea: projectInput.idea, description: '' });
+		const response1 = await request
+			.post('/projects')
+			.set('authorization', authHeader)
+			.send({ idea: projectInput.idea, description: '' });
 
-	// 	expect(response1.status).toBe(400);
+		expect(response1.status).toBe(400);
 
-	// 	const response2 = await request
-	// 		.post('/projects')
-	// 		.set('authorization', authHeader)
-	// 		.send({ idea: '', description: projectInput.description });
+		const response2 = await request
+			.post('/projects')
+			.set('authorization', authHeader)
+			.send({ idea: '', description: projectInput.description });
 
-	// 	expect(response2.status).toBe(400);
-	// });
+		expect(response2.status).toBe(400);
+	});
 
-	// it('it should create a new project', async () => {
-	// 	const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
+	it('it should create a new project', async () => {
+		const projectInput: BaseProject = { idea: 'testProject', description: 'testDescription' };
 
-	// 	const response = await request
-	// 		.post('/projects')
-	// 		.set('authorization', authHeader)
-	// 		.send({ idea: projectInput.idea, description: projectInput.description });
+		const response = await request
+			.post('/projects')
+			.set('authorization', authHeader)
+			.send({ idea: projectInput.idea, description: projectInput.description });
 
-	// 	const [[result]] = await db.query(`select * from projects where idea = '${projectInput.idea}'`);
+		const [result] = await db.query(`select * from projects where idea = '${projectInput.idea}'`);
 
-	// 	expect(result).toBeTruthy();
-	// });
+		expect(result).toBeTruthy();
+	});
 
 	// // updateUserProject
 	// it('should return 401 unauthorized if no authHeader is passed to updateUserProject', async () => {
