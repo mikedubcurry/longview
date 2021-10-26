@@ -8,6 +8,7 @@ import { app } from '../../app';
 import { User } from '../../model';
 import { createUser, deleteUser } from '../../controller/user';
 import { createProject } from '../../controller/project';
+import { createGoal } from '../../controller/goal';
 
 interface BaseProject {
 	idea: string;
@@ -33,6 +34,7 @@ describe('projects service', () => {
 
 	afterEach(async () => {
 		await db.query('delete from projects');
+		await db.query('delete from goals');
 	});
 
 	// getUserProjects
@@ -134,7 +136,7 @@ describe('projects service', () => {
 			.set('authorization', authHeader)
 			.send({ idea: projectInput.idea, description: projectInput.description });
 
-		const [result] = await db.query(`select * from projects where idea = '${projectInput.idea}'`);
+		const [[result]] = await db.query(`select * from projects where idea = '${projectInput.idea}'`);
 
 		expect(result).toBeTruthy();
 	});
@@ -220,38 +222,142 @@ describe('projects service', () => {
 	});
 
 	// deleteUserProject;
-	it('should return 401 unauthorized if no authHeader is passed to deleteUserProject', async () => {});
+	it('should return 401 unauthorized if no authHeader is passed to deleteUserProject', async () => {
+		const response = await request.delete('/projects/401');
 
-	it('should return 401 unauthorized if project does not belong to user', async () => {});
+		expect(response.status).toBe(401);
+	});
 
-	it('should return 400 bad input if no projectId is passed to deleteUserProject', async () => {});
+	it('should return 400 bad input if no projectId is passed to deleteUserProject', async () => {
+		const response = await request.delete('/projects/0').set('authorization', authHeader);
 
-	it('should return 404 not found if project does not exist when calling deleteUserProject', async () => {});
+		expect(response.status).toBe(400);
+	});
 
-	it('should delete a project', async () => {});
+	it('should return 401 unauthorized if project does not belong to user', async () => {
+		const project = await createProject('testProject', 'testDescription', user2.id);
+
+		const response = await request.delete(`/projects/${project.id}`).set('authorization', authHeader);
+
+		expect(response.status).toBe(401);
+	});
+
+	it('should return 404 not found if project does not exist when calling deleteUserProject', async () => {
+		const response = await request.delete('/projects/404').set('authorization', authHeader);
+
+		expect(response.status).toBe(404);
+	});
+
+	it('should delete a project', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		const response = await request.delete(`/project/${project.id}`).set('authorization', authHeader);
+
+		expect(response.status).toBe(200);
+
+		const [result] = await db.query(`select * from projects where id = '${project.id}'`);
+
+		expect(result).toHaveLength(0);
+	});
 
 	// addGoalToProject;
-	it('should return 401 unauthorized if no authHeader is passed to addGoalToProject', async () => {});
+	it('should return 401 unauthorized if no authHeader is passed to addGoalToProject', async () => {
+		const response = await request.patch('/projects/123/goal');
 
-	it('should return 400 bad input if no goalId is passed to addGoalToPRoject', async () => {});
+		expect(response.status).toBe(401);
+	});
 
-	it('should return 400 bad input if no projectId is passed to addGoalToProject', async () => {});
+	it('should return 400 bad input if no projectId is passed to addGoalToProject', async () => {
+		const response = await request.patch('/projects/0/goal').set('authorization', authHeader);
 
-	it('should return 404 not found if goal does not exist when calling addGoalToProject', async () => {});
+		expect(response.status).toBe(400);
+	});
 
-	it('should return 404 not found if project does not exist when calling addGoalToProject', async () => {});
+	it('should return 400 bad input if no goalId is passed to addGoalToProject', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
 
-	it('should add a goal to a project', async () => {});
+		const response = await request.patch(`/projects/${project.id}/goal`).set('authorization', authHeader);
+
+		expect(response.status).toBe(400);
+	});
+
+	it('should return 404 not found if goal does not exist when calling addGoalToProject', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		const response = await request
+			.patch(`/projects/${project.id}/goal`)
+			.set('authorization', authHeader)
+			.send({ goalId: '404' });
+
+		expect(response.status).toBe(404);
+	});
+
+	it('should return 404 not found if project does not exist when calling addGoalToProject', async () => {
+		const response = await request.patch('/projects/404').set('authorization', authHeader).send({ goalId: '999' });
+
+		expect(response.status).toBe(404);
+	});
+
+	it('should add a goal to a project', async () => {
+		const goal = await createGoal('testGoal', user.id);
+		const project = await createProject('testProject', 'testDescription', user.id);
+
+		const response = await request
+			.patch(`/projects/${project.id}/goal`)
+			.set('authorization', authHeader)
+			.send({ goalId: goal.id });
+
+		expect(response.status).toBe(200);
+
+		const [[result]] = await db.query(`select * from projects where id = '${project.id}'`);
+
+		const updatedProject = result as { goalId: number };
+		expect(updatedProject.goalId).toEqual(goal.id);
+	});
 	// removeGoalFromProject;
-	it('should return 401 unauthorized if no authHeader is passed to removeGoalToProject', async () => {});
+	it('should return 401 unauthorized if no authHeader is passed to removeGoalToProject', async () => {
+		const response = await request.delete('/projects/123/goal');
 
-	it('should return 400 bad input if no goalId is passed to removeGoalToPRoject', async () => {});
+		expect(response.status).toBe(401);
+	});
 
-	it('should return 400 bad input if no projectId is passed to removeGoalToProject', async () => {});
+	it('should return 400 bad input if no goalId is passed to removeGoalToProject', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
 
-	it('should return 404 not found if project does not exist when calling removeGoalToProject', async () => {});
+		const response = await request.delete(`/projects/${project.id}/goal`).set('authorization', authHeader);
 
-	it('should remove a goal from a project', async () => {});
+		expect(response.status).toBe(400);
+	});
+
+	it('should return 400 bad input if no projectId is passed to removeGoalToProject', async () => {
+		const response = await request.delete(`/projects/0/goal`).set('authorization', authHeader).send({ goalId: 0 });
+
+		expect(response.status).toBe(400);
+	});
+
+	it('should return 404 not found if project does not exist when calling removeGoalToProject', async () => {
+		const response = await request.delete('/projects/404/goal').set('authorization', authHeader).send({ goalId: 404 });
+
+		expect(response.status).toBe(404);
+	});
+
+	it('should remove a goal from a project', async () => {
+		const goal = await createGoal('testGoal', user.id);
+		const project = await createProject('testProject', 'testDescription', user.id, goal.id);
+
+		const response = await request
+			.delete(`1/projects/${project.id}/goal`)
+			.set('authorization', authHeader)
+			.send({ goalId: goal.id });
+
+		expect(response.status).toBe(200);
+
+		const [[result]] = await db.query(`select * from projects where id = '${project.id}'`);
+
+		const withoutGoal = result as BaseProject & { goalId: number };
+
+		expect(withoutGoal.goalId).toBeFalsy();
+	});
 
 	afterAll(async () => {
 		await deleteUser(testUser.username, testUser.password);
