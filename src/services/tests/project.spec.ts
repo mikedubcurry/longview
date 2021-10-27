@@ -220,43 +220,43 @@ describe('projects service', () => {
 	});
 
 	// // deleteUserProject;
-	// it('should return 401 unauthorized if no authHeader is passed to deleteUserProject', async () => {
-	// 	const response = await request.delete('/projects/401');
+	it('should return 401 unauthorized if no authHeader is passed to deleteUserProject', async () => {
+		const response = await request.delete('/projects/401');
 
-	// 	expect(response.status).toBe(401);
-	// });
+		expect(response.status).toBe(401);
+	});
 
-	// it('should return 400 bad input if no projectId is passed to deleteUserProject', async () => {
-	// 	const response = await request.delete('/projects/0').set('authorization', authHeader);
+	it('should return 400 bad input if no projectId is passed to deleteUserProject', async () => {
+		const response = await request.delete('/projects/0').set('authorization', authHeader);
 
-	// 	expect(response.status).toBe(400);
-	// });
+		expect(response.status).toBe(400);
+	});
 
-	// it('should return 401 unauthorized if project does not belong to user', async () => {
-	// 	const project = await createProject('testProject', 'testDescription', user2.id);
+	it('should return 401 unauthorized if project does not belong to user', async () => {
+		const project = await createProject('testProject', 'testDescription', user2.id);
 
-	// 	const response = await request.delete(`/projects/${project.id}`).set('authorization', authHeader);
+		const response = await request.delete(`/projects/${project.id}`).set('authorization', authHeader);
 
-	// 	expect(response.status).toBe(401);
-	// });
+		expect(response.status).toBe(401);
+	});
 
-	// it('should return 404 not found if project does not exist when calling deleteUserProject', async () => {
-	// 	const response = await request.delete('/projects/404').set('authorization', authHeader);
+	it('should return 404 not found if project does not exist when calling deleteUserProject', async () => {
+		const response = await request.delete('/projects/404').set('authorization', authHeader);
 
-	// 	expect(response.status).toBe(404);
-	// });
+		expect(response.status).toBe(404);
+	});
 
-	// it('should delete a project', async () => {
-	// 	const project = await createProject('testProject', 'testDescription', user.id);
+	it('should delete a project', async () => {
+		const project = await createProject('testProject', 'testDescription', user.id);
 
-	// 	const response = await request.delete(`/project/${project.id}`).set('authorization', authHeader);
+		const response = await request.delete(`/projects/${project.id}`).set('authorization', authHeader);		
 
-	// 	expect(response.status).toBe(200);
+		expect(response.status).toBe(200);
 
-	// 	const [result] = await db.query(`select * from projects where id = '${project.id}'`);
+		const [result] = await db.query(`select * from projects where id = '${project.id}'`);
 
-	// 	expect(result).toHaveLength(0);
-	// });
+		expect(result).toHaveLength(0);
+	});
 
 	// // addGoalToProject;
 	// it('should return 401 unauthorized if no authHeader is passed to addGoalToProject', async () => {

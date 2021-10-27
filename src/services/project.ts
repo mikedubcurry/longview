@@ -97,7 +97,27 @@ export async function updateUserProject(req: Request, res: Response) {
 	}
 }
 
-export async function deleteUserProject(req: Request, res: Response) {}
+export async function deleteUserProject(req: Request, res: Response) {
+	const { projectId } = req.params;
+	if (!parseInt(projectId)) {
+		return res.status(400).json({ message: 'must supply projectId to delete project' });
+	}
+	const user = req.user!;
+	try {
+		const project = await getProject(parseInt(projectId), user.id);
+
+		const deleted = await deleteProject(project.id, user.id);
+
+		return res.json({ deleted });
+	} catch (e: any) {
+		if (e.message.includes('does not exist')) {
+			return res.status(404).json({ message: e.message });
+		}
+		if (e.message.includes('not belong to user')) {
+			return res.status(401).json({ message: 'unauthorized' });
+		}
+	}
+}
 
 export async function addGoalToProject(req: Request, res: Response) {}
 
