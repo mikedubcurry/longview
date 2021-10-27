@@ -67,7 +67,35 @@ export async function createUserProject(req: Request, res: Response) {
 	}
 }
 
-export async function updateUserProject(req: Request, res: Response) {}
+export async function updateUserProject(req: Request, res: Response) {
+	const { idea, description } = req.body as { idea: string; description: string };
+
+	if (!idea && !description) {
+		return res.status(400).json({ message: 'must supply idea or description to update a project' });
+	}
+
+	const { projectId } = req.params;
+	if (!parseInt(projectId)) {
+		return res.status(400).json('must supply a valid projectId in url params');
+	}
+
+	const user = req.user!;
+
+	try {
+		const project = await getProject(parseInt(projectId), user.id);
+
+		const updatedProject = await updateProject(parseInt(projectId), user.id, { idea, description });
+
+		return res.json({ project: updatedProject });
+	} catch (e: any) {
+		if (e.message.includes('does not belong to user')) {
+			return res.status(401).json({ message: 'unauthorized' });
+		}
+		if (e.message.includes('does not exist')) {
+			return res.status(404).json({ message: e.message });
+		}
+	}
+}
 
 export async function deleteUserProject(req: Request, res: Response) {}
 
