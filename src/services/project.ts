@@ -119,7 +119,32 @@ export async function deleteUserProject(req: Request, res: Response) {
 	}
 }
 
-export async function addGoalToProject(req: Request, res: Response) {}
+export async function addGoalToProject(req: Request, res: Response) {
+	const { projectId } = req.params;
+
+	if (!parseInt(projectId)) {
+		return res.status(400).json({ message: 'must pass projectId to add a goal to a project' });
+	}
+	const { goalId } = req.body;
+	if (!parseInt(goalId)) {
+		return res.status(400).json({ message: 'must supply goalId to add goal to project' });
+	}
+
+	const user = req.user!;
+
+	try {
+		const withGoal = await addGoal(parseInt(projectId), parseInt(goalId), user.id);
+
+		return res.json({ project: withGoal });
+	} catch (e: any) {
+		if (e.message.includes('does not exist')) {
+			return res.status(404).json({ message: e.message });
+		}
+		if (e.message.includes('does not belong to user')) {
+			return res.status(401).json({ message: 'unauthorized' });
+		}
+	}
+}
 
 export async function removeGoalFromProject(req: Request, res: Response) {}
 
