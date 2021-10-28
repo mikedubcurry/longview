@@ -127,7 +127,7 @@ export async function addGoal(projectId: number, goalId: number, ownerId: number
 		throw new AuthError('goal does not belong to user');
 	}
 
-	const updated = await Project.upsert({
+	const [updated] = await Project.upsert({
 		id: project.id,
 		idea: project.idea,
 		description: project.description,
