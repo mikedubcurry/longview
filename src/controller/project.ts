@@ -155,7 +155,7 @@ export async function removeGoal(projectId: number, ownerId: number) {
 		throw new AuthError('project does not belong to user');
 	}
 
-	const withoutGoal = await Project.upsert({
+	const [withoutGoal] = await Project.upsert({
 		id: project.id,
 		idea: project.idea,
 		description: project.description,
