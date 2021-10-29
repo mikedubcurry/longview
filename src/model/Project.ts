@@ -74,4 +74,15 @@ Project.init(
 	}
 );
 
+Project.hasMany(Note, {
+	sourceKey: 'id',
+	foreignKey: 'projectId',
+	as: 'notes',
+});
+
+Note.belongsTo(Project, {
+	targetKey: 'id',
+	foreignKey: 'projectId',
+});
+
 export { Project };
