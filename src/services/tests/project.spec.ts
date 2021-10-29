@@ -317,7 +317,8 @@ describe('projects service', () => {
 			.set('authorization', authHeader)
 			.send({ goalId: goal.id });
 
-		expect(response.status).toBe(401);	});
+		expect(response.status).toBe(401);
+	});
 
 	it('should add a goal to a project', async () => {
 		const goal = await createGoal('testGoal', user.id);
@@ -358,9 +359,7 @@ describe('projects service', () => {
 		const goal = await createGoal('testGoal', user.id);
 		const project = await createProject('testProject', 'testDescription', user.id, goal.id);
 
-		const response = await request
-			.delete(`/projects/${project.id}/goal`)
-			.set('authorization', authHeader);
+		const response = await request.delete(`/projects/${project.id}/goal`).set('authorization', authHeader);
 
 		expect(response.status).toBe(200);
 
