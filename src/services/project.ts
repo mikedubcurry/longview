@@ -146,6 +146,26 @@ export async function addGoalToProject(req: Request, res: Response) {
 	}
 }
 
-export async function removeGoalFromProject(req: Request, res: Response) {}
+export async function removeGoalFromProject(req: Request, res: Response) {
+	const { projectId } = req.params;
+	if (!parseInt(projectId)) {
+		return res.status(400).json({ message: 'must supply projectId to remove a goal' });
+	}
+
+	const user = req.user!;
+
+	try {
+		const withoutGoal = await removeGoal(parseInt(projectId), user.id);
+
+		return res.json({ project: withoutGoal });
+	} catch (e: any) {
+		if (e.message.includes('does not belong to user')) {
+			return res.status(401).json({ message: 'unauthorized' });
+		}
+		if (e.message.includes('does not exist')) {
+			return res.status(404).json({ message: e.message });
+		}
+	}
+}
 
 // export async function addNoteToProject(req: Request, res: Response) {}
