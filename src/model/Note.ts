@@ -7,6 +7,7 @@ interface INote {
 	// createdOn: Date;
 	id: number;
 	ownerId: number;
+	projectId: number;
 }
 
 export interface NoteInput extends Optional<INote, 'id'> {}
@@ -15,6 +16,7 @@ class Note extends Model<INote, NoteInput> implements INote {
 	public id!: number;
 	public text!: string;
 	public ownerId!: number;
+	public projectId!: number;
 
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
@@ -29,6 +31,10 @@ Note.init(
 			primaryKey: true,
 		},
 		ownerId: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		},
+		projectId: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},

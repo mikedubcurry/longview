@@ -10,7 +10,8 @@ import {
 import bcrypt from 'bcrypt';
 
 import { sqlConnection } from '../db';
-import { Goal, Project } from '../model';
+import { Goal, Project, Note } from '../model';
+
 interface IUser {
 	username: string;
 	password: string;
@@ -40,9 +41,12 @@ class User extends Model<IUser, UserInput> implements IUser {
 	public addGoal!: HasManyAddAssociationMixin<Goal, number>;
 	public createGoal!: HasManyCreateAssociationMixin<Goal>;
 
+	public getNotes!: HasManyGetAssociationsMixin<Note>;
+
 	public static associations: {
 		projects: Association<User, Project>;
 		goals: Association<User, Goal>;
+		notes: Association<User, Note>;
 	};
 }
 
@@ -95,6 +99,17 @@ User.hasMany(Goal, {
 });
 
 Goal.belongsTo(User, {
+	targetKey: 'id',
+	foreignKey: 'ownerId',
+});
+
+User.hasMany(Note, {
+	foreignKey: 'ownerId',
+	sourceKey: 'id',
+	as: 'notes',
+});
+
+Note.belongsTo(User, {
 	targetKey: 'id',
 	foreignKey: 'ownerId',
 });
