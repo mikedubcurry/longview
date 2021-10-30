@@ -20,7 +20,7 @@ describe('note controller', () => {
 	});
 
 	afterEach(async () => {
-		await db.query('delete from projects');
+		// await db.query('delete from projects');
 		await db.query('delete from notes');
 	});
 
@@ -49,97 +49,100 @@ describe('note controller', () => {
 		await expect(createNote(text, 404, user.id)).rejects.toThrowError(NonExistentError);
 	});
 
-	it('should throw AuthError if user doesnt exist', async () => {
-		const text = 'testNote';
-
-		await expect(createNote(text, project.id, 401)).rejects.toThrowError(AuthError);
-	});
-
 	it('should throw AuthError if project doesnt belong to user', async () => {
 		const text = 'testNote';
 
 		await expect(createNote(text, project.id, user2.id)).rejects.toThrowError(AuthError);
 	});
 
-	it('should add a note to a project', async () => {});
+	it('should add a note to a project', async () => {
+		const note = await createNote('testNote', project.id, user.id);
 
-	// // getProjectNotes
-	// it('should throw BadInputError if no projectId is passed to getProjectNotes', async () => {
-	// 	await expect(getProjectNotes(NaN, user.id)).rejects.toThrowError(BadInputError);
-	// });
+		const [result] = await db.query(`select * from notes where "projectId" = '${project.id}'`);
+		const [result2] = await db.query(`select * from projects where id = '${project.id}'`);
+		const [noteOnProject] = result as { id: number; text: string; projectId: number }[];
+		const [projectWithNote] = result2 as { id: number }[];
 
-	// it('should throw NonExistentError if project doesnt exist', async () => {
-	// 	await expect(getProjectNotes(404, user.id)).rejects.toThrowError(NonExistentError);
-	// });
+		expect(noteOnProject.projectId).toEqual(projectWithNote.id);
+	});
 
-	// it('should throw AuthError if user doesnt exist', async () => {
-	// 	await expect(getProjectNotes(project.id, 401)).rejects.toThrowError(AuthError);
-	// });
+	// getProjectNotes
+	it('should throw BadInputError if no projectId is passed to getProjectNotes', async () => {
+		await expect(getProjectNotes(NaN, user.id)).rejects.toThrowError(BadInputError);
+	});
 
-	// it('should throw AuthError iif project doesnt belong to user', async () => {
-	// 	await expect(getProjectNotes(project.id, user2.id)).rejects.toThrowError(AuthError);
-	// });
+	it('should throw NonExistentError if project doesnt exist', async () => {
+		await expect(getProjectNotes(404, user.id)).rejects.toThrowError(NonExistentError);
+	});
 
-	// it('should get all a projects notes', async () => {
-	// 	const notes = ['testNote1', 'testNote2', 'testNote3'];
+	it('should throw AuthError if user doesnt exist', async () => {
+		await expect(getProjectNotes(project.id, 401)).rejects.toThrowError(AuthError);
+	});
 
-	// 	await Promise.all(
-	// 		notes.map((text) => {
-	// 			return createNote(text, project.id, user.id);
-	// 		})
-	// 	);
+	it('should throw AuthError if project doesnt belong to user', async () => {
+		await expect(getProjectNotes(project.id, user2.id)).rejects.toThrowError(AuthError);
+	});
 
-	// 	const projectNotes = await getProjectNotes(project.id, user.id);
+	it('should get all a projects notes', async () => {
+		const notes = ['testNote1', 'testNote2', 'testNote3'];
 
-	// 	expect(projectNotes.length).toBe(3);
-	// });
+		await Promise.all(
+			notes.map((text) => {
+				return createNote(text, project.id, user.id);
+			})
+		);
 
-	// // getUserNotes
-	// it('should throw AuthError if user doesnt exist calling getUserNotes', async () => {
-	// 	await expect(getUserNotes(401)).rejects.toThrowError(AuthError);
-	// });
+		const projectNotes = await getProjectNotes(project.id, user.id);
 
-	// it('should get all a users notes', async () => {
-	// 	const notes = ['testNote1', 'testNote2', 'testNote3'];
+		expect(projectNotes).toHaveLength(3)
+	});
 
-	// 	await Promise.all(
-	// 		notes.map((text) => {
-	// 			return createNote(text, project.id, user.id);
-	// 		})
-	// 	);
+	// getUserNotes
+	it('should throw AuthError if user doesnt exist calling getUserNotes', async () => {
+		await expect(getUserNotes(401)).rejects.toThrowError(AuthError);
+	});
 
-	// 	const userNotes = await getUserNotes(user.id);
+	it('should get all a users notes', async () => {
+		const notes = ['testNote1', 'testNote2', 'testNote3'];
 
-	// 	expect(userNotes.length).toBe(3);
-	// });
+		await Promise.all(
+			notes.map((text) => {
+				return createNote(text, project.id, user.id);
+			})
+		);
 
-	// // updateNote
-	// it('should throw BadInputError if no new text is passed to updateNote', async () => {
-	// 	const note = await createNote('testNote', project.id, user.id);
+		const userNotes = await getUserNotes(user.id);
 
-	// 	await expect(updateNote(note.id, 'newTestNote', user.id)).rejects.toThrowError(BadInputError);
-	// });
+		expect(userNotes).toHaveLength(3)
+	});
 
-	// it('should throw BadInputError if no noteId is passed to updateNote', async () => {
-	// 	await expect(updateNote(400, 'newTestNote', user.id)).rejects.toThrowError(BadInputError);
-	// });
+	// updateNote
+	it('should throw BadInputError if no new text is passed to updateNote', async () => {
+		const note = await createNote('testNote', project.id, user.id);
 
-	// it('should throw AuthError if note does not belong to user', async () => {
-	// 	const note = await createNote('testNote', project.id, user.id);
+		await expect(updateNote(note.id, 'newTestNote', user.id)).rejects.toThrowError(BadInputError);
+	});
 
-	// 	await expect(updateNote(note.id, 'newTestNote', user2.id)).rejects.toThrowError(AuthError);
-	// });
+	it('should throw BadInputError if no noteId is passed to updateNote', async () => {
+		await expect(updateNote(400, 'newTestNote', user.id)).rejects.toThrowError(BadInputError);
+	});
 
-	// it('should update a notes text', async () => {
-	// 	const note = await createNote('testNote', project.id, user.id);
-	// 	const newNoteText = 'newTestNote';
-	// 	const updated = await updateNote(note.id, 'newTestNote', user.id);
+	it('should throw AuthError if note does not belong to user', async () => {
+		const note = await createNote('testNote', project.id, user.id);
 
-	// 	const [result] = await db.query(`select * from notes where id = '${note.id}'`);
-	// 	const [updatedNote] = result as { id: number; text: string }[];
+		await expect(updateNote(note.id, 'newTestNote', user2.id)).rejects.toThrowError(AuthError);
+	});
 
-	// 	expect(updatedNote.text).toEqual(newNoteText);
-	// });
+	it('should update a notes text', async () => {
+		const note = await createNote('testNote', project.id, user.id);
+		const newNoteText = 'newTestNote';
+		const updated = await updateNote(note.id, 'newTestNote', user.id);
+
+		const [result] = await db.query(`select * from notes where id = '${note.id}'`);
+		const [updatedNote] = result as { id: number; text: string }[];
+
+		expect(updatedNote.text).toEqual(newNoteText);
+	});
 
 	// // deleteNote
 	// it('should throw BadInputError if no noteId is passed to deleteNote', async () => {
@@ -166,5 +169,6 @@ describe('note controller', () => {
 
 	afterAll(async () => {
 		await db.query(`delete from users where id = '${user.id}'`);
+		await db.query(`delete from users where id = '${user2.id}'`);
 	});
 });
