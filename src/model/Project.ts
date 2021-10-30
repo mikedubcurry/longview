@@ -32,7 +32,7 @@ class Project extends Model<IProject, ProjectInput> implements IProject {
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 
-	public getGoals!: HasManyGetAssociationsMixin<Note>;
+	public getNotes!: HasManyGetAssociationsMixin<Note>;
 	public addNote!: HasManyAddAssociationMixin<Note, number>;
 	public createNote!: HasManyCreateAssociationMixin<Note>;
 
