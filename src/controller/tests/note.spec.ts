@@ -20,7 +20,6 @@ describe('note controller', () => {
 	});
 
 	afterEach(async () => {
-		// await db.query('delete from projects');
 		await db.query('delete from notes');
 	});
 
@@ -126,9 +125,9 @@ describe('note controller', () => {
 	});
 
 	it('should throw AuthError if note does not belong to user', async () => {
-		const note = await createNote('testNote', project.id, user.id)!;
+		const note = (await createNote('testNote', project.id, user.id)) as { id: number };
 
-		if (note) await expect(updateNote(note.id, 'newTestNote', user2.id)).rejects.toThrowError(AuthError);
+		await expect(updateNote(note.id, 'newTestNote', user2.id)).rejects.toThrowError(AuthError);
 	});
 
 	it('should throw NonExistentError if note doesnt exist', async () => {
@@ -136,39 +135,41 @@ describe('note controller', () => {
 	});
 
 	it('should update a notes text', async () => {
-		const note = await createNote('testNote', project.id, user.id)!;
+		const note = (await createNote('testNote', project.id, user.id)) as { id: number };
 		const newNoteText = 'newTestNote';
-		if (note) {
-			const updated = await updateNote(note.id, 'newTestNote', user.id);
-			const [result] = await db.query(`select * from notes where id = '${note.id}'`);
-			const [updatedNote] = result as { id: number; text: string }[];
+		const updated = await updateNote(note.id, 'newTestNote', user.id);
+		const [result] = await db.query(`select * from notes where id = '${note.id}'`);
+		const [updatedNote] = result as { id: number; text: string }[];
 
-			expect(updatedNote.text).toEqual(newNoteText);
-		}
+		expect(updatedNote.text).toEqual(newNoteText);
 	});
 
-	// // deleteNote
-	// it('should throw BadInputError if no noteId is passed to deleteNote', async () => {
-	// 	await expect(deleteNote(400, user.id)).rejects.toThrowError(BadInputError);
-	// });
+	// deleteNote
+	it('should throw BadInputError if no noteId is passed to deleteNote', async () => {
+		await expect(deleteNote(NaN, user.id)).rejects.toThrowError(BadInputError);
+	});
 
-	// it('should throw AuthError if note does not belong to user', async () => {
-	// 	const note = await createNote('testNote', project.id, user.id);
+	it('should throw AuthError if note does not belong to user', async () => {
+		const note = (await createNote('testNote', project.id, user.id)) as { id: number };
 
-	// 	await expect(deleteNote(note.id, user2.id)).rejects.toThrowError(AuthError);
-	// });
+		await expect(deleteNote(note.id, user2.id)).rejects.toThrowError(AuthError);
+	});
 
-	// it('should delete a note', async () => {
-	// 	const note = await createNote('testNote', project.id, user.id);
+	it('should throw NonExistentError if note does not exist calling deleteNote', async () => {
+		await expect(deleteNote(404, user.id)).rejects.toThrowError(NonExistentError);
+	});
 
-	// 	const deleted = await deleteNote(note.id, user.id);
+	it('should delete a note', async () => {
+		const note = (await createNote('testNote', project.id, user.id)) as { id: number };
 
-	// 	expect(deleted).toBeTruthy();
+		const deleted = await deleteNote(note.id, user.id);
 
-	// 	const [result] = db.query(`select * from notes where id = '${note.id}'`);
+		expect(deleted).toBeTruthy();
 
-	// 	expect(result.length).toBe(0);
-	// });
+		const [result] = await db.query(`select * from notes where id = '${note.id}'`);
+
+		expect(result.length).toBe(0);
+	});
 
 	afterAll(async () => {
 		await db.query(`delete from users where id = '${user.id}'`);

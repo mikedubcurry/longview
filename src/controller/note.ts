@@ -78,4 +78,21 @@ export async function updateNote(noteId: number, text: string, ownerId: number) 
 	return updatedNote;
 }
 
-export async function deleteNote(noteId: number, ownerId: number) {}
+export async function deleteNote(noteId: number, ownerId: number) {
+	if (!noteId) {
+		throw new BadInputError('must supply noteId to deleteNote');
+	}
+	if (!ownerId) {
+		throw new AuthError('must supply ownerId to deleteNote');
+	}
+	const note = await Note.findByPk(noteId);
+	if (!note) {
+		throw new NonExistentError(`note with id: ${noteId} does not exist`);
+	}
+	if (note.ownerId !== ownerId) {
+		throw new AuthError('note does not belong to user');
+	}
+	const deleted = await Note.destroy({ where: { id: noteId } });
+
+	return deleted;
+}
