@@ -1,4 +1,4 @@
-import { User } from '../model';
+import { User, Note } from '../model';
 import { getProject } from './project';
 import { AuthError, BadInputError, NonExistentError } from './utlis';
 
@@ -60,7 +60,22 @@ export async function getUserNotes(ownerId: number) {
 }
 
 export async function updateNote(noteId: number, text: string, ownerId: number) {
-	
+	if (!text) {
+		throw new BadInputError('must supply text to updateNote');
+	}
+	if (!noteId) {
+		throw new BadInputError('must supply noteId to updateNote');
+	}
+	const note = await Note.findByPk(noteId);
+	if (!note) {
+		throw new NonExistentError(`note with id: ${noteId} does not exist`);
+	}
+	if (note.ownerId !== ownerId) {
+		throw new AuthError('note does not belong to user');
+	}
+	const updatedNote = await Note.upsert({ id: note.id, text, ownerId: note.ownerId, projectId: note.projectId });
+
+	return updatedNote;
 }
 
 export async function deleteNote(noteId: number, ownerId: number) {}

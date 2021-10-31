@@ -94,7 +94,7 @@ describe('note controller', () => {
 
 		const projectNotes = await getProjectNotes(project.id, user.id);
 
-		expect(projectNotes).toHaveLength(3)
+		expect(projectNotes).toHaveLength(3);
 	});
 
 	// getUserNotes
@@ -113,35 +113,38 @@ describe('note controller', () => {
 
 		const userNotes = await getUserNotes(user.id);
 
-		expect(userNotes).toHaveLength(3)
+		expect(userNotes).toHaveLength(3);
 	});
 
 	// updateNote
 	it('should throw BadInputError if no new text is passed to updateNote', async () => {
-		const note = await createNote('testNote', project.id, user.id);
-
-		await expect(updateNote(note.id, 'newTestNote', user.id)).rejects.toThrowError(BadInputError);
+		await expect(updateNote(400, '', user.id)).rejects.toThrowError(BadInputError);
 	});
 
 	it('should throw BadInputError if no noteId is passed to updateNote', async () => {
-		await expect(updateNote(400, 'newTestNote', user.id)).rejects.toThrowError(BadInputError);
+		await expect(updateNote(NaN, 'newTestNote', user.id)).rejects.toThrowError(BadInputError);
 	});
 
 	it('should throw AuthError if note does not belong to user', async () => {
-		const note = await createNote('testNote', project.id, user.id);
+		const note = await createNote('testNote', project.id, user.id)!;
 
-		await expect(updateNote(note.id, 'newTestNote', user2.id)).rejects.toThrowError(AuthError);
+		if (note) await expect(updateNote(note.id, 'newTestNote', user2.id)).rejects.toThrowError(AuthError);
+	});
+
+	it('should throw NonExistentError if note doesnt exist', async () => {
+		await expect(updateNote(404, 'testNote', user.id)).rejects.toThrowError(NonExistentError);
 	});
 
 	it('should update a notes text', async () => {
-		const note = await createNote('testNote', project.id, user.id);
+		const note = await createNote('testNote', project.id, user.id)!;
 		const newNoteText = 'newTestNote';
-		const updated = await updateNote(note.id, 'newTestNote', user.id);
+		if (note) {
+			const updated = await updateNote(note.id, 'newTestNote', user.id);
+			const [result] = await db.query(`select * from notes where id = '${note.id}'`);
+			const [updatedNote] = result as { id: number; text: string }[];
 
-		const [result] = await db.query(`select * from notes where id = '${note.id}'`);
-		const [updatedNote] = result as { id: number; text: string }[];
-
-		expect(updatedNote.text).toEqual(newNoteText);
+			expect(updatedNote.text).toEqual(newNoteText);
+		}
 	});
 
 	// // deleteNote
