@@ -11,6 +11,7 @@ import {
 	removeGoalFromProject,
 	updateUserProject,
 } from './services/project';
+import { createNewNote, deleteANote, getNotes, getProjectsNotes, updateANote } from './services/notes';
 
 type Route = {
 	path: `/${string}`;
@@ -108,26 +109,26 @@ export const protectedRoutes: Route[] = [
 	{
 		path: '/notes',
 		method: 'get',
-		handler: () => new Promise(() => {}), // notes.getNotes
+		handler: getNotes, // notes.getNotes
 	},
 	{
 		path: '/notes/:projectId',
 		method: 'get',
-		handler: () => new Promise(() => {}), // notes.getProjectNotes
+		handler: getProjectsNotes, // notes.getProjectNotes
 	},
 	{
 		path: '/notes',
 		method: 'post',
-		handler: () => new Promise(() => {}), // notes.createNote
+		handler: createNewNote, // notes.createNote
 	},
 	{
 		path: '/notes/:noteId',
 		method: 'patch',
-		handler: () => new Promise(() => {}), // notes.updateNote
+		handler: updateANote, // notes.updateNote
 	},
 	{
 		path: '/notes/:noteId',
 		method: 'delete',
-		handler: () => new Promise(() => {}), // notes.deleteNote
+		handler: deleteANote, // notes.deleteNote
 	},
 ];
