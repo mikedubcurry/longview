@@ -48,7 +48,6 @@ Note.init(
 		sequelize: sqlConnection,
 		tableName: 'notes',
 		freezeTableName: true,
-		paranoid: true,
 	}
 );
 
