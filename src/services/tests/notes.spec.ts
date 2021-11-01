@@ -21,6 +21,7 @@ let user: User;
 let user2: User;
 let authHeader: string;
 let project: Project;
+let secondProject: Project;
 
 describe('notes service', () => {
 	beforeAll(async () => {
@@ -28,6 +29,7 @@ describe('notes service', () => {
 		user2 = await createUser(altUser.username, altUser.password);
 		authHeader = 'Bearer ' + sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
 		project = await createProject(testProject.idea, testProject.description, user.id);
+		secondProject = await createProject(testProject.idea, testProject.description, user.id);
 	});
 
 	afterEach(async () => {
@@ -40,7 +42,31 @@ describe('notes service', () => {
 
 	// getNotes
 	//   should return 401 unauthorized if no authHeader is passed
+	it('should return 401 unauthorized if no authHeader is passed to getUserNotes', async () => {
+		const response = await request.get('/notes');
+		expect(response.status).toBe(401);
+	});
 	//   should return all a user's notes
+	it("should return all a user's notes", async () => {
+		const testNotes = ['testNote1', 'testNote2', 'testNote3'];
+		// bulk create notes across two projects
+		await Promise.all(
+			testNotes.map((note) => {
+				return createNote(note, project.id, user.id);
+			})
+		);
+		await Promise.all(
+			testNotes.map((note) => {
+				return createNote(note, secondProject.id, user.id);
+			})
+		);
+
+		const response = await request.get(`/notes/${project.id}`).set('authorization', authHeader);
+		expect(response.status).toBe(200);
+		expect(response.body).toHaveProperty('notes');
+		const responseNotes = response.body as { notes: { text: string; projectId: number }[] };
+		expect(responseNotes).toHaveLength(6);
+	});
 
 	// getProjectNotes
 	//   should return 401 unauthorized if no authHeader is passed
@@ -76,6 +102,7 @@ describe('notes service', () => {
 		await deleteUser(testUser.username, testUser.password);
 		await deleteUser(altUser.username, altUser.password);
 		await db.query(`delete from projects where id = '${project.id}'`);
+		await db.query(`delete from notes`);
 		await db.close();
 	});
 });
