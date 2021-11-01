@@ -174,5 +174,7 @@ describe('note controller', () => {
 	afterAll(async () => {
 		await db.query(`delete from users where id = '${user.id}'`);
 		await db.query(`delete from users where id = '${user2.id}'`);
+		await db.query(`delete from projects where id = '${project.id}'`);
+		await db.close();
 	});
 });
