@@ -22,6 +22,7 @@ let user2: User;
 let authHeader: string;
 let project: Project;
 let secondProject: Project;
+let user2Project: Project;
 
 describe('notes service', () => {
 	beforeAll(async () => {
@@ -30,6 +31,7 @@ describe('notes service', () => {
 		authHeader = 'Bearer ' + sign({ username: user.username, id: user.id }, process.env.JWT_SECRET!);
 		project = await createProject(testProject.idea, testProject.description, user.id);
 		secondProject = await createProject(testProject.idea, testProject.description, user.id);
+		user2Project = await createProject(testProject.idea, testProject.description, user2.id);
 	});
 
 	afterEach(async () => {
