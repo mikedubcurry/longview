@@ -117,7 +117,7 @@ export const protectedRoutes: Route[] = [
 		handler: getProjectsNotes, // notes.getProjectNotes
 	},
 	{
-		path: '/notes',
+		path: '/notes/:projectId',
 		method: 'post',
 		handler: createNewNote, // notes.createNote
 	},
