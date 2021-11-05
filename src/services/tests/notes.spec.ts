@@ -62,11 +62,11 @@ describe('notes service', () => {
 			})
 		);
 
-		const response = await request.get(`/notes/${project.id}`).set('authorization', authHeader);
+		const response = await request.get(`/notes`).set('authorization', authHeader);
 		expect(response.status).toBe(200);
 		expect(response.body).toHaveProperty('notes');
 		const responseNotes = response.body as { notes: { text: string; projectId: number }[] };
-		expect(responseNotes).toHaveLength(6);
+		expect(responseNotes.notes).toHaveLength(6);
 	});
 
 	// getProjectNotes
@@ -129,7 +129,11 @@ describe('notes service', () => {
 	});
 
 	it('should return 404 if project does not exist', async () => {
-		const response = await request.post('/notes/404').send({ text: 'asdf' }).set('authorization', authHeader);
+		const response = await request
+			.post('/notes/404')
+			.send({ text: 'asdf' })
+			.set('authorization', authHeader)
+			.send({ text: 'dont exist' });
 
 		expect(response.status).toBe(404);
 	});
@@ -177,20 +181,20 @@ describe('notes service', () => {
 	});
 
 	it('should return 401 if notes does not belong to user', async () => {
-		const note = await createNote('before', secondProject.id, user2.id);
+		const note = (await createNote('before', user2Project.id, user2.id)) as { id: number };
 		const response = await request.patch(`/notes/${note.id}`).send({ text: 'test' }).set('authorization', authHeader);
 
 		expect(response.status).toBe(401);
 	});
 
 	it("should update a note's text", async () => {
-		const note = await createNote('before', project.id, user.id);
+		const note = (await createNote('before', project.id, user.id)) as { id: number };
 
 		const response = await request.patch(`/notes/${note.id}`).send({ text: 'after' }).set('authorization', authHeader);
 
-		const resultResponse = await request.get(`/notes/${note.id}`).set('authorization', authHeader);
+		// const resultResponse = await request.get(`/notes/${note.id}`).set('authorization', authHeader);
 
-		expect(resultResponse.body.note.text).toEqual('after');
+		expect(response.body.note.text).toEqual('after');
 	});
 
 	// deleteNote
@@ -213,7 +217,7 @@ describe('notes service', () => {
 	});
 
 	it('should return 401 if note does not belong to user', async () => {
-		const note = await createNote('test', secondProject.id, user2.id);
+		const note = (await createNote('test', user2Project.id, user2.id)) as { id: number };
 
 		const response = await request.delete(`/notes/${note.id}`).set('authorization', authHeader);
 
@@ -221,7 +225,7 @@ describe('notes service', () => {
 	});
 
 	it('should delete a note', async () => {
-		const note = await createNote('test', project.id, user.id);
+		const note = (await createNote('test', project.id, user.id)) as { id: number };
 
 		const response = await request.delete(`/notes/${note.id}`).set('authorization', authHeader);
 
