@@ -39,18 +39,20 @@ function App() {
 
 	return (
 		<div className="App">
-			<Nav loggedIn={auth && auth.user} />
-			{auth && auth.user ? (
-				<button
-					onClick={() => {
-						auth.signout(() => history.push('/'));
-					}}
-				>
-					Log out
-				</button>
-			) : (
-				<button onClick={login}>Log in</button>
-			)}
+			<Nav loggedIn={auth && auth.user}>
+				{/* move login/logout buttons to Login.jsx/Logout.jsx made from ActionButton.jsx */}
+				{auth && auth.user ? (
+					<button
+						onClick={() => {
+							auth.signout(() => history.push('/'));
+						}}
+					>
+						Log out
+					</button>
+				) : (
+					<button onClick={login}>Log in</button>
+				)}
+			</Nav>
 			<Switch>
 				<Route path="/about">
 					<About />

@@ -1,3 +1,5 @@
+import './css/Hero.css'
+
 export function Hero({ title, subtitle, bgImage, children }) {
 	return (
 		<section className="hero">

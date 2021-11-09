@@ -1,0 +1,33 @@
+.nav-bar {
+  position: sticky;
+  top: 0;
+  
+	padding: 0 1rem;
+	height: 8vh;
+
+	background-color: #555;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.nav-bar > nav {
+
+	flex: 1;
+	display: flex;
+	justify-content: start;
+	gap: 1rem;
+}
+
+nav > a {
+	font-size: 18px;
+	text-decoration-color: transparent;
+	color: #fbff00;
+
+	transition: text-decoration-color 0.3s ease;
+}
+
+nav > a:hover {
+	text-decoration-color: rgba(33, 128, 119);
+}
