@@ -1,9 +1,14 @@
 .feature-section {
-  height: 45vh;
+	height: 45vh;
+
+	/* background-color: #ab6ceb; */
+	background-image: linear-gradient(to bottom right, #218077, 25%, #ab6ceb);
 }
 
 .feature-section-icon {
-  width: 50%;
-  height: 50%;
-  background-color: cyan;
+	/* styles for svg icon */
+	/* width: 50%;
+	height: 50%; */
+
+	/* background-color: cyan; */
 }
