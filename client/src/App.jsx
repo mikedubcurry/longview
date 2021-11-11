@@ -1,6 +1,7 @@
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
 import './App.css';
+import { AuthButton } from './components/AuthButton';
 import Nav from './components/Nav';
 import { useAuth } from './hooks';
 import { About } from './pages/About';
@@ -42,15 +43,9 @@ function App() {
 			<Nav loggedIn={auth && auth.user}>
 				{/* move login/logout buttons to Login.jsx/Logout.jsx made from ActionButton.jsx */}
 				{auth && auth.user ? (
-					<button
-						onClick={() => {
-							auth.signout(() => history.push('/'));
-						}}
-					>
-						Log out
-					</button>
+					<AuthButton text="Log out" clickHandler={() => auth.signout(() => history.push('/'))} />
 				) : (
-					<button onClick={login}>Log in</button>
+					<AuthButton clickHandler={login} text="Log in" />
 				)}
 			</Nav>
 			<Switch>
