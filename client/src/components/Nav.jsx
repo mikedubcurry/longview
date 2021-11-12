@@ -1,17 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import './css/Nav.css';
 
 function Nav({ loggedIn, children }) {
+	const { pathname } = useLocation();
+console.log(pathname);
 	return (
 		<div className="nav-bar">
 			<nav>
-				<Link to="/">Home</Link>
-				<Link to="/about">About</Link>
+				<Link className={pathname === '/' ? 'active' : ''} to="/">
+					Home
+				</Link>
+				<Link className={pathname === '/about' ? 'active' : ''} to="/about">
+					About
+				</Link>
 				{loggedIn && (
 					<>
-						<Link to="/goals">Goals</Link>
-						<Link to="/projects">Projects</Link>
+						<Link className={pathname === '/goals' ? 'active' : ''} to="/goals">
+							Goals
+						</Link>
+						<Link className={pathname === '/projects' ? 'active' : ''} to="/projects">
+							Projects
+						</Link>
 					</>
 				)}
 			</nav>
