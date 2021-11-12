@@ -6,6 +6,8 @@ import Nav from './components/Nav';
 import { useAuth } from './hooks';
 import { About } from './pages/About';
 import { Home } from './pages/Home';
+import {Goals} from './pages/Goals'
+import { Projects } from './pages/Projects';
 
 function PrivateRoute({ children, ...rest }) {
 	let auth = useAuth();
@@ -52,8 +54,8 @@ function App() {
 				<Route path="/about">
 					<About />
 				</Route>
-				<PrivateRoute path="/goals">Goals</PrivateRoute>
-				<PrivateRoute path="/projects">Projects</PrivateRoute>
+				<PrivateRoute path="/goals"><Goals/></PrivateRoute>
+				<PrivateRoute path="/projects"><Projects/></PrivateRoute>
 				<Route path="/">
 					<Home />
 				</Route>
