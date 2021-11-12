@@ -1,0 +1,4 @@
+<svg width="256px" height="128px" viewBox="0 0 128 256" id="logo" xmlns="http://www.w3.org/2000/svg">
+  <path fill="none" stroke-linecap="round" stroke-width="5" stroke="#000" id="logo-l" d="M 6, 250 L 106, 250 L 106, 6" />
+  <path id="logo-ongview" d="" />
+</svg>
