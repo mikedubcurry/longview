@@ -4,7 +4,7 @@ import './css/Nav.css';
 
 function Nav({ loggedIn, children }) {
 	const { pathname } = useLocation();
-console.log(pathname);
+	console.log(pathname);
 	return (
 		<div className="nav-bar">
 			<nav>
@@ -16,10 +16,10 @@ console.log(pathname);
 				</Link>
 				{loggedIn && (
 					<>
-						<Link className={pathname === '/goals' ? 'active' : ''} to="/goals">
+						<Link className={pathname.includes('/goals') ? 'active' : ''} to="/goals">
 							Goals
 						</Link>
-						<Link className={pathname === '/projects' ? 'active' : ''} to="/projects">
+						<Link className={pathname.includes('/projects') ? 'active' : ''} to="/projects">
 							Projects
 						</Link>
 					</>

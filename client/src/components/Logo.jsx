@@ -1,6 +1,7 @@
 // import Svg from '../assets/logo.svg';
 import './css/Logo.css';
 
+// refactor to a smaller viewbox of 0 0 150 50 or something with that aprx aspect ratio
 export function Logo() {
 	const letters = ['o', 'n', 'g', 'v', 'i', 'e', 'w'];
 	return (
@@ -14,7 +15,7 @@ export function Logo() {
 				d="M 66, 250 L 166, 250 L 166, 6"
 			/>
 			{letters.map((l, i) => (
-				<text id={"logo"+i} key={i} x={((i / 300) * 10000 - 115).toString()} fontSize="32" y="200">
+				<text id={'logo' + i} key={i} x={((i / 300) * 10000 - 115).toString()} fontSize="32" y="200">
 					{l}
 				</text>
 			))}

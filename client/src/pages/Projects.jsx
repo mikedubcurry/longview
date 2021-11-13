@@ -1,5 +1,5 @@
 import { Card } from '../components/Card';
-import { ProjectCard } from '../components/ProjectCard';
+import { ProjectCard } from '../components/projects/ProjectCard';
 
 export function Projects({}) {
 	const projects = [
