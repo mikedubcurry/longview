@@ -60,3 +60,8 @@ nav > a:hover::before,
 nav > a:focus::before {
 	width: 100%;
 }
+
+/* prevent both underlines from appearing when changing links */
+nav > a.active::before {
+	width: 0;
+}
