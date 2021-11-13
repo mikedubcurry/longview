@@ -1,0 +1,45 @@
+.project-goal {
+	align-self: flex-start;
+}
+
+.project-milestone-progress {
+	width: 100%;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.project-milestone-progress::-webkit-progress-bar {
+	background-color: #eee;
+	border-radius: 18px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+.project-milestone-progress::-webkit-progress-value {
+	background-image: linear-gradient(to bottom right, #fbff00, 50%, #ff9100);
+
+	border-radius: 18px;
+}
+
+.project-milestone-progress-count {
+	align-self: flex-start;
+}
+
+.project-milestone {
+	background-color: #999;
+	padding: 1rem;
+
+	border-radius: 4px;
+
+	display: flex;
+	flex-direction: column;
+}
+
+.milestone {
+	align-self: flex-start;
+}
+
+.milestone-completed {
+	text-decoration: line-through;
+	text-decoration-thickness: 1px;
+	text-decoration-color: cyan;
+}
