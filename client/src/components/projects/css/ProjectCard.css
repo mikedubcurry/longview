@@ -15,7 +15,7 @@
 }
 
 .project-milestone-progress::-webkit-progress-value {
-	background-image: linear-gradient(to bottom right, #fbff00, 50%, #ff9100);
+	background-image: linear-gradient(to bottom right, var(--primary-color), 50%, var(--secondary-color));
 
 	border-radius: 18px;
 }
@@ -25,13 +25,19 @@
 }
 
 .project-milestone {
-	background-color: #999;
+	background-color: var(--base-card-subsection-bg);
 	padding: 1rem;
 
 	border-radius: 4px;
 
 	display: flex;
 	flex-direction: column;
+
+	transition: all .3s ease;
+}
+
+.project-milestone:hover {
+	background-color: var(--base-card-subsection-hover);
 }
 
 .milestone {
@@ -41,5 +47,5 @@
 .milestone-completed {
 	text-decoration: line-through;
 	text-decoration-thickness: 1px;
-	text-decoration-color: cyan;
+	text-decoration-color: var(--base-card-bg);
 }

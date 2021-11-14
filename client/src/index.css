@@ -19,5 +19,10 @@ code {
 }
 
 :root {
-  --action-color: #fbff00;
+  --primary-color: #fbff00;
+  --secondary-color: #ff9100;
+  --base-card-bg: #00ffff;
+  --base-card-hover: #7bf5f5;
+  --base-card-subsection-bg: #999999;
+  --base-card-subsection-hover: #ababab;
 }

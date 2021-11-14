@@ -9,13 +9,13 @@
 	flex-direction: column;
 	align-items: flex-start;
 
-	background-color: var(--card-bg, cyan);
+	background-color: var(--base-card-bg);
 
 	transition: background-color 0.25s ease;
 }
 
 .card:hover {
-	background-color: #77ffff;
+	background-color: var(--base-card-hover);
 }
 
 .card header {
@@ -35,7 +35,7 @@
 	margin-top: 0.5rem;
 	border-radius: 4px;
 
-	/* background-color: #999; */
+	/* background-color: var(--base-card-subsection-bg); */
 
 	display: flex;
 	flex-direction: column;
