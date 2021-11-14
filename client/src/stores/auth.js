@@ -1,4 +1,6 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+// import { configureStore } from '@reduxjs/toolkit';
+import reduxThunk from 'redux-thunk';
 
 function authReducer(state = { user: '' }, action) {
 	switch (action.type) {
@@ -16,6 +18,8 @@ function authReducer(state = { user: '' }, action) {
 	}
 }
 
-export const authStore = createStore(authReducer);
+const middlewares = applyMiddleware(reduxThunk);
+
+export const authStore = createStore(authReducer, middlewares);
 
 export const selectAuth = (state) => state.user;
