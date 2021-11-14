@@ -6,9 +6,10 @@ import Nav from './components/Nav';
 import { useAuth } from './hooks';
 import { About } from './pages/About';
 import { Home } from './pages/Home';
-import {Goals} from './pages/Goals'
+import { Goals } from './pages/Goals';
+import { GoalById } from './pages/GoalById';
 import { Projects } from './pages/Projects';
-import {ProjectById} from './pages/ProjectById'
+import { ProjectById } from './pages/ProjectById';
 
 function PrivateRoute({ children, ...rest }) {
 	let auth = useAuth();
@@ -55,9 +56,18 @@ function App() {
 				<Route path="/about">
 					<About />
 				</Route>
-				<PrivateRoute path="/goals"><Goals/></PrivateRoute>
-				<PrivateRoute path="/projects/:projectId"><ProjectById /></PrivateRoute>
-				<PrivateRoute path="/projects"><Projects/></PrivateRoute>
+				<PrivateRoute path="/goals/:goalId">
+					<GoalById />
+				</PrivateRoute>
+				<PrivateRoute path="/goals">
+					<Goals />
+				</PrivateRoute>
+				<PrivateRoute path="/projects/:projectId">
+					<ProjectById />
+				</PrivateRoute>
+				<PrivateRoute path="/projects">
+					<Projects />
+				</PrivateRoute>
 				<Route path="/">
 					<Home />
 				</Route>

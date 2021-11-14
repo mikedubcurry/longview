@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ProjectCard } from '../components/projects/ProjectCard';
 
 export function ProjectById() {
@@ -91,7 +91,7 @@ export function ProjectById() {
 			id: '3',
 		},
 	];
-  
+
 	const { projectId } = useParams();
 
 	const [project, setProject] = useState(null);
@@ -102,5 +102,42 @@ export function ProjectById() {
 		}
 	}, [project]);
 
-	return <div>{project && <ProjectCard project={project} />} </div>;
+	if (!project) return null;
+
+	return (
+		<main>
+			<section className="project">
+				<h2>{project.idea}</h2>
+				<p>{project.description}</p>
+			</section>
+			<section className="goal">
+				<h3><Link to={`/goals/${project.goal.id}`}>{project.goal.goal}</Link></h3>
+				{/* link to goal detail page */}
+			</section>
+			<section className="milestones">
+				<h3>Milestones</h3>
+				{project.milestones.length ? (
+					<ul>
+						{project.milestones.map((ms) => (
+							<li key={ms.id}>{ms.milestone}</li>
+						))}
+					</ul>
+				) : (
+					<p>Add some milestones</p>
+				)}
+			</section>
+			<section className="notes">
+				<h3>Notes</h3>
+				{project.notes?.length ? (
+					<ul>
+						{project.notes.map((nt) => {
+							<li key={nt.id}>{nt.text}</li>;
+						})}
+					</ul>
+				) : (
+					<p>Add some notes</p>
+				)}
+			</section>
+		</main>
+	);
 }
