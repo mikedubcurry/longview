@@ -10,6 +10,8 @@ Why spend thirty seconds writing down ideas in a journal when I can spend a mont
 
 ## Ideas for Improvement
 
+Add controller function for goals that gets projects a goal may be assigned to
+
 Starting on the frontend, I'm feeling like there could be some kind of metric saved along with **goals** or **projects**, like a milestone or possibly the ability to mark an item complete.
 
 Adding **milestones** could give the possibility to add a progress bar for each item, as a visual element for the data.
