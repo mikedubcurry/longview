@@ -3,10 +3,9 @@
 - [ ] start using CSS custom properties for color
 
 - [ ] ProjectCard styles
-  - [ ] hover styles, should react to mouseover event
-  - [ ] if project title clicked, should nav to project data page
-  - [ ] clicking milestone section should tranition between open and closed state with a slide
-  - [ ] clicking a milestone item should nav to project detail page
+  - [x] hover styles, should react to mouseover event
+  - [x] if project title clicked, should nav to project data page
+  - [x] clicking milestone section should tranition between open and closed state with a slide
 - [ ] project detail page
   - [ ] make direct updates to server
   - [ ] TBD
@@ -14,3 +13,6 @@
   - [ ] list child projects
     - [ ] list child milestones
   - [ ] add/remove/update project
+
+- [ ] once project and goal detail pages are set up, start linking redux state with backend
+  - [ ] redux-thunk for async actions
