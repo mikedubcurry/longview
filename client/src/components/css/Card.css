@@ -19,10 +19,21 @@
 }
 
 .card header {
+	color: black;
 	font-size: 24px;
 	text-decoration: underline;
 	text-decoration-thickness: 1px;
 	align-self: flex-start;
+}
+
+.card header a {
+	color: unset;
+	text-decoration: none;
+	transition: color .3s ease;
+}
+
+.card header a:hover {
+	color: blue;
 }
 
 .card .card-text {

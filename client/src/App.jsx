@@ -8,6 +8,7 @@ import { About } from './pages/About';
 import { Home } from './pages/Home';
 import {Goals} from './pages/Goals'
 import { Projects } from './pages/Projects';
+import {ProjectById} from './pages/ProjectById'
 
 function PrivateRoute({ children, ...rest }) {
 	let auth = useAuth();
@@ -55,6 +56,7 @@ function App() {
 					<About />
 				</Route>
 				<PrivateRoute path="/goals"><Goals/></PrivateRoute>
+				<PrivateRoute path="/projects/:projectId"><ProjectById /></PrivateRoute>
 				<PrivateRoute path="/projects"><Projects/></PrivateRoute>
 				<Route path="/">
 					<Home />

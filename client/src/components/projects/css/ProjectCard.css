@@ -40,7 +40,13 @@
 	background-color: var(--base-card-subsection-hover);
 }
 
+.milestones {
+	text-align: start;
+	margin-bottom: 1rem;
+	}
+
 .milestone {
+	list-style: none;
 	align-self: flex-start;
 }
 

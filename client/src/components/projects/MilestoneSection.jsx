@@ -1,20 +1,23 @@
 import { useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 export function MilestoneSection({ milestones }) {
 	const [expanded, setExpanded] = useState(false);
 
 	return (
-		<div className={'project-milestone' + (expanded ? ' expanded' : '')} onClick={() => setExpanded(!expanded)}>
+		// possibly use react-spring instead...
+		// <CSSTransition in={expanded} classNames="expanded" timeout={200}>
+		<div className={'project-milestone'} onClick={() => setExpanded(!expanded)}>
 			{expanded ? (
-				<>
+				<ul className="milestones">
 					{milestones.map((ms) => (
-						<p key={ms.id} className={'milestone' + (ms.completed ? ' milestone-completed' : '')}>
+						<li key={ms.id} className={'milestone' + (ms.completed ? ' milestone-completed' : '')}>
 							{ms.milestone}
-						</p>
+						</li>
 					))}
-				</>
+				</ul>
 			) : (
-				<span className="project-milestone-progress-count">
+				<span className="milestones project-milestone-progress-count">
 					{milestones.filter((m) => m.completed).length} / {milestones.length} milestones complete
 				</span>
 			)}
@@ -24,5 +27,6 @@ export function MilestoneSection({ milestones }) {
 				value={milestones.filter((i) => i.completed).length}
 			/>
 		</div>
+		// </CSSTransition>
 	);
 }
