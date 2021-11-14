@@ -1,5 +1,7 @@
 # TODO
 
+- [ ] start using CSS custom properties for color
+
 - [ ] ProjectCard styles
   - [ ] hover styles, should react to mouseover event
   - [ ] if project title clicked, should nav to project data page
