@@ -1,8 +1,10 @@
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
+import { useDispatch } from 'react-redux';
+
 import './App.css';
-import { AuthButton } from './components/AuthButton';
-import Nav from './components/Nav';
+import { AuthButton } from './components/elements/AuthButton';
+import { Nav } from './components/Nav';
 import { useAuth } from './hooks';
 import { About } from './pages/About';
 import { Home } from './pages/Home';
@@ -10,6 +12,9 @@ import { Goals } from './pages/Goals';
 import { GoalById } from './pages/GoalById';
 import { Projects } from './pages/Projects';
 import { ProjectById } from './pages/ProjectById';
+
+import { signIn } from './actions/auth';
+import { AuthSection } from './components/AuthSection';
 
 function PrivateRoute({ children, ...rest }) {
 	let auth = useAuth();
@@ -33,11 +38,14 @@ function PrivateRoute({ children, ...rest }) {
 }
 
 function App() {
+	const dispatch = useDispatch();
 	let history = useHistory();
 	let auth = useAuth();
 	let { from } = location.state || { from: { pathname: '/' } };
 	let login = () => {
-		auth.signin(() => {
+		// use test creds until auth form is set up...
+		dispatch(signIn('authtest', 'password'));
+		auth.login(() => {
 			history.replace(from);
 		});
 	};
@@ -46,11 +54,12 @@ function App() {
 		<div className="App">
 			<Nav loggedIn={auth && auth.user}>
 				{/* move login/logout buttons to Login.jsx/Logout.jsx made from ActionButton.jsx */}
-				{auth && auth.user ? (
-					<AuthButton text="Log out" clickHandler={() => auth.signout(() => history.push('/'))} />
+				<AuthSection loggedIn={auth.user}/>
+				{/* {auth && auth.user ? (
+					<AuthButton text="Log out" clickHandler={() => auth.logout(() => history.push('/'))} />
 				) : (
 					<AuthButton clickHandler={login} text="Log in" />
-				)}
+				)} */}
 			</Nav>
 			<Switch>
 				<Route path="/about">

@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import './css/Nav.css';
 
-function Nav({ loggedIn, children }) {
+export function Nav({ loggedIn, children }) {
 	const { pathname } = useLocation();
 	console.log(pathname);
 	return (
@@ -29,5 +29,3 @@ function Nav({ loggedIn, children }) {
 		</div>
 	);
 }
-
-export default Nav;

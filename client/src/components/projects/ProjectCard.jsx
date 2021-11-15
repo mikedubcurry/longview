@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 
-import { Card } from '../Card';
+import { Card } from '../elements/Card';
 import './css/ProjectCard.css';
 import { MilestoneSection } from './MilestoneSection';
 

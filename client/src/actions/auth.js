@@ -3,16 +3,17 @@ import { authConstants } from './constants';
 // split fetch requests into UserAPI module
 
 export function signIn(username, password) {
+	console.log('test');
 	return async (dispatch) => {
 		// starting request, show a spinner
 		dispatch(request({ username }));
 		try {
 			const response = await fetch('http://localhost:3000/user/login', {
 				method: 'POST',
-				body: {
-					username,
-					password,
-				},
+				body: JSON.stringify({ username, password }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			});
 			if (response.ok) {
 				const token = await response.json();
@@ -23,7 +24,7 @@ export function signIn(username, password) {
 			}
 		} catch (e) {
 			// alert user that login failed
-			dispatch(failure(error));
+			dispatch(failure(e));
 		}
 	};
 
