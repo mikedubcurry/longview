@@ -1,10 +1,12 @@
 import express from 'express';
+import cors from 'cors';
 
 import { useTokenAuth } from './middleware';
 import { authRoutes, protectedRoutes } from './routes';
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
