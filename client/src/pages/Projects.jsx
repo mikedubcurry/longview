@@ -1,4 +1,3 @@
-import { Card } from '../components/elements/Card';
 import { ProjectCard } from '../components/projects/ProjectCard';
 
 export function Projects({}) {
@@ -90,75 +89,6 @@ export function Projects({}) {
 			id: '3',
 		},
 	];
-	const goals = [
-		{
-			goal: 'Get better at React',
-			id: '1',
-		},
-		{
-			goal: 'Learn a second language',
-			id: '2',
-		},
-		{
-			goal: 'Relax and take a break from coding every now and then',
-			id: '3',
-		},
-		{
-			goal: 'Practice CSS',
-			id: '4',
-		},
-	];
-
-	const milestones = [
-		{
-			milestone: 'MVP backend with tests',
-			completed: true,
-			projectId: '1',
-			id: '1',
-		},
-		{
-			milestone: 'MVP fronend with auth',
-			completed: false,
-			projectId: '1',
-			id: '2',
-		},
-		{
-			milestone: 'all api endpoints connected to frontend',
-			completed: false,
-			projectId: '1',
-			id: '3',
-		},
-		{
-			milestone: 'deploy on hosted server',
-			completed: false,
-			projectId: '1',
-			id: '4',
-		},
-		{
-			milestone: 'get all 16 badges',
-			completed: false,
-			projectId: '2',
-			id: '5',
-		},
-		{
-			milestone: 'catch both legendary birds',
-			completed: false,
-			projectId: '2',
-			id: '6',
-		},
-		{
-			milestone: 'catch legendary dogs',
-			completed: false,
-			projectId: '2',
-			id: '7',
-		},
-		{
-			milestone: 'beat red',
-			completed: false,
-			projectId: '2',
-			id: '8',
-		},
-	];
 	return (
 		<main>
 			<h1>Projects</h1>
@@ -167,21 +97,7 @@ export function Projects({}) {
 				{projects
 					.filter((prj) => prj.status === 'active')
 					.map((prj) => (
-						<ProjectCard key={prj.id} project={prj}/>
-						// <div className="project" key={prj.id}>
-						//     <p className="project-title">{prj.idea}</p>
-						//     <p className="description">{prj.description}</p>
-						//     <div className="goal">{prj.goal.goal}</div>
-						//     <div className="milestones">
-						//         {prj.milestones.map((ms) => {
-						//             if (ms.completed) {
-						//                 return <span key={ms.id}>x</span>;
-						//             } else {
-						//                 return <span key={ms.id}>o</span>;
-						//             }
-						//         })}
-						//     </div>
-						// </div>
+						<ProjectCard key={prj.id} project={prj} />
 					))}
 			</section>
 		</main>
