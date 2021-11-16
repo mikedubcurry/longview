@@ -9,12 +9,12 @@ export function authReducer(state = initialState, action) {
 		case authConstants.LOGIN_REQUEST:
 			return {
 				loggingIn: true,
-				user: action.user,
+				username: action.username,
 			};
 		case authConstants.LOGIN_SUCCESS:
 			return {
 				loggedIn: true,
-				user: action.user,
+				token: action.token,
 			};
 		case authConstants.LOGIN_FAILURE:
 			return {};
