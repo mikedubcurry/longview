@@ -1,16 +1,87 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useStore } from 'react-redux';
 
+import './css/AuthForm.css';
+import { signIn, signup } from '../actions/auth';
 import { BaseButton } from './elements/BaseButton';
 
 export function AuthForm({ intention, onClick }) {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+
+	const usernameRef = useRef();
+	const passwordRef = useRef();
+
+	const dispatch = useDispatch();
+	const authStore = useStore();
+
+	useEffect(() => {
+		const unsubscribe = authStore.subscribe(() => {
+			// listen for state changes, if login/signup is successful, close AuthForm
+			const { loggedIn } = authStore.getState();
+			if (loggedIn) {
+				onClick();
+				setUsername('');
+				setPassword('');
+			}
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	});
+
+	function passwordIsValid(pw) {
+		if (!pw || pw.trim().length < 8) {
+			return false;
+		}
+		return true;
+	}
+
+	function handleFormSubmit(e) {
+		e.preventDefault();
+		// reset input validation styles
+		passwordRef.current.classList.remove('invalid');
+		usernameRef.current.classList.remove('invalid');
+
+		let valid = true;
+		if (!username || !username.trim()) {
+			usernameRef.current.classList.add('invalid');
+			console.log('invalid username');
+			valid = false;
+		}
+		if (!passwordIsValid(password)) {
+			passwordRef.current.classList.add('invalid');
+			console.log('invalid pw');
+			valid = false;
+		}
+		if (!valid) {
+			return;
+		}
+
+		if (intention === 'LOGIN') {
+			dispatch(signIn(username.trim(), password.trim()));
+		} else if (intention === 'SIGNUP') {
+			dispatch(signup(username.trim(), password.trim()));
+		} else {
+			alert('Login/Signup form seems to be broken...');
+		}
+	}
+
 	return (
 		<form>
 			<label htmlFor="username">Username:</label>
-			<input id="username" name="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+			<input
+				ref={usernameRef}
+				id="username"
+				name="username"
+				type="text"
+				value={username}
+				onChange={(e) => setUsername(e.target.value)}
+			/>
 			<label htmlFor="password">Password:</label>
 			<input
+				ref={passwordRef}
 				type="password"
 				name="password"
 				id="password"
@@ -19,23 +90,9 @@ export function AuthForm({ intention, onClick }) {
 			/>
 
 			{intention === 'LOGIN' ? (
-				<BaseButton
-					text="Log in"
-					clickHandler={(e) => {
-						e.preventDefault();
-						console.log('loggin in!');
-            onClick()
-					}}
-				/>
+				<BaseButton text="Log in" clickHandler={handleFormSubmit} />
 			) : (
-				<BaseButton
-					text="Sign up"
-					clickHandler={(e) => {
-						e.preventDefault();
-						console.log('signin up!');
-            onClick()
-					}}
-				/>
+				<BaseButton text="Sign up" clickHandler={handleFormSubmit} />
 			)}
 		</form>
 	);
