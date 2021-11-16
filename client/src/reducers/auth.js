@@ -1,6 +1,6 @@
 import { authConstants } from '../actions/constants';
 
-let user = JSON.parse(localStorage.getItem('user'));
+let user = JSON.parse(localStorage.getItem(import.meta.env.VITE_userTokenKey));
 
 const initialState = user ? { loggedIn: true, user } : {};
 

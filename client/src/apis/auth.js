@@ -1,4 +1,4 @@
-const apiServerHost = import.meta.env.api_server_host;
+const apiServerHost = import.meta.env.VITE_api_server_host;
 
 async function login(username, password) {
 	if (!username || !password) {
@@ -51,7 +51,7 @@ async function signup(username, password) {
 	}
 }
 
-const userTokenKey = import.meta.env.userTokenKey;
+const userTokenKey = import.meta.env.VITE_userTokenKey;
 
 function logout() {
 	localStorage.removeItem(userTokenKey);
