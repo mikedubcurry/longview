@@ -1,6 +1,5 @@
+import authApi from '../apis/auth';
 import { authConstants } from './constants';
-
-// split fetch requests into UserAPI module
 
 export function signIn(username, password) {
 	console.log('test');
@@ -8,20 +7,9 @@ export function signIn(username, password) {
 		// starting request, show a spinner
 		dispatch(request({ username }));
 		try {
-			const response = await fetch('http://localhost:3000/user/login', {
-				method: 'POST',
-				body: JSON.stringify({ username, password }),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-			if (response.ok) {
-				const token = await response.json();
-				// user logged in
-				dispatch(success(token));
-			} else {
-				throw Error('login failed');
-			}
+			const token = await authApi.login(username, password);
+			// user logged in!
+			dispatch(success(token));
 		} catch (e) {
 			// alert user that login failed
 			dispatch(failure(e));
@@ -39,8 +27,9 @@ export function signIn(username, password) {
 	}
 }
 
-export function logout() {
+export function signOut() {
 	// remove token from localstorage...
+	const loggedOut = authApi.logout();
 	return { type: authConstants.LOGOUT };
 }
 
@@ -50,19 +39,9 @@ export function signup(username, password) {
 		dispatch(request(username));
 
 		try {
-			const response = await fetch('http://localhost:3000/user/signup', {
-				method: 'POST',
-				body: {
-					username,
-					password,
-				},
-			});
-
-			if (response.ok) {
-				// user signed up!
-				const token = await response.json();
-				dispatch(success(token));
-			}
+			const token = await authApi.signup(username, password);
+			// user signed up!
+			dispatch(success(token));
 		} catch (e) {
 			// alert user signup failed...
 			dispatch(failure(e));
