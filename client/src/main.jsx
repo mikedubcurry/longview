@@ -17,11 +17,11 @@ export function ProvideAuth({ children }) {
 ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={authStore}>
-			<ProvideAuth>
+			{/* <ProvideAuth> */}
 				<Router>
 					<App />
 				</Router>
-			</ProvideAuth>
+			{/* </ProvideAuth> */}
 		</Provider>
 	</React.StrictMode>,
 	document.getElementById('root')
