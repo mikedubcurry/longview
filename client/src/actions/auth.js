@@ -4,10 +4,10 @@ import { authConstants } from './constants';
 export function signIn(username, password) {
 	return async (dispatch) => {
 		// starting request, show a spinner
-		dispatch(request({ username }));
+		dispatch(request(username));
 		try {
 			const token = await authApi.login(username, password);
-			dispatch(success({ token }));
+			dispatch(success(token));
 			// user logged in!
 		} catch (e) {
 			// alert user that login failed
@@ -16,13 +16,13 @@ export function signIn(username, password) {
 	};
 
 	function request(user) {
-		return { type: authConstants.LOGIN_REQUEST, user };
+		return { type: authConstants.LOGIN_REQUEST, payload: user };
 	}
 	function success(token) {
-		return { type: authConstants.LOGIN_SUCCESS, token };
+		return { type: authConstants.LOGIN_SUCCESS, payload: token };
 	}
 	function failure(error) {
-		return { type: authConstants.LOGIN_FAILURE, error };
+		return { type: authConstants.LOGIN_FAILURE, payload: error };
 	}
 }
 
@@ -48,12 +48,12 @@ export function signup(username, password) {
 	};
 
 	function request(username) {
-		return { type: authConstants.SIGNUP_REQUEST, username };
+		return { type: authConstants.SIGNUP_REQUEST, payload: username };
 	}
 	function success(token) {
-		return { type: authConstants.SIGNUP_SUCCESS, token };
+		return { type: authConstants.SIGNUP_SUCCESS, payload: token };
 	}
 	function failure(error) {
-		return { type: authConstants.SIGNUP_FAILURE, error };
+		return { type: authConstants.SIGNUP_FAILURE, payload: error };
 	}
 }
