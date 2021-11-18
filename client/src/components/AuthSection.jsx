@@ -5,22 +5,19 @@ import { AuthForm } from './AuthForm';
 import { AuthButton } from './elements/AuthButton';
 
 export function AuthSection({ loggedIn }) {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	const [loginFormOpen, setLoginFormOpen] = useState(false);
 	const [signupFormOpen, setSignupFormOpen] = useState(false);
 	const logout = () => {
-		dispatch({type: authConstants.LOGOUT})
-		console.log('logging out');
+		dispatch({ type: authConstants.LOGOUT });
 	};
 
 	const openLoginForm = () => {
-		console.log('displaying login form');
 		setSignupFormOpen(false);
 		setLoginFormOpen(true);
 	};
 
 	const openSignupForm = () => {
-		console.log('displaying signup form');
 		setLoginFormOpen(false);
 		setSignupFormOpen(true);
 	};
@@ -49,22 +46,4 @@ export function AuthSection({ loggedIn }) {
 			</>
 		);
 	}
-	// return (
-	// 	<>
-	// {loggedIn ? (
-	// 	<AuthButton text="Log out" clickHandler={logout} />
-	// ) : (
-	// 	<>
-	// 		<AuthButton text="Log in" clickHandler={openLoginForm} />
-	// 		<AuthButton text="Sign up" clickHandler={openSignupForm} />
-	// 	</>
-	// )}
-
-	//     {
-	//       formOpen && (
-	//         <AuthForm intention="LOGIN" />
-	//       )
-	//     }
-	// 	</>
-	// );
 }

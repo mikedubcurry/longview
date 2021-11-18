@@ -47,12 +47,10 @@ export function AuthForm({ intention, onClick }) {
 		let valid = true;
 		if (!username || !username.trim()) {
 			usernameRef.current.classList.add('invalid');
-			console.log('invalid username');
 			valid = false;
 		}
 		if (!passwordIsValid(password)) {
 			passwordRef.current.classList.add('invalid');
-			console.log('invalid pw');
 			valid = false;
 		}
 		if (!valid) {

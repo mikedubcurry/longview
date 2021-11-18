@@ -51,12 +51,4 @@ async function signup(username, password) {
 	}
 }
 
-const userTokenKey = import.meta.env.VITE_userTokenKey;
-
-function logout() {
-	localStorage.removeItem(userTokenKey);
-
-	return true;
-}
-
-export default { login, logout, signup };
+export default { login, signup };

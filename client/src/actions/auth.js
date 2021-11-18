@@ -28,7 +28,6 @@ export function signIn(username, password) {
 
 export function signOut() {
 	// remove token from localstorage...
-	const loggedOut = authApi.logout();
 	return { type: authConstants.LOGOUT };
 }
 
