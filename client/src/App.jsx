@@ -15,14 +15,16 @@ import { ProjectById } from './pages/ProjectById';
 
 import { signIn } from './actions/auth';
 import { AuthSection } from './components/AuthSection';
+import { useStore } from 'react-redux';
+import { useEffect, useState } from 'react';
 
-function PrivateRoute({ children, ...rest }) {
-	let auth = useAuth();
+function PrivateRoute({ children, user, ...rest }) {
+	// let auth = useAuth();
 	return (
 		<Route
 			{...rest}
 			render={({ location }) =>
-				auth.user ? (
+				user ? (
 					children
 				) : (
 					<Redirect
@@ -38,23 +40,39 @@ function PrivateRoute({ children, ...rest }) {
 }
 
 function App() {
-	const dispatch = useDispatch();
-	let history = useHistory();
-	let auth = useAuth();
-	let { from } = location.state || { from: { pathname: '/' } };
-	let login = () => {
-		// use test creds until auth form is set up...
-		dispatch(signIn('authtest', 'password'));
-		auth.login(() => {
-			history.replace(from);
+	const store = useStore();
+	const [auth, setAuth] = useState(null);
+
+	useEffect(() => {
+		const currentState = store.getState();
+		if (currentState.token) {
+			setAuth(currentState.token);
+		}
+		const unsubscribe = store.subscribe(() => {
+			setAuth(store.getState().token);
 		});
-	};
+
+		return () => {
+			unsubscribe();
+		};
+	}, [auth]);
+	// const dispatch = useDispatch();
+	// let history = useHistory();
+	// let auth = useAuth();
+	// let { from } = location.state || { from: { pathname: '/' } };
+	// let login = () => {
+	// 	// use test creds until auth form is set up...
+	// 	dispatch(signIn('authtest', 'password'));
+	// 	auth.login(() => {
+	// 		history.replace(from);
+	// 	});
+	// };
 
 	return (
 		<div className="App">
-			<Nav loggedIn={auth && auth.user}>
+			<Nav loggedIn={auth}>
 				{/* move login/logout buttons to Login.jsx/Logout.jsx made from ActionButton.jsx */}
-				<AuthSection loggedIn={auth.user}/>
+				<AuthSection loggedIn={auth} />
 				{/* {auth && auth.user ? (
 					<AuthButton text="Log out" clickHandler={() => auth.logout(() => history.push('/'))} />
 				) : (
@@ -65,16 +83,16 @@ function App() {
 				<Route path="/about">
 					<About />
 				</Route>
-				<PrivateRoute path="/goals/:goalId">
+				<PrivateRoute user={auth} path="/goals/:goalId">
 					<GoalById />
 				</PrivateRoute>
-				<PrivateRoute path="/goals">
+				<PrivateRoute user={auth} path="/goals">
 					<Goals />
 				</PrivateRoute>
-				<PrivateRoute path="/projects/:projectId">
+				<PrivateRoute user={auth} path="/projects/:projectId">
 					<ProjectById />
 				</PrivateRoute>
-				<PrivateRoute path="/projects">
+				<PrivateRoute user={auth} path="/projects">
 					<Projects />
 				</PrivateRoute>
 				<Route path="/">
