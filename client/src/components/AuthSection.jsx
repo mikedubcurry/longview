@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { authConstants } from '../actions/constants';
 import { AuthForm } from './AuthForm';
 import { AuthButton } from './elements/AuthButton';
 
 export function AuthSection({ loggedIn }) {
+	const dispatch = useDispatch()
 	const [loginFormOpen, setLoginFormOpen] = useState(false);
 	const [signupFormOpen, setSignupFormOpen] = useState(false);
 	const logout = () => {
+		dispatch({type: authConstants.LOGOUT})
 		console.log('logging out');
 	};
 
