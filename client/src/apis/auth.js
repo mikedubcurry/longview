@@ -46,7 +46,6 @@ async function signup(username, password) {
 		if (response.ok) {
 			// user signed up!
 			const token = await response.json();
-
 			return token;
 		}  else {
 			const errMessage = await response.json();

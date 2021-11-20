@@ -37,7 +37,7 @@ export function signup(username, password) {
 		dispatch(request(username));
 
 		try {
-			const { token } = await authApi.signup(username, password);
+			const token = await authApi.signup(username, password);
 			// user signed up!
 			dispatch(success(token));
 		} catch (e) {
