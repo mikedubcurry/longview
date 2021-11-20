@@ -21,7 +21,9 @@ export function authReducer(state = initialState, action) {
 			};
 
 		case authConstants.LOGIN_FAILURE:
-			return {};
+			return {
+				error: action.payload,
+			};
 
 		case authConstants.LOGOUT:
 			localStorage.removeItem(userStorageKey);
@@ -43,7 +45,9 @@ export function authReducer(state = initialState, action) {
 			};
 
 		case authConstants.SIGNUP_FAILURE:
-			return {};
+			return {
+				error: action.payload,
+			};
 
 		default:
 			return state;

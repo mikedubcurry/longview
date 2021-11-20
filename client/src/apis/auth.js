@@ -17,10 +17,13 @@ async function login(username, password) {
 			// user logged in
 			return token;
 		} else {
-			throw Error('login failed');
+			const errMessage = await response.json();
+			console.log(errMessage);
+			throw errMessage.message;
 		}
 	} catch (e) {
-		throw Error(e);
+		console.log('error');
+		throw e;
 	}
 }
 
@@ -45,9 +48,13 @@ async function signup(username, password) {
 			const token = await response.json();
 
 			return token;
+		}  else {
+			const errMessage = await response.json();
+			console.log(errMessage);
+			throw errMessage.message;
 		}
 	} catch (e) {
-		throw Error(e);
+		throw e;
 	}
 }
 

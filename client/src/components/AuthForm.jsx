@@ -8,6 +8,7 @@ import { BaseButton } from './elements/BaseButton';
 export function AuthForm({ intention, onClick }) {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [serverMessage, setServerMessage] = useState('');
 
 	const usernameRef = useRef();
 	const passwordRef = useRef();
@@ -17,8 +18,14 @@ export function AuthForm({ intention, onClick }) {
 
 	useEffect(() => {
 		const unsubscribe = authStore.subscribe(() => {
+			const currentState = authStore.getState();
+			if (currentState.error) {
+				setServerMessage(currentState.error);
+				usernameRef.current.classList.add('invalid');
+				passwordRef.current.classList.add('invalid');
+			}
 			// listen for state changes, if login/signup is successful, close AuthForm
-			const { loggedIn } = authStore.getState();
+			const { loggedIn } = currentState;
 			if (loggedIn) {
 				onClick();
 				setUsername('');
@@ -86,7 +93,9 @@ export function AuthForm({ intention, onClick }) {
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
 			/>
-
+			{serverMessage && (
+				<p>{serverMessage}</p>
+			)}
 			{intention === 'LOGIN' ? (
 				<BaseButton text="Log in" clickHandler={handleFormSubmit} />
 			) : (
