@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { authConstants } from '../actions/constants';
 import { AuthForm } from './AuthForm';
 import { AuthButton } from './elements/AuthButton';
+import { Modal } from './elements/Modal';
 
 export function AuthSection({ loggedIn }) {
 	const dispatch = useDispatch();
@@ -26,9 +27,15 @@ export function AuthSection({ loggedIn }) {
 		return (
 			<>
 				{loginFormOpen ? (
-					<AuthForm intention="LOGIN" onClick={() => setLoginFormOpen(false)} />
+					<Modal open={loginFormOpen} onClose={() => setLoginFormOpen(false)}>
+						<h2>Log In</h2>
+						<AuthForm intention="LOGIN" onClick={() => setLoginFormOpen(false)} />
+					</Modal>
 				) : (
-					<AuthForm intention="SIGNUP" onClick={() => setSignupFormOpen(false)} />
+					<Modal open={signupFormOpen} onClose={() => setSignupFormOpen(false)}>
+						<h2>Sign Up</h2>
+						<AuthForm intention="SIGNUP" onClick={() => setSignupFormOpen(false)} />
+					</Modal>
 				)}
 			</>
 		);
