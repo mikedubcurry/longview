@@ -50,19 +50,19 @@ export function Projects({}) {
 			milestones: [
 				{
 					milestone: 'get all 16 badges',
-					completed: false,
+					completed: true,
 					projectId: '2',
 					id: '5',
 				},
 				{
 					milestone: 'catch both legendary birds',
-					completed: false,
+					completed: true,
 					projectId: '2',
 					id: '6',
 				},
 				{
 					milestone: 'catch legendary dogs',
-					completed: false,
+					completed: true,
 					projectId: '2',
 					id: '7',
 				},
