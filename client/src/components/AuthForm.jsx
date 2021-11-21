@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 
-import './css/AuthForm.css';
 import { signIn, signup } from '../actions/auth';
 import { BaseButton } from './elements/BaseButton';
 
@@ -74,7 +73,13 @@ export function AuthForm({ intention, onClick }) {
 	}
 
 	return (
-		<form>
+		<form
+			css={css`
+				input.invalid {
+					background-color: var(--warning-color);
+				}
+			`}
+		>
 			<label htmlFor="username">Username:</label>
 			<input
 				ref={usernameRef}
@@ -93,9 +98,7 @@ export function AuthForm({ intention, onClick }) {
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
 			/>
-			{serverMessage && (
-				<p>{serverMessage}</p>
-			)}
+			{serverMessage && <p>{serverMessage}</p>}
 			{intention === 'LOGIN' ? (
 				<BaseButton text="Log in" clickHandler={handleFormSubmit} />
 			) : (

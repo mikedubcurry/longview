@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useStore } from 'react-redux';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
-
-import './App.css';
+// import './App.css';
 import { Nav } from './components/Nav';
 import { About } from './pages/About';
 import { Home } from './pages/Home';
@@ -52,7 +51,7 @@ function App() {
 	}, [auth]);
 
 	return (
-		<div className="App">
+		<>
 			<Nav loggedIn={auth}>
 				<AuthSection loggedIn={auth} />
 			</Nav>
@@ -76,7 +75,7 @@ function App() {
 					<Home />
 				</Route>
 			</Switch>
-		</div>
+		</>
 	);
 }
 
