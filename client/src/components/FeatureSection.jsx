@@ -10,23 +10,23 @@ export function FeatureSection({ featureText, featureIcon, leftAlign }) {
 		secondCurveStart: leftAlign ? `${iconWidth} ${iconHeight - 16}` : `${vw - iconWidth}  ${16}`,
 		secondCurve: leftAlign ? `16 16 0 0 0 ${iconWidth + 16} ${iconHeight}` : `16 16 0 0 1 ${vw - iconWidth + 16} 0`,
 		rightSide: leftAlign ? `${vw} ${iconHeight}` : `${vw} 0`,
-		bottomRight: `${vw} ${vh * 0.65}`,
-		bottomLeft: `0 ${vh * 0.65}`,
+		bottomRight: leftAlign ? `${vw} ${vh * 0.65}` : `${vw} ${vh * 0.65 + iconHeight}`,
+		bottomLeft: leftAlign ? `0 ${vh * 65}` : `0 ${vh * 0.65 + iconHeight}`,
 	};
 	return (
 		<section
 			css={css`
 				position: relative;
-				top: ${leftAlign ? 'calc(0px - 44vh - 64px)' : 'calc((0px - 13vh - 32px))'};
+				// top: calc(0px - 44vh - 64px);
+				top: -${leftAlign ? iconHeight * 2 : iconHeight}px;
 				display: grid;
 				grid-template-rows: auto;
 				height: ${leftAlign ? '65vh' : 'calc(65vh + ' + iconHeight + 'px)'};
 				padding: var(--med-padding);
 				clip-path: path(
-					'M ${clipCoords.start} L ${clipCoords.firstCurveStart} A ${clipCoords.firstCurve} L ${clipCoords.secondCurveStart} A ${clipCoords.secondCurve} L ${clipCoords.rightSide} L ${clipCoords.bottomRight} L 0 ${vh *
-					0.65}'
+					'M ${clipCoords.start} L ${clipCoords.firstCurveStart} A ${clipCoords.firstCurve} L ${clipCoords.secondCurveStart} A ${clipCoords.secondCurve} L ${clipCoords.rightSide} L ${clipCoords.bottomRight} L ${clipCoords.bottomLeft}'
 				);
-
+				z-index: ${leftAlign ? 2 : 1};
 				background-color: ${leftAlign ? 'blue' : 'orange'};
 				& .feature-section-icon {
 					display: flex;
