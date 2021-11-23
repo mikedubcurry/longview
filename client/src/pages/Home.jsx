@@ -7,7 +7,7 @@ export function Home() {
 		<>
 			<Hero title="Longview" subtitle="Keeping track of all the things so you don't have to."></Hero>
 			<main>
-				<Logo />
+				{/* <Logo /> */}
 				<FeatureSection
 					// add featureIcon svg
 					featureText={{
@@ -18,6 +18,8 @@ export function Home() {
 
 				<FeatureSection
 					// add featureIcon svg
+					leftAlign={true}
+
 					featureText={{
 						__html:
 							'Coming soon, allow other users to join in a group and collaborate with shared <em>Goals</em> and <em>Projects</em>',
