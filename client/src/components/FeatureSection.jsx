@@ -17,7 +17,6 @@ export function FeatureSection({ featureText, featureIcon, leftAlign }) {
 		<section
 			css={css`
 				position: relative;
-				// top: calc(0px - 44vh - 64px);
 				top: -${leftAlign ? iconHeight * 2 : iconHeight}px;
 				display: grid;
 				grid-template-rows: auto;
