@@ -8,7 +8,7 @@ export function Nav({ loggedIn, children }) {
 			css={css`
 				position: sticky;
 				top: 0;
-
+				z-index: 25;
 				padding: 0 1rem;
 				height: 8vh;
 

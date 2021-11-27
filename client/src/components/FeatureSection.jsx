@@ -1,40 +1,61 @@
+import { useState } from 'react';
+import { useEffect } from 'react';
+
+const styles = (leftAlign) => css`
+	height: 80vh;
+	display: grid;
+	grid-template-rows: calc(13vh + var(--med-padding) * 2) auto;
+	background-color: ${leftAlign ? 'blue' : 'orange'};
+	.feature-section-icon {
+		background-color: ${leftAlign ? 'orange' : 'rgb(33, 128, 119)'};
+
+		.icon {
+			float: ${leftAlign ? 'left' : 'right'};
+			width: 58%;
+			height: 100%;
+			background-color: ${leftAlign ? 'blue' : 'orange'};
+			border-radius: ${leftAlign ? '0 var(--med-padding) 0 0' : 'var(--med-padding) 0 0 0'};
+		}
+		.convex-corner {
+			position: relative;
+			float: ${leftAlign ? 'right' : 'left'};
+			width: 42%;
+			height: 100%;
+		}
+    .convex-corner::after {
+      position: absolute;
+      content: '';
+      left: ${leftAlign ? '' : 'calc(100% - var(--med-padding) * 2)'};
+      top: calc(100% - var(--med-padding)*2);
+      border-radius: 100%;
+      width: calc(var(--med-padding) * 2);
+      height: calc(var(--med-padding) * 2);
+      background-color: ${leftAlign ? 'orange' : 'rgb(33, 128, 119)'};
+    }
+    
+    .convex-corner::before {
+      position: absolute;
+      content: '';
+      background-color: ${leftAlign ? 'blue' : 'orange'};
+      // background-color: red;
+      bottom: 0;
+      width: calc(var(--med-padding));
+      height: calc(var(--med-padding));
+      left: ${leftAlign ? '0' : 'calc(100% - var(--med-padding))'};
+    }
+  }
+
+  .feature-section-text {
+    padding: var(--med-padding);
+  }
+`;
+
 export function FeatureSection({ featureText, featureIcon, leftAlign }) {
-	const vw = Math.floor(window.innerWidth);
-	const vh = Math.floor(window.innerHeight);
-	const iconHeight = Math.floor(0.13 * vh + 32);
-	const iconWidth = Math.floor(0.58 * vw + 32);
-	const clipCoords = {
-		start: leftAlign ? `0 0 ` : `0 ${iconHeight}`,
-		firstCurveStart: leftAlign ? `${iconWidth - 16} 0` : `${vw - iconWidth - 16} ${iconHeight}`,
-		firstCurve: leftAlign ? `16 16 0 0 1 ${iconWidth} 16 ` : `16 16 0 0 0 ${vw - iconWidth} ${iconHeight - 16}`,
-		secondCurveStart: leftAlign ? `${iconWidth} ${iconHeight - 16}` : `${vw - iconWidth}  ${16}`,
-		secondCurve: leftAlign ? `16 16 0 0 0 ${iconWidth + 16} ${iconHeight}` : `16 16 0 0 1 ${vw - iconWidth + 16} 0`,
-		rightSide: leftAlign ? `${vw} ${iconHeight}` : `${vw} 0`,
-		bottomRight: leftAlign ? `${vw} ${vh * 0.65}` : `${vw} ${vh * 0.65 + iconHeight}`,
-		bottomLeft: leftAlign ? `0 ${vh * 65}` : `0 ${vh * 0.65 + iconHeight}`,
-	};
 	return (
-		<section
-			css={css`
-				position: relative;
-				top: -${leftAlign ? iconHeight * 2 : iconHeight}px;
-				display: grid;
-				grid-template-rows: auto;
-				height: ${leftAlign ? '65vh' : 'calc(65vh + ' + iconHeight + 'px)'};
-				padding: var(--med-padding);
-				clip-path: path(
-					'M ${clipCoords.start} L ${clipCoords.firstCurveStart} A ${clipCoords.firstCurve} L ${clipCoords.secondCurveStart} A ${clipCoords.secondCurve} L ${clipCoords.rightSide} L ${clipCoords.bottomRight} L ${clipCoords.bottomLeft}'
-				);
-				z-index: ${leftAlign ? 2 : 1};
-				background-color: ${leftAlign ? 'blue' : 'orange'};
-				& .feature-section-icon {
-					display: flex;
-					justify-content: ${leftAlign ? 'start' : 'end'};
-				}
-			`}
-		>
+		<section css={styles(leftAlign)}>
 			<div className="feature-section-icon">
-				<span style={{ backgroundColor: 'red', width: '58vw', height: '13vh' }}></span>
+				<div className="convex-corner"></div>
+				<div className="icon"></div>
 			</div>
 			<aside className="feature-section-text">
 				<p dangerouslySetInnerHTML={featureText}>

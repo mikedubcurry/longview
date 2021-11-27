@@ -10,7 +10,7 @@ export function Hero({ title, subtitle, bgImage, children }) {
 				justify-content: space-evenly;
 				align-items: center;
 
-				background-color: rgba(33, 128, 119, 0.789);
+				background-color: rgba(33, 128, 119);
 
 				& > h1 {
 					flex: 1;

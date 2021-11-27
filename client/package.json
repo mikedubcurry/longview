@@ -2,7 +2,7 @@
   "name": "longview-client",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "serve": "vite preview"
   },
@@ -13,7 +13,6 @@
     "react-dom": "^17.0.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
-    "react-transition-group": "^4.4.2",
     "redux-thunk": "^2.4.0"
   },
   "devDependencies": {
