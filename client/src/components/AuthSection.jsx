@@ -28,7 +28,13 @@ export function AuthSection({ loggedIn }) {
 			<>
 				{loginFormOpen ? (
 					<Modal open={loginFormOpen} onClose={() => setLoginFormOpen(false)}>
-						<h2>Log In</h2>
+						<h2
+							css={css`
+								font-size: 40px;
+							`}
+						>
+							Log In
+						</h2>
 						<AuthForm intention="LOGIN" onClick={() => setLoginFormOpen(false)} />
 					</Modal>
 				) : (

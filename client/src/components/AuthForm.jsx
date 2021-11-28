@@ -75,6 +75,22 @@ export function AuthForm({ intention, onClick }) {
 	return (
 		<form
 			css={css`
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				justify-content: space-evenly;
+				height: 100%;
+
+				label {
+					font-size: 24px;
+				}
+
+				input {
+					font-size: 16px;
+					border-radius: 2px;
+					padding: 4px;
+				}
+
 				input.invalid {
 					background-color: var(--warning-color);
 				}
@@ -104,6 +120,7 @@ export function AuthForm({ intention, onClick }) {
 			) : (
 				<BaseButton text="Sign up" clickHandler={handleFormSubmit} />
 			)}
+			<BaseButton text="Close" clickHandler={onClick} />
 		</form>
 	);
 }
