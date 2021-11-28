@@ -32,7 +32,7 @@ async function signup(username, password) {
 		throw Error('username and password must be included to sign up');
 	}
 	try {
-		const response = await fetch('http://localhost:3000/user/signup', {
+		const response = await fetch(`${apiServerHost}/user/signup`, {
 			method: 'POST',
 			body: JSON.stringify({
 				username,
