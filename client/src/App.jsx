@@ -49,7 +49,6 @@ function App() {
 			unsubscribe();
 		};
 	}, [auth]);
-
 	return (
 		<>
 			<Nav loggedIn={auth}>

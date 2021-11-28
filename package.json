@@ -4,6 +4,7 @@
 	"description": "an app to organize and prioritize different aspirations and project i want to work on at some point",
 	"main": "index.js",
 	"scripts": {
+		"start": "node dist/index.js",
 		"dev": "NODE_ENV=development nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.spec/ts' --exec 'ts-node src/index.ts'",
 		"build": "tsc",
 		"test": "NODE_ENV=test jest --runInBand",
