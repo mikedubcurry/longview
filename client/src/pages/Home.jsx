@@ -34,7 +34,20 @@ export function Home() {
 
 function Checklist() {
 	return (
-		<svg width="100%" height="100%" viewBox="0 0 150 100" xmlns="http://www.w3.org/2000/svg">
+		<svg css={css`
+			.checks, .boxes, .lines {
+				transition: all .3s ease;
+			}
+			&:hover .checks {
+				stroke: green;
+			}
+			&:hover .boxes {
+				stroke: yellow;
+			}
+			&:hover .lines {
+				stroke: #444;
+			}
+		`} width="100%" height="100%" viewBox="0 0 150 100" xmlns="http://www.w3.org/2000/svg">
 			<path
 				fill="none"
 				stroke="#ddd"
@@ -45,16 +58,26 @@ function Checklist() {
 			<path
 				fill="none"
 				stroke="#ddd"
+				className="lines"
 				strokeWidth="5px"
 				strokeLinecap="round"
 				d="m15 20 l 40 0 m -40 10 l 15 0 m 10 0 l 15 0 m -40 10 l 40 0m -40 10 l 40 0m -40 10 l 15 0 m 10 0 l 15 0 m -40 10 l 40 0m -40 10 l 40 0"
 			/>
 			<path
 				fill="none"
+				className="checks"
 				stroke="#ddd"
 				strokeWidth="5px"
 				strokeLinecap="round"
-				d="m75 25 l 5 5 l 15 -20 m-20 40l 5 5 l 15 -20m-20 40l 5 5 l 15 -20m25 -35 l 5 5 l 15 -20 m -20 35 l 10 0l0 10 l -10 0 l 0 -10z m 0 25 l 10 0l0 10 l -10 0 l 0 -10z"
+				d="m75 25 l 5 5 l 15 -20 m-20 40l 5 5 l 15 -20m-20 40l 5 5 l 15 -20m25 -35 l 5 5 l 15 -20"
+			/>
+			<path
+				fill="none"
+				className="boxes"
+				stroke="#ddd"
+				strokeWidth="5px"
+				strokeLinecap="round"
+				d=" m120 45 l 10 0l0 10 l -10 0 l 0 -10z m 0 25 l 10 0l0 10 l -10 0 l 0 -10z"
 			/>
 		</svg>
 	);
@@ -62,7 +85,29 @@ function Checklist() {
 
 function Progress() {
 	return (
-		<svg id="svg-progress" width="100%" height="100%" viewBox="0 0 150 100" xmlns="http://www.w3.org/2000/svg">
+		<svg
+			css={css`
+				.svg-progress-amount1 {
+					transition: all 0.5s ease 0s;
+				}
+				.svg-progress-amount2 {
+					transition: all 0.5s ease 0.5s;
+				}
+				.svg-progress-amount3 {
+					transition: all 0.5s ease 1s;
+				}
+				&:hover .svg-progress-amount1,
+				&:hover .svg-progress-amount2,
+				&:hover .svg-progress-amount3 {
+					stroke-dashoffset: 0;
+				}
+			`}
+			id="svg-progress"
+			width="100%"
+			height="100%"
+			viewBox="0 0 150 100"
+			xmlns="http://www.w3.org/2000/svg"
+		>
 			<path
 				stroke="#ddd"
 				strokeWidth="6px"

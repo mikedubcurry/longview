@@ -19,19 +19,6 @@ const styles = (leftAlign) => css`
 			justify-content: center;
 			align-items: center;
 			padding: var(--med-padding);
-
-			.svg-progress-amount1 {
-				transition: all .5s ease 0s;
-			}
-			.svg-progress-amount2 {
-				transition: all .5s ease .5s
-			}
-			.svg-progress-amount3 {
-				transition: all .5s ease 1s
-			}
-			#svg-progress:hover .svg-progress-amount1,#svg-progress:hover .svg-progress-amount2,#svg-progress:hover .svg-progress-amount3{
-				stroke-dashoffset: 0;
-			}
 		}
 		.convex-corner {
 			position: relative;
@@ -65,8 +52,6 @@ const styles = (leftAlign) => css`
 	.feature-section-text {
 		padding: var(--med-padding);
 	}
-
-
 `;
 
 export function FeatureSection({ featureText, featureIcon, leftAlign }) {
@@ -77,9 +62,7 @@ export function FeatureSection({ featureText, featureIcon, leftAlign }) {
 				<div className="icon">{featureIcon}</div>
 			</div>
 			<aside className="feature-section-text">
-				<p dangerouslySetInnerHTML={featureText}>
-					{/* Keep track of different <em>Goals</em> and <em>Projects</em> while documenting your successes and challanges. */}
-				</p>
+				<p dangerouslySetInnerHTML={featureText}></p>
 			</aside>
 		</section>
 	);
