@@ -11,6 +11,7 @@ import { GoalById } from './pages/GoalById';
 import { Projects } from './pages/Projects';
 import { ProjectById } from './pages/ProjectById';
 import { AuthSection } from './components/AuthSection';
+import { Header } from './components/Header';
 
 function PrivateRoute({ children, auth, ...rest }) {
 	return (
@@ -35,6 +36,7 @@ function PrivateRoute({ children, auth, ...rest }) {
 function App() {
 	const store = useStore();
 	const [auth, setAuth] = useState(null);
+	const [navOpen, setNavOpen] = useState(false);
 
 	useEffect(() => {
 		const currentState = store.getState();
@@ -51,29 +53,32 @@ function App() {
 	}, [auth]);
 	return (
 		<>
-			<Nav loggedIn={auth}>
+			<Header openState={[navOpen, setNavOpen]} />
+			{/* <Nav loggedIn={auth}>
 				<AuthSection loggedIn={auth} />
-			</Nav>
-			<Switch>
-				<Route path="/about">
-					<About />
-				</Route>
-				<PrivateRoute auth={auth} path="/goals/:goalId">
-					<GoalById />
-				</PrivateRoute>
-				<PrivateRoute auth={auth} path="/goals">
-					<Goals />
-				</PrivateRoute>
-				<PrivateRoute auth={auth} path="/projects/:projectId">
-					<ProjectById />
-				</PrivateRoute>
-				<PrivateRoute auth={auth} path="/projects">
-					<Projects />
-				</PrivateRoute>
-				<Route path="/">
-					<Home />
-				</Route>
-			</Switch>
+			</Nav> */}
+			<div onClick={() => setNavOpen(false)}>
+				<Switch>
+					<Route path="/about">
+						<About />
+					</Route>
+					<PrivateRoute auth={auth} path="/goals/:goalId">
+						<GoalById />
+					</PrivateRoute>
+					<PrivateRoute auth={auth} path="/goals">
+						<Goals />
+					</PrivateRoute>
+					<PrivateRoute auth={auth} path="/projects/:projectId">
+						<ProjectById />
+					</PrivateRoute>
+					<PrivateRoute auth={auth} path="/projects">
+						<Projects />
+					</PrivateRoute>
+					<Route path="/">
+						<Home />
+					</Route>
+				</Switch>
+			</div>
 		</>
 	);
 }
