@@ -77,7 +77,7 @@ export function AuthForm({ intention, onClick }) {
 			css={css`
 				display: flex;
 				flex-direction: column;
-				gap: 8px;
+				gap: 16px;
 				justify-content: space-evenly;
 				height: 100%;
 

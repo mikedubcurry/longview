@@ -31,6 +31,7 @@ export function AuthSection({ loggedIn }) {
 						<h2
 							css={css`
 								font-size: 40px;
+								margin-bottom: 12px;
 							`}
 						>
 							Log In
@@ -39,7 +40,14 @@ export function AuthSection({ loggedIn }) {
 					</Modal>
 				) : (
 					<Modal open={signupFormOpen} onClose={() => setSignupFormOpen(false)}>
-						<h2>Sign Up</h2>
+						<h2
+							css={css`
+								font-size: 40px;
+								margin-bottom: 12px;
+							`}
+						>
+							Sign Up
+						</h2>
 						<AuthForm intention="SIGNUP" onClick={() => setSignupFormOpen(false)} />
 					</Modal>
 				)}
