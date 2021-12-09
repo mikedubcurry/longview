@@ -2,18 +2,19 @@ import { Link, useLocation } from 'react-router-dom';
 
 export function Nav({ openState, loggedIn, children }) {
 	const { pathname } = useLocation();
-	const [isOpen, setIsOpen] = openState
+	const [isOpen, setIsOpen] = openState;
 
 	return (
 		<div
 			css={css`
 				position: fixed;
-				transition: top .3s ease;
+				transition: top 0.3s ease;
 				top: ${isOpen ? '8vh' : '0'};
 				z-index: 25;
 				padding: 0 1rem;
 				height: 8vh;
 				width: 100%;
+				border-radius: 0 0 8px 8px;
 
 				background-color: #555;
 
@@ -36,7 +37,12 @@ export function Nav({ openState, loggedIn, children }) {
 
 					transition: text-decoration-color 0.3s ease;
 				}
-
+				
+				& nav a::selection {
+					color: unset;
+					background-color: unset;
+					text-decoration-color: transparent;
+				}
 				nav > a::before {
 					left: 0;
 					top: 100%;
@@ -76,18 +82,22 @@ export function Nav({ openState, loggedIn, children }) {
 			`}
 		>
 			<nav>
-				<Link onClick={() =>setIsOpen(false)} className={pathname === '/' ? 'active' : ''} to="/">
+				<Link onClick={() => setIsOpen(false)} className={pathname === '/' ? 'active' : ''} to="/">
 					Home
 				</Link>
-				<Link onClick={() =>setIsOpen(false)} className={pathname === '/about' ? 'active' : ''} to="/about">
+				<Link onClick={() => setIsOpen(false)} className={pathname === '/about' ? 'active' : ''} to="/about">
 					About
 				</Link>
 				{loggedIn && (
 					<>
-						<Link onClick={() =>setIsOpen(false)} className={pathname.includes('/goals') ? 'active' : ''} to="/goals">
+						<Link onClick={() => setIsOpen(false)} className={pathname.includes('/goals') ? 'active' : ''} to="/goals">
 							Goals
 						</Link>
-						<Link onClick={() =>setIsOpen(false)} className={pathname.includes('/projects') ? 'active' : ''} to="/projects">
+						<Link
+							onClick={() => setIsOpen(false)}
+							className={pathname.includes('/projects') ? 'active' : ''}
+							to="/projects"
+						>
 							Projects
 						</Link>
 					</>

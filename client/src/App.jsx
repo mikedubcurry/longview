@@ -53,7 +53,7 @@ function App() {
 	}, [auth]);
 	return (
 		<>
-			<Header openState={[navOpen, setNavOpen]} />
+			<Header auth={auth} openState={[navOpen, setNavOpen]} />
 			{/* <Nav loggedIn={auth}>
 				<AuthSection loggedIn={auth} />
 			</Nav> */}

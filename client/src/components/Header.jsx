@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { AuthSection } from './AuthSection';
 import { Logo } from './Logo';
 import { MenuBtn } from './MenuBtn';
 import { Nav } from './Nav';
 
-export function Header({ children, openState }) {
+export function Header({ auth, openState }) {
 	const [isOpen, setIsOpen] = openState;
 
 	return (
@@ -25,7 +26,9 @@ export function Header({ children, openState }) {
 				<Logo />
 				<MenuBtn openState={[isOpen, setIsOpen]} />
 			</header>
-			<Nav openState={[isOpen, setIsOpen]} />
+			<Nav loggedIn={auth} openState={[isOpen, setIsOpen]}>
+				<AuthSection loggedIn={auth} />
+			</Nav>
 		</>
 	);
 }

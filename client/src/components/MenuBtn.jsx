@@ -14,7 +14,7 @@ export function MenuBtn({ openState }) {
 
 				.top-line,
 				.bottom-line {
-					transition: transform 0.3s ease;
+					transition: transform 0.2s ease;
 					transform-origin: 50% 50%;
 				}
 				.open .top-line {
