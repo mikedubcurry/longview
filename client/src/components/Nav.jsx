@@ -9,35 +9,45 @@ export function Nav({ openState, loggedIn, children }) {
 			css={css`
 				position: fixed;
 				transition: top 0.3s ease;
-				top: ${isOpen ? '8vh' : '0'};
+				top: ${isOpen ? '8vh' : '-10vh'};
 				z-index: 25;
-				padding: 0 1rem;
-				height: 8vh;
+				padding: 1rem;
 				width: 100%;
 				border-radius: 0 0 8px 8px;
 
-				background-color: #555;
+				// background-color: #555;
+				background-color: red;
 
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+				flex-direction: ${loggedIn ? 'column' : 'row'};
 
-				& > nav {
-					flex: 1;
-					display: flex;
-					justify-content: start;
+				& > nav,
+				& > .auth {
+					// height: 100%;
+					display: grid;
+					grid-template-rows: repeat(2, 1fr);
+					justify-items: center;
 					gap: 1rem;
+				}
+				& > nav {
+					${loggedIn ? 'grid-template-columns: repeat(2, 1fr);' : ''}
+					${loggedIn ? 'width: 100%;' : ''}
+				}
+				& > .auth {
+				  ${loggedIn ? 'grid-template-rows: 1fr;' : ''}
+					align-self: end;
 				}
 
 				& nav > a {
 					position: relative;
-					font-size: 18px;
+					font-size: 24px;
 					text-decoration-color: transparent;
 					color: var(--primary-color);
-
 					transition: text-decoration-color 0.3s ease;
 				}
-				
+
 				& nav a::selection {
 					color: unset;
 					background-color: unset;
@@ -81,7 +91,7 @@ export function Nav({ openState, loggedIn, children }) {
 				}
 			`}
 		>
-			<nav>
+			<nav className={loggedIn ? 'loggedIn' : ''}>
 				<Link onClick={() => setIsOpen(false)} className={pathname === '/' ? 'active' : ''} to="/">
 					Home
 				</Link>

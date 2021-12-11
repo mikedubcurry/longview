@@ -23,48 +23,45 @@ export function AuthSection({ loggedIn }) {
 		setSignupFormOpen(true);
 	};
 
-	if (loginFormOpen || signupFormOpen) {
-		return (
-			<>
-				{loginFormOpen ? (
-					<Modal open={loginFormOpen} onClose={() => setLoginFormOpen(false)}>
-						<h2
-							css={css`
-								font-size: 40px;
-								margin-bottom: 12px;
-							`}
-						>
-							Log In
-						</h2>
-						<AuthForm intention="LOGIN" onClick={() => setLoginFormOpen(false)} />
-					</Modal>
-				) : (
-					<Modal open={signupFormOpen} onClose={() => setSignupFormOpen(false)}>
-						<h2
-							css={css`
-								font-size: 40px;
-								margin-bottom: 12px;
-							`}
-						>
-							Sign Up
-						</h2>
-						<AuthForm intention="SIGNUP" onClick={() => setSignupFormOpen(false)} />
-					</Modal>
-				)}
-			</>
-		);
-	} else {
-		return (
-			<>
-				{loggedIn ? (
-					<AuthButton text="Log out" clickHandler={logout} />
-				) : (
-					<>
-						<AuthButton text="Log in" clickHandler={openLoginForm} />
-						<AuthButton text="Sign up" clickHandler={openSignupForm} />
-					</>
-				)}
-			</>
-		);
-	}
+	return (
+		<>
+			{(loginFormOpen || signupFormOpen) && (
+				<>
+					{loginFormOpen ? (
+						<Modal open={loginFormOpen} onClose={() => setLoginFormOpen(false)}>
+							<h2
+								css={css`
+									font-size: 40px;
+									margin-bottom: 12px;
+								`}
+							>
+								Log In
+							</h2>
+							<AuthForm intention="LOGIN" onClick={() => setLoginFormOpen(false)} />
+						</Modal>
+					) : (
+						<Modal open={signupFormOpen} onClose={() => setSignupFormOpen(false)}>
+							<h2
+								css={css`
+									font-size: 40px;
+									margin-bottom: 12px;
+								`}
+							>
+								Sign Up
+							</h2>
+							<AuthForm intention="SIGNUP" onClick={() => setSignupFormOpen(false)} />
+						</Modal>
+					)}
+				</>
+			)}
+			{loggedIn ? (
+				<AuthButton text="Log out" clickHandler={logout} />
+			) : (
+				<>
+					<AuthButton text="Log in" clickHandler={openLoginForm} />
+					<AuthButton text="Sign up" clickHandler={openSignupForm} />
+				</>
+			)}
+		</>
+	);
 }
