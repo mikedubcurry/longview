@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { AuthSection } from './AuthSection';
 import { Logo } from './Logo';
 import { MenuBtn } from './MenuBtn';
