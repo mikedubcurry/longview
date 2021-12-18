@@ -36,8 +36,12 @@ export function Nav({ openState, loggedIn, children }) {
 					${loggedIn ? 'width: 100%;' : ''}
 				}
 				& > .auth {
-				  ${loggedIn ? 'grid-template-rows: 1fr;' : ''}
+					${loggedIn ? 'grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; width: 100%;' : ''}
 					align-self: end;
+				}
+
+				& > .auth button {
+					${loggedIn ? 'grid-column: 2;' : ''}
 				}
 
 				& nav > a {
