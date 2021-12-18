@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
 
 export function MilestoneSection({ milestones }) {
 	const [expanded, setExpanded] = useState(false);
