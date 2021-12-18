@@ -105,7 +105,7 @@ export function Modal({ children, open, onClose, locked }) {
 					className="modal-portal"
 				>
 					<div ref={backdrop} className={`backdrop ${active && open && 'active'}`}>
-						<div className="modal-content contents">{children}</div>
+						<div aria-modal="true" className="modal-content contents">{children}</div>
 					</div>
 				</Portal>
 			)}

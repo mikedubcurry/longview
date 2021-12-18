@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
+import FocusTrap from 'focus-trap-react';
 
 import { signIn, signup } from '../actions/auth';
 import { BaseButton } from './elements/BaseButton';
@@ -72,55 +73,62 @@ export function AuthForm({ intention, onClick }) {
 		}
 	}
 
+	function handleTab(e) {
+		console.log(e.key);
+	}
+
 	return (
-		<form
-			css={css`
-				display: flex;
-				flex-direction: column;
-				gap: 16px;
-				justify-content: space-evenly;
-				height: 100%;
+		<FocusTrap >
+			<form
+				css={css`
+					display: flex;
+					flex-direction: column;
+					gap: 16px;
+					justify-content: space-evenly;
+					height: 100%;
 
-				label {
-					font-size: 24px;
-				}
+					label {
+						font-size: 24px;
+					}
 
-				input {
-					font-size: 16px;
-					border-radius: 2px;
-					padding: 4px;
-				}
+					input {
+						font-size: 16px;
+						border-radius: 2px;
+						padding: 4px;
+					}
 
-				input.invalid {
-					background-color: var(--warning-color);
-				}
-			`}
-		>
-			<label htmlFor="username">Username:</label>
-			<input
-				ref={usernameRef}
-				id="username"
-				name="username"
-				type="text"
-				value={username}
-				onChange={(e) => setUsername(e.target.value)}
-			/>
-			<label htmlFor="password">Password:</label>
-			<input
-				ref={passwordRef}
-				type="password"
-				name="password"
-				id="password"
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
-			/>
-			{serverMessage && <p>{serverMessage}</p>}
-			{intention === 'LOGIN' ? (
-				<BaseButton text="Log in" clickHandler={handleFormSubmit} />
-			) : (
-				<BaseButton text="Sign up" clickHandler={handleFormSubmit} />
-			)}
-			<BaseButton text="Close" clickHandler={onClick} />
-		</form>
+					input.invalid {
+						background-color: var(--warning-color);
+					}
+				`}
+			>
+				<label htmlFor="username">Username:</label>
+				<input
+					ref={usernameRef}
+					tabIndex="0"
+					id="username"
+					name="username"
+					type="text"
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
+				/>
+				<label htmlFor="password">Password:</label>
+				<input
+					ref={passwordRef}
+					type="password"
+					name="password"
+					id="password"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+				/>
+				{serverMessage && <p>{serverMessage}</p>}
+				{intention === 'LOGIN' ? (
+					<BaseButton text="Log in" clickHandler={handleFormSubmit} />
+				) : (
+					<BaseButton text="Sign up" clickHandler={handleFormSubmit} />
+				)}
+				<BaseButton text="Close" clickHandler={onClick} />
+			</form>
+		</FocusTrap>
 	);
 }
