@@ -12,7 +12,7 @@ export async function createGoal(goal: string, ownerId: number) {
 	if (!user) {
 		throw new AuthError(`user with id: ${ownerId} does not exist`);
 	}
-	const newGoal = await user.createGoal({ goal });
+	const newGoal = await user.createGoal({ goal, ownerId: user.id });
 	return await newGoal.save();
 }
 

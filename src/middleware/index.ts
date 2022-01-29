@@ -10,8 +10,8 @@ export async function useTokenAuth(req: Request, res: Response, next: NextFuncti
 		return res.status(401).json({ message: 'unauthorized' });
 	}
 	// return headers.authorization string after 'Bearer '...
-	const token = getToken(req.headers.authorization);
 	try {
+		const token = getToken(req.headers.authorization);
 		let tokenIsValid = verify(token, jwtSecret) as UsernameAndId;
 		if (tokenIsValid && typeof tokenIsValid !== 'string' && tokenIsValid.id) {
 			const userExists = await User.findOne({ where: { id: tokenIsValid.id } });
@@ -31,7 +31,8 @@ export async function useTokenAuth(req: Request, res: Response, next: NextFuncti
 		}
 	} catch (e) {
 		console.log(e);
-		next(e);
+		return res.status(500).json({ message: 'something went wrong' });
+		// next(e);
 	}
 }
 
