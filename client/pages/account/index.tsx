@@ -1,14 +1,20 @@
-import type { GetServerSidePropsContext, NextPage } from 'next';
+import { GetServerSidePropsContext } from 'next';
+import Login from '../../lib/components/auth/Login';
 
-function Projects() {
-	return <h1>Projects</h1>;
+function AccountPage({}) {
+	return (
+		<>
+			<h1>Account Page</h1>
+			<Login />
+		</>
+	);
 }
 
-export default Projects;
+export default AccountPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	const { auth } = context.req.cookies;
-	if (!auth) {
+	if (auth) {
 		return {
 			redirect: {
 				destination: '/',
