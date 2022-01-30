@@ -67,6 +67,8 @@ export async function getProjects(ownerId: number) {
 	if (user) {
 		const projects = await user.getProjects();
 
+		// fetch goals if exist on project
+
 		return projects;
 	} else {
 		throw new AuthError(`user with id: ${ownerId} does not exist`);

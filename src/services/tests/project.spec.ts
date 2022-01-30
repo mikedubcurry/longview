@@ -137,8 +137,9 @@ describe('projects service', () => {
 			.send({ idea: projectInput.idea, description: projectInput.description });
 
 		const [result] = await db.query(`select * from projects where idea = '${projectInput.idea}'`);
+		const [project] = result;
 
-		expect(result).toBeTruthy();
+		expect(project).toBeTruthy();
 	});
 
 	// updateUserProject

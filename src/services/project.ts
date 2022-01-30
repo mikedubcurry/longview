@@ -15,7 +15,7 @@ export async function getUserProjects(req: Request, res: Response) {
 
 	try {
 		const projects = await getProjects(user.id);
-
+		
 		return res.json({ projects });
 	} catch (e: any) {
 		if (e.message.includes('must supply ownerId')) {
@@ -46,12 +46,12 @@ export async function getSingleProject(req: Request, res: Response) {
 }
 
 export async function createUserProject(req: Request, res: Response) {
-	const { idea, description } = req.params;
+	const { idea, description } = req.body;
 	if (!idea || !description) {
 		return res.status(400).json({ message: 'must include idea and description to create a project' });
 	}
 	const user = req.user!;
-	const { goalId } = req.params;
+	const { goalId } = req.body;
 	try {
 		const project = await createProject(idea, description, user.id, parseInt(goalId));
 

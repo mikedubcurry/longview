@@ -8,7 +8,10 @@
 		"dev": "NODE_ENV=development nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.spec/ts' --exec 'ts-node src/index.ts'",
 		"build": "tsc",
 		"test": "NODE_ENV=test jest --runInBand",
-		"test-watch": "NODE_ENV=test jest --watch"
+		"test-watch": "NODE_ENV=test jest --watch",
+		"ui:dev": "pnpm recursive run dev --filter client",
+		"all:dev": "pnpm recursive run dev",
+		"all:i": "pnpm recursive install"
 	},
 	"author": "mikedubcurry",
 	"license": "MIT",
