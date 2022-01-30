@@ -29,7 +29,9 @@ function Nav() {
 	return (
 		<nav className="flex justify-between  bg-violet-400">
 			<span className="p-4">
-				<h1 className="inline">Longview</h1>
+				<Link href="/">
+					<h1 className="inline cursor-pointer">Longview</h1>
+				</Link>
 			</span>
 			<span className="w-2/3 grid grid-cols-2 gap-4 sm:flex sm:justify-between p-4 px-8 bg-gradient-to-r from-violet-400 to-purple-600">
 				<span className="justify-self-end col-start-1 row-start-1">
@@ -49,7 +51,7 @@ function Nav() {
 					</>
 				)}
 				{!isLoading && loggedIn ? (
-					<span className="justify-self-end col-start-2" onClick={logOut}>
+					<span className="justify-self-end col-start-2 cursor-pointer" onClick={logOut}>
 						Log Out
 					</span>
 				) : (
