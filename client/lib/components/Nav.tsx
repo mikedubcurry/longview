@@ -12,7 +12,7 @@ function Nav() {
 			setLoading(true);
 			fetch('api/user')
 				.then((res) => res.json())
-				.then(({user}) => {
+				.then(({ user }) => {
 					setLoggedIn(user);
 					setLoading(false);
 				});
