@@ -6,7 +6,7 @@ function Layout({ children }: { children: ReactElement }) {
 	return (
 		<>
 			<Nav />
-			<main>{children}</main>
+			<main className='container mx-auto  h-full bg-zinc-300'>{children}</main>
 		</>
 	);
 }

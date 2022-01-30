@@ -27,7 +27,7 @@ function Nav() {
 	};
 
 	return (
-		<nav className="flex justify-between  bg-violet-400">
+		<nav className="flex justify-between bg-violet-400">
 			<span className="p-4">
 				<Link href="/">
 					<h1 className="inline cursor-pointer">Longview</h1>
