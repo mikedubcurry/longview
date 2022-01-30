@@ -12,8 +12,8 @@ function Nav() {
 			setLoading(true);
 			fetch('api/user')
 				.then((res) => res.json())
-				.then((data) => {
-					setLoggedIn(data);
+				.then(({user}) => {
+					setLoggedIn(user);
 					setLoading(false);
 				});
 		}
