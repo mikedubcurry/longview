@@ -1,6 +1,16 @@
 import type { GetServerSidePropsContext, NextPage } from 'next';
 
-function Projects() {
+type ProjectProps = {
+	projects: {
+		idea: string;
+		description: string;
+		id: string;
+	}[];
+};
+
+function Projects({ projects }: ProjectProps) {
+	console.log(projects);
+
 	return <h1>Projects</h1>;
 }
 
@@ -17,7 +27,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		};
 	}
 
+	const response = await fetch(`${process.env.SERVER_URL || ''}/projects`, {
+		headers: {
+			authorization: `Bearer ${auth}`,
+		},
+	});
+	const projects = await response.json();
+	// console.log(projects);
+
 	return {
-		props: {},
+		props: { projects },
 	};
 }
